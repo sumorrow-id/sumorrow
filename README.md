@@ -1,58 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sumorrow Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains the backend schema and application code for Sumorrow.
 
-## About Laravel
+## Local setup (Windows + XAMPP)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Prerequisites
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.2+ and Composer available in terminal
+- XAMPP installed
+- Apache and MySQL started from XAMPP Control Panel
+- MySQL running on port `3306`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1) Clone and install dependencies
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```powershell
+cd C:\path\to\workspace
+git clone <your-repo-url> sumorrow
+cd sumorrow
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2) Configure environment
 
-## Contributing
+```powershell
+Copy-Item .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Set database values in `.env`:
 
-## Code of Conduct
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=sumorrow
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3) Create local database
 
-## Security Vulnerabilities
+Use phpMyAdmin, or run:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```powershell
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS sumorrow"
+```
 
-## License
+or add manually in your MySQL client:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```sql
+CREATE DATABASE IF NOT EXISTS sumorrow
+```
+
+### 4) Clear cached config and run migrations
+
+```powershell
+php artisan config:clear
+php artisan cache:clear
+php artisan migrate
+```
+
+If there any error like
+
+```powershell
+# SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sumorrow.cache' doesn't exist (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: sumorrow, SQL: delete from `cache`)
+```
+
+Just ignore it, and continue running the command
+
+### 5) Optional: reset local schema
+
+Use this only when you want to wipe and recreate all tables locally.
+
+```powershell
+php artisan migrate:fresh
+```
+
+### 6) Verify DB connection (optional)
+
+```powershell
+php artisan tinker
+```
+
+Inside Tinker:
+
+```php
+DB::select('SELECT database() as db');
+```
+
+Expected database should be `sumorrow`.
+
+## Team migration workflow
+
+- Pull latest changes before running migrations.
+- Run `php artisan migrate` after every pull that includes migration files.
+- Never edit old migration files that are already shared; create a new migration for schema changes.
+- Update architecture docs (`docs/architecture/*`) when schema changes.
+
+## Architecture documentation
+
+- ERD index and conventions: `docs/architecture/erd/README.md`
+- Data dictionary: `docs/architecture/data-dictionary.md`
+
+## Notes
+
+- Keep sensitive architecture details in team-only channels if this repo is shared externally.
+- This README only covers local setup and migration workflow.
