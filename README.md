@@ -1,6 +1,6 @@
-# Sumorrow Backend
+# Sumorrow Docs
 
-This repository contains the backend schema and application code for Sumorrow.
+This repository contains application code for Sumorrow.
 
 ## Local setup (Windows + XAMPP)
 
