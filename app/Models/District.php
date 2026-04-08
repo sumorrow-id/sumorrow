@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Basecamp extends Model
+class District extends Model
 {
     use HasFactory, HasUuids;
 
@@ -18,21 +19,18 @@ class Basecamp extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'mountain_id',
+        'regency_id',
         'name',
-        'village_id',
-        'address',
-        'coordinates',
-        'contact',
     ];
 
-    public function mountain(): BelongsTo
+    public function regency(): BelongsTo
     {
-        return $this->belongsTo(Mountain::class);
+        return $this->belongsTo(Regency::class);
     }
 
-    public function village(): BelongsTo
+    public function villages(): HasMany
     {
-        return $this->belongsTo(Village::class);
+        return $this->hasMany(Village::class);
     }
 }
+

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class PostTag extends Model
+class Province extends Model
 {
     use HasFactory, HasUuids;
 
@@ -18,17 +18,12 @@ class PostTag extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'post_id',
-        'keyword',
+        'name',
     ];
 
-    public function post(): BelongsTo
+    public function regencies(): HasMany
     {
-        return $this->belongsTo(Post::class);
-    }
-
-    public function setKeywordAttribute(string $value): void
-    {
-        $this->attributes['keyword'] = strtolower(trim($value));
+        return $this->hasMany(Regency::class);
     }
 }
+

@@ -21,6 +21,7 @@ class MountainRating extends Model
         'user_id',
         'mountain_id',
         'score',
+        'review',
     ];
 
     protected function casts(): array
@@ -41,4 +42,3 @@ class MountainRating extends Model
         return $this->belongsTo(Mountain::class);
     }
 }
-

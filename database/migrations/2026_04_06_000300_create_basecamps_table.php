@@ -15,8 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('mountain_id')->constrained('mountains')->cascadeOnDelete();
             $table->string('name');
-            $table->string('location');
+            $table->foreignUuid('village_id')->constrained('villages')->cascadeOnDelete();
+            $table->string('address');
             $table->string('coordinates');
+            $table->string('contact')->nullable();
         });
     }
 

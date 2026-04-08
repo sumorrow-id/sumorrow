@@ -18,6 +18,7 @@ class Post extends Model
 
     protected $fillable = [
         'author_id',
+        'title',
         'body',
     ];
 
@@ -41,4 +42,3 @@ class Post extends Model
         return $this->hasMany(PostTag::class);
     }
 }
-

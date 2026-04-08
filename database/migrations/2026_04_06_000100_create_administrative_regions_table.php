@@ -11,12 +11,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('administrative_regions', function (Blueprint $table) {
+        Schema::create('provinces', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('province');
-            $table->string('regency_city');
-            $table->string('district');
-            $table->string('village');
+            $table->string('name')->unique();
+        });
+
+        Schema::create('regencies', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('province_id')->constrained('provinces')->cascadeOnDelete();
+            $table->string('name');
+            $table->enum('type', ['regency', 'city']);
+
+            $table->unique(['province_id', 'name']);
+        });
+
+        Schema::create('districts', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('regency_id')->constrained('regencies')->cascadeOnDelete();
+            $table->string('name');
+
+            $table->unique(['regency_id', 'name']);
+        });
+
+        Schema::create('villages', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('district_id')->constrained('districts')->cascadeOnDelete();
+            $table->string('name');
+
+            $table->unique(['district_id', 'name']);
         });
     }
 
@@ -25,7 +47,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('administrative_regions');
+        Schema::dropIfExists('villages');
+        Schema::dropIfExists('districts');
+        Schema::dropIfExists('regencies');
+        Schema::dropIfExists('provinces');
     }
 };
 

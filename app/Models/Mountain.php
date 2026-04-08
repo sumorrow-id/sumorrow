@@ -20,15 +20,17 @@ class Mountain extends Model
 
     protected $fillable = [
         'name',
-        'region_id',
+        'village_id',
         'elevation_masl',
         'coordinates',
         'description',
-        'image_url',
         'is_open',
         'is_active',
         'closed_since',
-        'avg_rating',
+        'length_km',
+        'elevation_gain_m',
+        'est_duration_minutes',
+        'difficulty',
     ];
 
     protected function casts(): array
@@ -37,13 +39,16 @@ class Mountain extends Model
             'is_open' => 'boolean',
             'is_active' => 'boolean',
             'closed_since' => 'date',
+            'length_km' => 'float',
+            'elevation_gain_m' => 'float',
+            'est_duration_minutes' => 'float',
             'avg_rating' => 'float',
         ];
     }
 
-    public function region(): BelongsTo
+    public function village(): BelongsTo
     {
-        return $this->belongsTo(AdministrativeRegion::class, 'region_id');
+        return $this->belongsTo(Village::class);
     }
 
     public function basecamps(): HasMany
@@ -66,4 +71,3 @@ class Mountain extends Model
         return $this->hasMany(Comment::class);
     }
 }
-
