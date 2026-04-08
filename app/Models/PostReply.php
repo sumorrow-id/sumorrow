@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\ValidationException;
 
 class PostReply extends Model
 {
@@ -22,6 +23,35 @@ class PostReply extends Model
         'parent_reply_id',
         'content',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (PostReply $reply): void {
+            if ($reply->parent_reply_id === null) {
+                return;
+            }
+
+            $parent = PostReply::query()->find($reply->parent_reply_id);
+
+            if ($parent === null) {
+                throw ValidationException::withMessages([
+                    'parent_reply_id' => 'Parent reply does not exist.',
+                ]);
+            }
+
+            if ($parent->post_id !== $reply->post_id) {
+                throw ValidationException::withMessages([
+                    'parent_reply_id' => 'Parent reply must belong to the same post.',
+                ]);
+            }
+
+            if ($parent->parent_reply_id !== null) {
+                throw ValidationException::withMessages([
+                    'parent_reply_id' => 'Replies can only be nested up to 2 levels.',
+                ]);
+            }
+        });
+    }
 
     public function post(): BelongsTo
     {
@@ -43,4 +73,3 @@ class PostReply extends Model
         return $this->hasMany(PostReply::class, 'parent_reply_id');
     }
 }
-

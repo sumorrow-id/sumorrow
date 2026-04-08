@@ -23,12 +23,14 @@ class MountainImage extends Model
         'mountain_id',
         'image_url',
         'position',
+        'is_cover',
         'uploaded_at',
     ];
 
     protected function casts(): array
     {
         return [
+            'is_cover' => 'boolean',
             'uploaded_at' => 'datetime',
         ];
     }
@@ -38,4 +40,3 @@ class MountainImage extends Model
         return $this->belongsTo(Mountain::class);
     }
 }
-
