@@ -13,18 +13,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->foreignUuid('author_id')->constrained('users')->cascadeOnDelete();
+            $table->string('title');
             $table->text('body');
             $table->timestamps();
+
+            $table->index('created_at');
         });
 
-        $driver = Schema::getConnection()->getDriverName();
-        if ($driver === 'mysql') {
-            DB::statement('ALTER TABLE posts ADD FULLTEXT posts_body_fulltext (body)');
-        } elseif ($driver === 'pgsql') {
-            DB::statement('CREATE INDEX posts_body_fulltext ON posts USING GIN (to_tsvector(\'simple\', body))');
-        }
+        //  MySQL DB Statement
+        DB::statement('ALTER TABLE posts ADD FULLTEXT posts_title_body_fulltext (title, body)');
     }
 
     /**
@@ -35,4 +34,3 @@ return new class extends Migration
         Schema::dropIfExists('posts');
     }
 };
-

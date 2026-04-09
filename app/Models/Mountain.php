@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,40 +9,47 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Mountain extends Model
 {
-    use HasFactory, HasUuids;
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
+    use HasFactory;
 
     public $timestamps = false;
 
     protected $fillable = [
         'name',
-        'region_id',
+        'village_id',
         'elevation_masl',
         'coordinates',
         'description',
-        'image_url',
         'is_open',
         'is_active',
         'closed_since',
-        'avg_rating',
+        'min_length_km',
+        'max_length_km',
+        'min_elevation_gain_m',
+        'max_elevation_gain_m',
+        'min_est_duration_minutes',
+        'max_est_duration_minutes',
+        'difficulty',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_open' => 'boolean',
-            'is_active' => 'boolean',
-            'closed_since' => 'date',
-            'avg_rating' => 'float',
+            'is_open'                  => 'boolean',
+            'is_active'                => 'boolean',
+            'closed_since'             => 'date',
+            'min_length_km'            => 'float',
+            'max_length_km'            => 'float',
+            'min_elevation_gain_m'     => 'float',
+            'max_elevation_gain_m'     => 'float',
+            'min_est_duration_minutes' => 'integer',
+            'max_est_duration_minutes' => 'integer',
+            'avg_rating'               => 'float',
         ];
     }
 
-    public function region(): BelongsTo
+    public function village(): BelongsTo
     {
-        return $this->belongsTo(AdministrativeRegion::class, 'region_id');
+        return $this->belongsTo(Village::class);
     }
 
     public function basecamps(): HasMany
@@ -66,4 +72,3 @@ class Mountain extends Model
         return $this->hasMany(Comment::class);
     }
 }
-
