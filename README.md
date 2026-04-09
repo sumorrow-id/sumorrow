@@ -16,8 +16,8 @@ Sumorrow is expected to become an integrated solution that helps hikers plan, ca
 
 ## Documentation index
 
-- Local setup and migration guide: `docs/local-setup.md`
-- Commit convention: `docs/commit-convention.md`
-- ERD (specification): `docs/architecture/erd/README.md`
-- ERD (visual): `docs/architecture/erd/mountain_api_erd_v0.html`
-- API endpoint structure: `docs/architecture/api-endpoint/README.md`
+- Local setup and migration guide: [docs/local-setup.md](docs/local-setup.md)
+- Commit convention: [docs/commit-convention.md](docs/commit-convention.md)
+- ERD (specification): [docs/architecture/erd/README.md](docs/architecture/erd/README.md)
+- ERD (visual): [docs/architecture/erd/mountain_api_erd_v0.html](docs/architecture/erd/mountain_api_erd_v0.html)
+- API endpoint structure: [docs/architecture/api-endpoint/README.md](docs/architecture/api-endpoint/README.md)
