@@ -18,70 +18,68 @@ mermaid.initialize({
 });
 const { svg } = await mermaid.render('erd-svg', `erDiagram
   PROVINCE {
-    uuid id PK
+    int id PK
     string name
   }
   REGENCY {
-    uuid id PK
-    uuid province_id FK
+    int id PK
+    int province_id FK
     string name
     enum type
   }
   DISTRICT {
-    uuid id PK
-    uuid regency_id FK
+    int id PK
+    int regency_id FK
     string name
   }
   VILLAGE {
-    uuid id PK
-    uuid district_id FK
+    int id PK
+    int district_id FK
     string name
   }
   MOUNTAIN {
-    uuid id PK
+    int id PK
     string name
-    uuid village_id FK
+    int village_id FK
     int elevation_masl
     string coordinates
     text description
     boolean is_open
     boolean is_active
     date closed_since
-    float length_km
-    float elevation_gain_m
-    float est_duration_minutes
+    float min_length_km
+    float max_length_km
+    float min_elevation_gain_m
+    float max_elevation_gain_m
+    int min_est_duration_minutes
+    int max_est_duration_minutes
     enum difficulty
     float avg_rating
   }
   MOUNTAIN_IMAGE {
-    uuid id PK
-    uuid mountain_id FK
+    int id PK
+    int mountain_id FK
     string image_url
     int position
     boolean is_cover
     timestamp uploaded_at
   }
   BASECAMP {
-    uuid id PK
-    uuid mountain_id FK
-    uuid village_id FK
-    string name
-    string address
-    string coordinates
-    string contact
+    int id PK
+    int mountain_id FK
   }
   MOUNTAIN_RATING {
-    uuid id PK
+    int id PK
     uuid user_id FK
-    uuid mountain_id FK
+    int mountain_id FK
     int score
     text review
     timestamp created_at
   }
   COMMENT {
-    uuid id PK
+    int id PK
     uuid user_id FK
-    uuid mountain_id FK
+    int mountain_id FK
     text content
     timestamp created_at
     timestamp updated_at
@@ -96,7 +94,7 @@ const { svg } = await mermaid.render('erd-svg', `erDiagram
     timestamp created_at
   }
   POST {
-    uuid id PK
+    int id PK
     uuid author_id FK
     string title
     text body
@@ -104,24 +102,24 @@ const { svg } = await mermaid.render('erd-svg', `erDiagram
     timestamp updated_at
   }
   POST_IMAGE {
-    uuid id PK
-    uuid post_id FK
+    int id PK
+    int post_id FK
     string image_url
     int position
     timestamp uploaded_at
   }
   POST_REPLY {
-    uuid id PK
-    uuid post_id FK
+    int id PK
+    int post_id FK
     uuid author_id FK
-    uuid parent_reply_id FK
+    int parent_reply_id FK
     text content
     timestamp created_at
     timestamp updated_at
   }
   POST_TAG {
-    uuid id PK
-    uuid post_id FK
+    int id PK
+    int post_id FK
     string keyword
   }
 
@@ -129,7 +127,7 @@ const { svg } = await mermaid.render('erd-svg', `erDiagram
   REGENCY ||--o{ DISTRICT : "has"
   DISTRICT ||--o{ VILLAGE : "has"
   VILLAGE ||--o{ MOUNTAIN : "locates"
-  VILLAGE ||--o{ BASECAMP : "locates"
+
   MOUNTAIN ||--o{ MOUNTAIN_IMAGE : "has"
   MOUNTAIN ||--o{ BASECAMP : "has"
   MOUNTAIN ||--o{ MOUNTAIN_RATING : "rated via"

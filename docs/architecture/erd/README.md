@@ -1,49 +1,52 @@
 PROVINCE {
-  uuid    id    PK
+  int     id    PK
   string  name  UNIQUE
 }
 
 REGENCY {
-  uuid    id          PK
-  uuid    province_id FK → PROVINCE.id
+  int     id          PK
+  int     province_id FK → PROVINCE.id
   string  name
   enum    type        (regency, city)
   UNIQUE (province_id, name)
 }
 
 DISTRICT {
-  uuid    id         PK
-  uuid    regency_id FK → REGENCY.id
+  int     id         PK
+  int     regency_id FK → REGENCY.id
   string  name
   UNIQUE (regency_id, name)
 }
 
 VILLAGE {
-  uuid    id          PK
-  uuid    district_id FK → DISTRICT.id
+  int     id          PK
+  int     district_id FK → DISTRICT.id
   string  name
   UNIQUE (district_id, name)
 }
 
 MOUNTAIN
-uuid        id                   PK
-string      name                 UNIQUE
-uuid        village_id           FK → VILLAGE.id
+int         id                       PK
+string      name                     UNIQUE
+int         village_id               FK → VILLAGE.id
 int         elevation_masl
 string      coordinates
 text        description
 boolean     is_open
 boolean     is_active
-date        closed_since         nullable
-float       length_km
-float       elevation_gain_m
-float       est_duration_minutes
-enum        difficulty           (easy, moderate, hard, strenuous)
-float       avg_rating           denormalized cache, updated on each rating
+date        closed_since             nullable
+float       min_length_km
+float       max_length_km
+float       min_elevation_gain_m
+float       max_elevation_gain_m
+int         min_est_duration_minutes
+int         max_est_duration_minutes
+enum        difficulty               (easy, moderate, hard, strenuous)
+float       avg_rating               denormalized cache, updated on each rating
 
 MOUNTAIN_IMAGE
-uuid        id           PK
-uuid        mountain_id  FK → MOUNTAIN.id
+int         id           PK
+int         mountain_id  FK → MOUNTAIN.id
 string      image_url
 int         position
 boolean     is_cover
@@ -51,27 +54,22 @@ timestamp   uploaded_at
 UNIQUE (mountain_id, position)
 
 BASECAMP
-uuid        id           PK
-uuid        mountain_id  FK → MOUNTAIN.id
-string      name
-uuid  	    village_id   FK → VILLAGE.id
-string      address
-string      coordinates
-string      contact      nullable — phone/WhatsApp
+int         id           PK
+int         mountain_id  FK → MOUNTAIN.id
 
 MOUNTAIN_RATING
-uuid        id           PK
+int         id           PK
 uuid        user_id      FK → USER.id
-uuid        mountain_id  FK → MOUNTAIN.id
+int         mountain_id  FK → MOUNTAIN.id
 int         score        CHECK (score BETWEEN 1 AND 5)
 text        review       nullable
 timestamp   created_at
 UNIQUE (user_id, mountain_id)
 
 COMMENT
-uuid        id           PK
+int         id           PK
 uuid        user_id      FK → USER.id
-uuid        mountain_id  FK → MOUNTAIN.id
+int         mountain_id  FK → MOUNTAIN.id
 text        content
 timestamp   created_at
 timestamp   updated_at
@@ -88,7 +86,7 @@ timestamp   created_at
 
 
 POST
-uuid        id         PK
+int         id         PK
 uuid        author_id  FK → USER.id
 string      title
 text        body       full-text searchable
@@ -96,25 +94,25 @@ timestamp   created_at
 timestamp   updated_at
 
 POST_IMAGE
-uuid        id         PK
-uuid        post_id    FK → POST.id
+int         id         PK
+int         post_id    FK → POST.id
 string      image_url
 int         position
 timestamp   uploaded_at
 UNIQUE (post_id, position)
 
 POST_REPLY
-uuid        id              PK
-uuid        post_id         FK → POST.id
+int         id              PK
+int         post_id         FK → POST.id
 uuid        author_id       FK → USER.id
-uuid        parent_reply_id FK → POST_REPLY.id  nullable (null = top-level reply)
+int         parent_reply_id FK → POST_REPLY.id  nullable (null = top-level reply)
 text        content
 timestamp   created_at
 timestamp   updated_at
 
 POST_TAG
-uuid        id       PK
-uuid        post_id  FK → POST.id
+int         id       PK
+int         post_id  FK → POST.id
 string      keyword  lowercased on insert
 UNIQUE (post_id, keyword)
 
@@ -127,7 +125,7 @@ Mountain core
 - VILLAGE → MOUNTAIN (one-to-many): one village locates many mountains
 - MOUNTAIN → MOUNTAIN_IMAGE (one-to-many): one mountain has many images
 - MOUNTAIN → BASECAMP (one-to-many): one mountain has many basecamps
-- VILLAGE → BASECAMP (one-to-many): one village locates many basecamps
+
 
 Mountain interactions
 - MOUNTAIN → MOUNTAIN_RATING (one-to-many): one mountain receives many ratings
@@ -166,7 +164,7 @@ Nullable fields
 - USER.avatar_url → nullable: user may not have a profile photo
 - MOUNTAIN.closed_since → nullable: only set when the mountain is closed
 - MOUNTAIN_RATING.review → nullable: user may submit a score without a written review
-- BASECAMP.contact → nullable: not all basecamps have a listed contact
+
 - POST_REPLY.parent_reply_id → nullable: null means it is a top-level reply directly under the post; a value means it is a nested reply to another reply
 
 Default values
@@ -180,7 +178,7 @@ Indexes for performance
 Foreign key indexes — these should be created on every FK column since they are frequently used in JOIN operations:
 - MOUNTAIN (village_id)
 - MOUNTAIN_IMAGE (mountain_id)
-- BASECAMP (mountain_id), BASECAMP (village_id)
+- BASECAMP (mountain_id)
 - MOUNTAIN_RATING (mountain_id), MOUNTAIN_RATING (user_id)
 - COMMENT (mountain_id), COMMENT (user_id)
 - POST (author_id)
