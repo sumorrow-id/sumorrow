@@ -2,37 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Basecamp extends Model
 {
-    use HasFactory, HasUuids;
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
+    use HasFactory;
 
     public $timestamps = false;
 
     protected $fillable = [
         'mountain_id',
-        'name',
-        'village_id',
-        'address',
-        'coordinates',
-        'contact',
     ];
 
     public function mountain(): BelongsTo
     {
         return $this->belongsTo(Mountain::class);
-    }
-
-    public function village(): BelongsTo
-    {
-        return $this->belongsTo(Village::class);
     }
 }

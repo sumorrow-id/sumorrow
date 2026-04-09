@@ -12,13 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('basecamps', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('mountain_id')->constrained('mountains')->cascadeOnDelete();
-            $table->string('name');
-            $table->foreignUuid('village_id')->constrained('villages')->cascadeOnDelete();
-            $table->string('address');
-            $table->string('coordinates');
-            $table->string('contact')->nullable();
+            $table->id();
+            $table->foreignId('mountain_id')->constrained('mountains')->cascadeOnDelete();
         });
     }
 
