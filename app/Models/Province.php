@@ -4,20 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Basecamp extends Model
+class Province extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
     protected $fillable = [
-        'mountain_id',
+        'name',
     ];
 
-    public function mountain(): BelongsTo
+    public function regencies(): HasMany
     {
-        return $this->belongsTo(Mountain::class);
+        return $this->hasMany(Regency::class);
     }
 }
+

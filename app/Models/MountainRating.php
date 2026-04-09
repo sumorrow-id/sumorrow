@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MountainRating extends Model
 {
-    use HasFactory, HasUuids;
-
-    public $incrementing = false;
-
-    protected $keyType = 'string';
+    use HasFactory;
 
     const UPDATED_AT = null;
 
@@ -21,6 +16,7 @@ class MountainRating extends Model
         'user_id',
         'mountain_id',
         'score',
+        'review',
     ];
 
     protected function casts(): array
@@ -41,4 +37,3 @@ class MountainRating extends Model
         return $this->belongsTo(Mountain::class);
     }
 }
-

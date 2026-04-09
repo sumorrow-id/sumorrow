@@ -5,25 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class PostTag extends Model
+class District extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
     protected $fillable = [
-        'post_id',
-        'keyword',
+        'regency_id',
+        'name',
     ];
 
-    public function post(): BelongsTo
+    public function regency(): BelongsTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Regency::class);
     }
 
-    public function setKeywordAttribute(string $value): void
+    public function villages(): HasMany
     {
-        $this->attributes['keyword'] = strtolower(trim($value));
+        return $this->hasMany(Village::class);
     }
 }
+
