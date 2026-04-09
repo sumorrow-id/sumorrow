@@ -15,7 +15,7 @@ This document contains detailed steps to run Sumorrow locally.
 
 ```powershell
 cd C:\path\to\workspace
-git clone <your-repo-url> sumorrow
+git clone https://github.com/sumorrow-id/sumorrow sumorrow
 cd sumorrow
 composer install
 ```
