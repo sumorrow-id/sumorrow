@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('provinces', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name')->unique();
         });
 
         Schema::create('regencies', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('province_id')->constrained('provinces')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('province_id')->constrained('provinces')->cascadeOnDelete();
             $table->string('name');
             $table->enum('type', ['regency', 'city']);
 
@@ -26,16 +26,16 @@ return new class extends Migration
         });
 
         Schema::create('districts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('regency_id')->constrained('regencies')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('regency_id')->constrained('regencies')->cascadeOnDelete();
             $table->string('name');
 
             $table->unique(['regency_id', 'name']);
         });
 
         Schema::create('villages', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('district_id')->constrained('districts')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('district_id')->constrained('districts')->cascadeOnDelete();
             $table->string('name');
 
             $table->unique(['district_id', 'name']);

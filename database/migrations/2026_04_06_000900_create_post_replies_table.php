@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_replies', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('post_id')->constrained('posts')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
             $table->foreignUuid('author_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignUuid('parent_reply_id')->nullable()->constrained('post_replies')->nullOnDelete();
+            $table->foreignId('parent_reply_id')->nullable()->constrained('post_replies')->nullOnDelete();
             $table->text('content');
             $table->timestamps();
         });

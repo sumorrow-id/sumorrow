@@ -12,18 +12,21 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('mountains', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('name')->unique();
-            $table->foreignUuid('village_id')->constrained('villages')->cascadeOnDelete();
+            $table->foreignId('village_id')->constrained('villages')->cascadeOnDelete();
             $table->integer('elevation_masl');
             $table->string('coordinates');
             $table->text('description');
             $table->boolean('is_open')->default(true);
             $table->boolean('is_active')->default(true);
             $table->date('closed_since')->nullable();
-            $table->float('length_km');
-            $table->float('elevation_gain_m');
-            $table->float('est_duration_minutes');
+            $table->float('min_length_km');
+            $table->float('max_length_km');
+            $table->float('min_elevation_gain_m');
+            $table->float('max_elevation_gain_m');
+            $table->integer('min_est_duration_minutes');
+            $table->integer('max_est_duration_minutes');
             $table->enum('difficulty', ['easy', 'moderate', 'hard', 'strenuous']);
             $table->float('avg_rating')->default(0);
 

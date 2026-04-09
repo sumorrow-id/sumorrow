@@ -13,8 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_tags', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('post_id')->constrained('posts')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
             $table->string('keyword');
 
             $table->unique(['post_id', 'keyword']);

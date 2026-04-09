@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mountain_images', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('mountain_id')->constrained('mountains')->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('mountain_id')->constrained('mountains')->cascadeOnDelete();
             $table->string('image_url');
             $table->integer('position');
             $table->boolean('is_cover')->default(false);
