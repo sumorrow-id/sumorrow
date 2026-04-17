@@ -24,9 +24,9 @@ class Regency extends Model
         return $this->belongsTo(Province::class);
     }
 
-    public function districts(): HasMany
+    public function basecamps(): HasMany
     {
-        return $this->hasMany(District::class);
+        return $this->hasMany(Basecamp::class);
     }
 }
 

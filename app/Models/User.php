@@ -26,7 +26,6 @@ class User extends Authenticatable
         'email',
         'password_hash',
         'avatar_url',
-        'is_active',
     ];
 
     protected $hidden = [
@@ -38,7 +37,6 @@ class User extends Authenticatable
         return [
             'created_at' => 'datetime',
             'password_hash' => 'hashed',
-            'is_active' => 'boolean',
         ];
     }
 
