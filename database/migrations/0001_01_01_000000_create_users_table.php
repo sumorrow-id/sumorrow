@@ -17,10 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password_hash');
             $table->string('avatar_url')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamp('created_at')->useCurrent();
-
-            $table->index('is_active');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -14,23 +14,14 @@ return new class extends Migration {
         Schema::create('mountains', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->foreignId('village_id')->constrained('villages')->cascadeOnDelete();
             $table->integer('elevation_masl');
             $table->string('coordinates');
             $table->text('description');
-            $table->boolean('is_open')->default(true);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->date('closed_since')->nullable();
-            $table->float('min_length_km');
-            $table->float('max_length_km');
-            $table->float('min_elevation_gain_m');
-            $table->float('max_elevation_gain_m');
-            $table->integer('min_est_duration_minutes');
-            $table->integer('max_est_duration_minutes');
             $table->enum('difficulty', ['easy', 'moderate', 'hard', 'strenuous']);
             $table->float('avg_rating')->default(0);
 
-            $table->index('is_open');
             $table->index('is_active');
             $table->index('difficulty');
             $table->index('avg_rating');

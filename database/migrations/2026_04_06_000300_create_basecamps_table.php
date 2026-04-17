@@ -14,6 +14,15 @@ return new class extends Migration
         Schema::create('basecamps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mountain_id')->constrained('mountains')->cascadeOnDelete();
+            $table->foreignId('regency_id')->constrained('regencies')->cascadeOnDelete();
+            $table->string('name');
+            $table->integer('base_elevation_masl');
+            $table->float('length_km');
+            $table->integer('elevation_gain_m');
+            $table->integer('est_duration_minutes');
+
+            $table->index('mountain_id');
+            $table->index('regency_id');
         });
     }
 

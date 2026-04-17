@@ -24,22 +24,6 @@ return new class extends Migration
 
             $table->unique(['province_id', 'name']);
         });
-
-        Schema::create('districts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('regency_id')->constrained('regencies')->cascadeOnDelete();
-            $table->string('name');
-
-            $table->unique(['regency_id', 'name']);
-        });
-
-        Schema::create('villages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('district_id')->constrained('districts')->cascadeOnDelete();
-            $table->string('name');
-
-            $table->unique(['district_id', 'name']);
-        });
     }
 
     /**
@@ -47,8 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('villages');
-        Schema::dropIfExists('districts');
         Schema::dropIfExists('regencies');
         Schema::dropIfExists('provinces');
     }
