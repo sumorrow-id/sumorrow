@@ -1,139 +1,161 @@
+# Mountain API — Entity Relationship Design
+
+## Entities
+
+### PROVINCE
+```
 PROVINCE {
-  int     id    PK
-  string  name  UNIQUE
+  int id PK
+  string name UNIQUE
 }
+```
 
-REGENCY {
-  int     id          PK
-  int     province_id FK → PROVINCE.id
-  string  name
-  enum    type        (regency, city)
-  UNIQUE (province_id, name)
+### MOUNTAIN
+```
+MOUNTAIN {
+  int id PK
+  int province_id FK → PROVINCE.id
+  string name
+  int elevation_masl       -- absolute height of the peak
+  int length_km            -- distance from basecamp to the peak (route-specific)
+  int elevation_gain_m     -- elevation gain for this route
+  string coordinates       -- coordinates of the peak itself
+  text description
+  boolean is_active        -- default false
+  date closed_since        -- nullable
+  enum difficulty          -- (easy, moderate, hard, strenuous)
+  float avg_rating         -- denormalized cache, updated on each rating
 }
+```
 
-DISTRICT {
-  int     id         PK
-  int     regency_id FK → REGENCY.id
-  string  name
-  UNIQUE (regency_id, name)
+> **Note:** If a mountain has multiple access routes, each route is represented as a separate MOUNTAIN row with a different name (e.g., "Semeru via Ranu Pane", "Semeru via Tumpang"). Route-specific fields (`length_km`, `elevation_gain_m`, `elevation_masl`) reflect the attributes of that particular route.
+
+### MOUNTAIN_IMAGE
+```
+MOUNTAIN_IMAGE {
+  int id PK
+  int mountain_id FK → MOUNTAIN.id
+  string image_url
+  int position
+  boolean is_cover
+  timestamp uploaded_at
+  UNIQUE (mountain_id, position)
 }
+```
 
-VILLAGE {
-  int     id          PK
-  int     district_id FK → DISTRICT.id
-  string  name
-  UNIQUE (district_id, name)
+### BASECAMP
+```
+BASECAMP {
+  int id PK
+  int mountain_id FK → MOUNTAIN.id
+  string name              -- e.g., "Candi Cetho", "Ranu Pane"
 }
+```
 
-MOUNTAIN
-int         id                       PK
-string      name                     UNIQUE
-int         village_id               FK → VILLAGE.id
-int         elevation_masl
-string      coordinates
-text        description
-boolean     is_open
-boolean     is_active
-date        closed_since             nullable
-float       min_length_km
-float       max_length_km
-float       min_elevation_gain_m
-float       max_elevation_gain_m
-int         min_est_duration_minutes
-int         max_est_duration_minutes
-enum        difficulty               (easy, moderate, hard, strenuous)
-float       avg_rating               denormalized cache, updated on each rating
+> Basecamp now stores only the entry-point name. All route metrics (length, elevation gain) are stored on the MOUNTAIN row itself.
 
-MOUNTAIN_IMAGE
-int         id           PK
-int         mountain_id  FK → MOUNTAIN.id
-string      image_url
-int         position
-boolean     is_cover
-timestamp   uploaded_at
-UNIQUE (mountain_id, position)
+### MOUNTAIN_RATING
+```
+MOUNTAIN_RATING {
+  int id PK
+  uuid user_id FK → USER.id
+  int mountain_id FK → MOUNTAIN.id
+  int score                -- CHECK (score BETWEEN 1 AND 5)
+  text review              -- nullable
+  timestamp created_at
+  UNIQUE (user_id, mountain_id)
+}
+```
 
-BASECAMP
-int         id           PK
-int         mountain_id  FK → MOUNTAIN.id
+### COMMENT
+```
+COMMENT {
+  int id PK
+  uuid user_id FK → USER.id
+  int mountain_id FK → MOUNTAIN.id
+  text content
+  timestamp created_at
+  timestamp updated_at
+}
+```
 
-MOUNTAIN_RATING
-int         id           PK
-uuid        user_id      FK → USER.id
-int         mountain_id  FK → MOUNTAIN.id
-int         score        CHECK (score BETWEEN 1 AND 5)
-text        review       nullable
-timestamp   created_at
-UNIQUE (user_id, mountain_id)
+### USER
+```
+USER {
+  uuid id PK
+  string username UNIQUE
+  string email UNIQUE
+  string password_hash
+  string avatar_url        -- nullable
+  timestamp created_at
+}
+```
 
-COMMENT
-int         id           PK
-uuid        user_id      FK → USER.id
-int         mountain_id  FK → MOUNTAIN.id
-text        content
-timestamp   created_at
-timestamp   updated_at
+### POST
+```
+POST {
+  int id PK
+  uuid author_id FK → USER.id
+  string title
+  text body                -- full-text searchable
+  timestamp created_at
+  timestamp updated_at
+}
+```
 
+### POST_IMAGE
+```
+POST_IMAGE {
+  int id PK
+  int post_id FK → POST.id
+  string image_url
+  int position
+  timestamp uploaded_at
+  UNIQUE (post_id, position)
+}
+```
 
-USER
-uuid        id            PK
-string      username      UNIQUE
-string      email         UNIQUE
-string      password_hash
-string      avatar_url    nullable
-boolean     is_active     default true
-timestamp   created_at
+### POST_REPLY
+```
+POST_REPLY {
+  int id PK
+  int post_id FK → POST.id
+  uuid author_id FK → USER.id
+  int parent_reply_id FK → POST_REPLY.id  -- nullable (null = top-level reply)
+  text content
+  timestamp created_at
+  timestamp updated_at
+}
+```
 
+### POST_TAG
+```
+POST_TAG {
+  int id PK
+  int post_id FK → POST.id
+  string keyword           -- lowercased on insert
+  UNIQUE (post_id, keyword)
+}
+```
 
-POST
-int         id         PK
-uuid        author_id  FK → USER.id
-string      title
-text        body       full-text searchable
-timestamp   created_at
-timestamp   updated_at
+---
 
-POST_IMAGE
-int         id         PK
-int         post_id    FK → POST.id
-string      image_url
-int         position
-timestamp   uploaded_at
-UNIQUE (post_id, position)
+## Relationships
 
-POST_REPLY
-int         id              PK
-int         post_id         FK → POST.id
-uuid        author_id       FK → USER.id
-int         parent_reply_id FK → POST_REPLY.id  nullable (null = top-level reply)
-text        content
-timestamp   created_at
-timestamp   updated_at
+### Administrative hierarchy
+- PROVINCE → MOUNTAIN (one-to-many): one province has many mountains
 
-POST_TAG
-int         id       PK
-int         post_id  FK → POST.id
-string      keyword  lowercased on insert
-UNIQUE (post_id, keyword)
-
-Administrative hierarchy
-- PROVINCE → REGENCY (one-to-many): one province has many regencies/cities
-- REGENCY → DISTRICT (one-to-many): one regency/city has many districts
-- DISTRICT → VILLAGE (one-to-many): one district has many villages
-
-Mountain core
-- VILLAGE → MOUNTAIN (one-to-many): one village locates many mountains
+### Mountain core
 - MOUNTAIN → MOUNTAIN_IMAGE (one-to-many): one mountain has many images
-- MOUNTAIN → BASECAMP (one-to-many): one mountain has many basecamps
+- MOUNTAIN → BASECAMP (one-to-many): one mountain has many basecamps (entry points)
 
-
-Mountain interactions
+### Mountain interactions
 - MOUNTAIN → MOUNTAIN_RATING (one-to-many): one mountain receives many ratings
 - USER → MOUNTAIN_RATING (one-to-many): one user can rate many mountains
 - MOUNTAIN → COMMENT (one-to-many): one mountain receives many comments
 - USER → COMMENT (one-to-many): one user can write many comments
 
-Forum
+### Forum
 - USER → POST (one-to-many): one user can author many posts
 - POST → POST_IMAGE (one-to-many): one post has many images
 - POST → POST_REPLY (one-to-many): one post has many replies
@@ -143,7 +165,9 @@ Forum
 
 ---
 
-Unique constraints:
+## Constraints
+
+### Unique constraints
 - MOUNTAIN_RATING → UNIQUE (user_id, mountain_id): one user can only rate each mountain once
 - MOUNTAIN_IMAGE → UNIQUE (mountain_id, position): no two images on the same mountain share the same position
 - POST_IMAGE → UNIQUE (post_id, position): no two images on the same post share the same position
@@ -151,32 +175,28 @@ Unique constraints:
 - USER.username → UNIQUE: no two users share the same username
 - USER.email → UNIQUE: no two users share the same email
 - PROVINCE.name → UNIQUE: no duplicate province names
-- REGENCY → UNIQUE (province_id, name): no duplicate regency names within the same province
-- DISTRICT → UNIQUE (regency_id, name): no duplicate district names within the same regency
-- VILLAGE → UNIQUE (district_id, name): no duplicate village names within the same district
 
-Check constraints
+### Check constraints
 - MOUNTAIN_RATING.score → CHECK (score BETWEEN 1 AND 5): score must be a value from 1 to 5
 - MOUNTAIN.difficulty → CHECK (difficulty IN ('easy', 'moderate', 'hard', 'strenuous')): only valid difficulty levels allowed
-- REGENCY.type → CHECK (type IN ('regency', 'city')): only valid regency types allowed
 
-Nullable fields
+### Nullable fields
 - USER.avatar_url → nullable: user may not have a profile photo
 - MOUNTAIN.closed_since → nullable: only set when the mountain is closed
 - MOUNTAIN_RATING.review → nullable: user may submit a score without a written review
-
 - POST_REPLY.parent_reply_id → nullable: null means it is a top-level reply directly under the post; a value means it is a nested reply to another reply
 
-Default values
-- USER.is_active → default true: all newly registered users are active by default
-- MOUNTAIN.is_open → default true: mountains are assumed open unless explicitly closed
-- MOUNTAIN.is_active → default true: mountains are assumed volcanically active unless stated otherwise
+### Default values
+- MOUNTAIN.is_active → default false: mountains are assumed inactive unless stated otherwise
 
 ---
 
-Indexes for performance
-Foreign key indexes — these should be created on every FK column since they are frequently used in JOIN operations:
-- MOUNTAIN (village_id)
+## Indexes
+
+### Foreign key indexes
+These should be created on every FK column since they are frequently used in JOIN operations:
+
+- MOUNTAIN (province_id)
 - MOUNTAIN_IMAGE (mountain_id)
 - BASECAMP (mountain_id)
 - MOUNTAIN_RATING (mountain_id), MOUNTAIN_RATING (user_id)
@@ -185,29 +205,38 @@ Foreign key indexes — these should be created on every FK column since they ar
 - POST_IMAGE (post_id)
 - POST_REPLY (post_id), POST_REPLY (author_id), POST_REPLY (parent_reply_id)
 - POST_TAG (post_id)
-- REGENCY (province_id)
-- DISTRICT (regency_id)
-- VILLAGE (district_id)
 
-Filter indexes — columns frequently used in WHERE clauses:
-- MOUNTAIN (is_open): filter open/closed mountains
+### Filter indexes
+Columns frequently used in WHERE clauses:
+
 - MOUNTAIN (is_active): filter active/inactive volcanoes
 - MOUNTAIN (difficulty): filter by difficulty level
 - MOUNTAIN (avg_rating): sort mountains by rating
 - MOUNTAIN (elevation_masl): sort/filter by height
-- USER (is_active): filter banned/active users
+- MOUNTAIN (province_id): filter mountains by province
 - POST (created_at): sort forum posts by newest
 
-Full-text search indexes — for keyword search functionality:
+### Full-text search indexes
+For keyword search functionality:
+
 - POST (title, body): search forum posts by keyword — use a GIN index in PostgreSQL
 - POST_TAG (keyword): search posts by tag
 - MOUNTAIN (name): search mountains by name
 - MOUNTAIN (description): search mountains by description content
 
-avg_rating maintenance strategy:
-- MOUNTAIN.avg_rating is a denormalized cache — it does not auto-update. You need to keep it in sync using one of these approaches:
-- Database trigger: automatically recalculate avg_rating on every INSERT, UPDATE, or DELETE on MOUNTAIN_RATING
+---
 
-POST_REPLY depth limit:
+## Design Notes
+
+### avg_rating maintenance strategy
+- MOUNTAIN.avg_rating is a denormalized cache — it does not auto-update. You need to keep it in sync using one of these approaches:
+  - **Database trigger:** automatically recalculate avg_rating on every INSERT, UPDATE, or DELETE on MOUNTAIN_RATING
+
+### POST_REPLY depth limit
 - Cap at 2 levels deep (reply to post → reply to reply)
 
+### Multiple routes per mountain
+- Each distinct hiking route is stored as its own MOUNTAIN row
+- Use a consistent naming convention to group variants, e.g.: `"Semeru via Ranu Pane"`, `"Semeru via Tumpang"`
+- Route-specific data (`length_km`, `elevation_gain_m`, `elevation_masl`) lives on each MOUNTAIN row
+- The BASECAMP row linked to each MOUNTAIN names the entry point for that route

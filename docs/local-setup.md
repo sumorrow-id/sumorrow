@@ -11,7 +11,26 @@ This document contains detailed steps to run Sumorrow locally.
 - Apache and MySQL started from XAMPP Control Panel
 - MySQL running on port `3306`
 
-### 1) Clone and install dependencies
+### Automated Setup
+
+Instead of manual setup, you can run the provided Composer script (which refers to dependencies listed in `composer.lock`) to automate most of the installation:
+
+```powershell
+cd C:\path\to\workspace
+git clone https://github.com/sumorrow-id/sumorrow sumorrow
+cd sumorrow
+composer run setup
+```
+
+*(Note: The automated setup copies `.env.example`, generates the app key, and runs migrations. If you are using MySQL instead of the default Laravel SQLite configuration, you will need to configure your `.env` and create the `sumorrow` database before running migrations, or just follow the manual steps below).*
+
+---
+
+### Manual Setup
+
+If you prefer to configure everything step by step, or need to use a custom MySQL database configuration on Windows, follow these instructions:
+
+#### 1) Clone and install dependencies
 
 ```powershell
 cd C:\path\to\workspace
@@ -20,7 +39,7 @@ cd sumorrow
 composer install
 ```
 
-### 2) Configure environment
+#### 2) Configure environment
 
 ```powershell
 Copy-Item .env.example .env
@@ -38,7 +57,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 3) Create local database
+#### 3) Create local database
 
 Use phpMyAdmin, or run:
 
@@ -52,7 +71,7 @@ or add manually in your MySQL client:
 CREATE DATABASE IF NOT EXISTS sumorrow;
 ```
 
-### 4) Clear cached config and run migrations
+#### 4) Clear cached config and run migrations
 
 ```powershell
 php artisan config:clear
