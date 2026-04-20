@@ -14,10 +14,28 @@ class Basecamp extends Model
 
     protected $fillable = [
         'mountain_id',
+        'regency_id',
+        'name',
+        'base_elevation_masl',
+        'length_km',
+        'elevation_gain_m',
+        'est_duration_minutes',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'length_km' => 'float',
+        ];
+    }
 
     public function mountain(): BelongsTo
     {
         return $this->belongsTo(Mountain::class);
+    }
+
+    public function regency(): BelongsTo
+    {
+        return $this->belongsTo(Regency::class);
     }
 }

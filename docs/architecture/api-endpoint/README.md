@@ -51,7 +51,7 @@ For list endpoints such as `GET /mountains` and `GET /posts`, use these query pa
 
 - `?search=rinjani` - full-text keyword search
 - `?difficulty=moderate` - filter by difficulty
-- `?is_open=true` - only open mountains
+- `?is_active=true` - only active volcanoes
 - `?province_id=uuid` - filter by province
 - `?sort=avg_rating` - sort field
 - `?order=desc` - sort direction (`asc`, `desc`)
