@@ -23,5 +23,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'password_hash' => Hash::make('password'),
         ]);
+
+        $this->call([
+            MountainSeeder::class,
+        ]);
     }
 }

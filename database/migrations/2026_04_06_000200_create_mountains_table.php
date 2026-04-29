@@ -13,8 +13,11 @@ return new class extends Migration {
     {
         Schema::create('mountains', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->foreignId('province_id')->constrained('provinces')->cascadeOnDelete();
+            $table->string('name');
             $table->integer('elevation_masl');
+            $table->float('length_km');
+            $table->integer('elevation_gain_m');
             $table->string('coordinates');
             $table->text('description');
             $table->boolean('is_active')->default(false);
@@ -22,6 +25,7 @@ return new class extends Migration {
             $table->enum('difficulty', ['easy', 'moderate', 'hard', 'strenuous']);
             $table->float('avg_rating')->default(0);
 
+            $table->index('province_id');
             $table->index('is_active');
             $table->index('difficulty');
             $table->index('avg_rating');
