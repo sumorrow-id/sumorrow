@@ -1,4 +1,4 @@
-<footer class="bg-white w-full border-t border-gray-200 mt-20 py-10">
+<footer class="bg-white w-full border-t border-gray-200 py-10">
     <div class="w-[95%] max-w-7xl mx-auto grid grid-cols-4 gap-8">
         <div class="flex flex-col gap-5">
             <a href="/">
