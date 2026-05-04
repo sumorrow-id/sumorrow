@@ -17,7 +17,7 @@ class ExploreController extends Controller
             $searchTerm = $request->search;
             $query->where(function (Builder $q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('description', 'like', '%' . $searchTerm . '%');
             });
         }
 
