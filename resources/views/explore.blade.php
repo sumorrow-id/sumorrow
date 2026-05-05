@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="pt-32 bg-[#F8F9FA] min-h-screen">
-        <form method="GET" action="{{ route('explore') }}" class="w-[90%] mx-auto pb-20 flex flex-col lg:flex-row items-start gap-8">
+        <form id="explore-form" method="GET" action="{{ route('explore') }}" class="w-[90%] mx-auto pb-20 flex flex-col lg:flex-row items-start gap-8">
             <aside
                 class="flex flex-col gap-8 pb-4 mb-8 w-full lg:w-64 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto flex-shrink-0">
                 <div class="flex items-center gap-2">
@@ -52,7 +52,7 @@
                     <div class="flex items-center gap-3 bg-gray-200/60 rounded-full px-5 py-3 w-full">
                         <img src="{{ asset('images/explore/search.png') }}" alt="Search Icon"
                             class="w-4 h-4 object-contain opacity-70" />
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Find mountains"
+                        <input id="search-input" type="text" name="search" value="{{ request('search') }}" placeholder="Find mountains"
                             class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 w-full text-sm text-[#1a2b4c] placeholder-gray-500 font-medium" />
                         <button type="submit" class="hidden">Search</button>
                     </div>
