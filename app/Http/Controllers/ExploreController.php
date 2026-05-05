@@ -60,7 +60,8 @@ class ExploreController extends Controller
             });
         }
 
-        $mountains = $query->orderBy('name')->paginate(10)->withQueryString();
+        $seed = $request->input('seed', rand(1, 999999));
+        $mountains = $query->inRandomOrder($seed)->paginate(10)->appends(['seed' => $seed])->withQueryString();
 
         return view('explore', compact('mountains'));
     }
