@@ -9,8 +9,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
-Route::get('/', [HomeController::class,'index'])->name('home');
-Route::get('/explore',[ExploreController::class,'dummy'])->name('explore');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -29,22 +29,19 @@ Route::get('/dashboard', function(){
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// 1. Halaman pemberitahuan verifikasi (Notice)
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-// 2. Link verifikasi yang diklik di email
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-    return redirect()->route('dashboard'); // Sesuaikan mau redirect ke mana setelah sukses
+    return redirect()->route('dashboard');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-// 3. Kirim ulang email verifikasi (Resend)
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// Tambahkan ini di web.php
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
