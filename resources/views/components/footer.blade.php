@@ -1,6 +1,6 @@
 <footer class="bg-white w-full border-t border-gray-200 py-10">
-    <div class="w-[95%] max-w-7xl mx-auto grid grid-cols-4 gap-8">
-        <div class="flex flex-col gap-5">
+    <div class="w-[95%] max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="flex flex-col gap-5 items-center md:items-start text-center md:text-left">
             <a href="/">
                 <img
                     src="{{ asset('images/logo/SUMORROW-LOGO-BLACK.png') }}"
@@ -11,9 +11,9 @@
             <p class="text-gray-500 text-sm leading-relaxed max-w-[185px]">Connecting the spirit of adventure with Indonesia's highest peaks and archipelago's majestic peaks</p>
         </div>
 
-        <div>
+        <div class="items-center md:items-start text-center md:text-left">
             <h3 class="font-bold text-[#1a2b4c] mb-6">NAVIGATION</h3>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
                 <a
                     href="#"
                     class="text-gray-500 hover:text-[#094174] transition w-fit"
@@ -32,10 +32,10 @@
             </div>
         </div>
 
-        <div>
+        <div class="items-center md:items-start text-center md:text-left"">
             <h3 class="font-bold text-[#1a2b4c] mb-6">LEGAL</h3>
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
                 <a
                     href="#"
                     class="text-gray-500 hover:text-[#094174] transition w-fit"
@@ -49,10 +49,10 @@
             </div>
         </div>
 
-        <div>
+        <div class="items-center md:items-start text-center md:text-left"">
             <h3 class="font-bold text-[#1a2b4c] mb-6">CONTACT US</h3>
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
                 <a
                     href="mailto:himilsquad@gmail.com"
                     class="flex items-center gap-3 group w-fit"
