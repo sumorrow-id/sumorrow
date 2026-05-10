@@ -33,9 +33,9 @@
 
                 @if ($errors->any())
                     <div class="mb-5 p-4 rounded-2xl bg-red-50 border border-red-200">
-                        <ul class="list-disc list-inside text-sm text-red-600 font-medium">
+                        <ul class="text-sm text-red-600">
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <li>{{ rtrim($error, '.') }}</li>
                             @endforeach
                         </ul>
                     </div>
@@ -51,6 +51,7 @@
                         </div>
                         <input type="text" name="username" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-4 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
+                            value="{{ old('username') }}"
                             placeholder="Full Name">
                     </div>
 
@@ -61,6 +62,7 @@
                         </div>
                         <input type="email" id="regEmail" name="email" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-4 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
+                            value="{{ old('email') }}"
                             placeholder="Email Address">
                     </div>
 
@@ -71,6 +73,7 @@
                         </div>
                         <input type="password" id="regPassword" name="password" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-14 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
+                            value="{{ old('password') }}"
                             placeholder="Create Password">
                         <button type="button" id="regToggleBtn" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#094174] focus:outline-none">
                             <i class="fa-solid fa-eye-slash text-lg" id="regEyeIcon"></i>
@@ -84,6 +87,7 @@
                         </div>
                         <input type="password" id="confirmPassword" name="password_confirmation" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-14 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
+                            value="{{ old('password') }}"
                             placeholder="Confirm Password">
                         <button type="button" id="confirmToggleBtn" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#094174] focus:outline-none">
                             <i class="fa-solid fa-eye-slash text-lg" id="confirmEyeIcon"></i> <!-- ID Diubah -->

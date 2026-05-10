@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 
@@ -32,11 +33,14 @@ class RegisterController extends Controller
             'id' => (string) \Illuminate\Support\Str::uuid(),
             'username' => $request->username,
             'email' => $request->email,
-            'password_hash' => Hash::make($request->password), // Password di-hash agar aman
+            'password_hash' => Hash::make($request->password),
+            'is_active' => true,
         ]);
 
         event(new Registered($user));
-        // 3. Redirect (Arahkan) kembali ke Login dengan pesan sukses
-        return redirect()->route('login')->with('success', 'Account created successfully! Please login.');
+        Auth::login($user);
+        // return redirect()->route('login')->with('success', 'Account created successfully! Please login');
+
+        return view('auth.verify-email', ['email' => $user->email]);
     }
 }

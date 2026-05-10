@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'testuser',
             'email' => 'test@example.com',
             'password_hash' => Hash::make('password'),
+            'is_active' => true,
         ]);
 
         $this->call([
