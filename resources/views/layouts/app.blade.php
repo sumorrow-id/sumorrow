@@ -15,7 +15,7 @@
     class="bg-[#E7E7E7] antialiased font-sans text-gray-900 flex flex-col min-h-screen"
 >
     <x-navbar />
-    <main class="flex-grow">
+    <main class="grow">
         @yield ('content')
     </main>
     <x-footer />

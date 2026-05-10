@@ -6,6 +6,17 @@
 @source '../**/*.js';
 
 @theme {
+    --color-morning-mist: #BDD8E9;
+    --color-sky-oxygen: #7CBCE8;
+    --color-lithic-blue: #6EA1B2;
+    --color-glacial-teal: #4D8EA2;
+    --color-blue-bird: #49769F;
+    --color-summit-blue: #094174;
+    --color-deep-midnight: #001E3A;
+    --color-primary: #094174;
+    --color-heading: #001E3A;
+    --color-blue-support: #7CBCE8;
+    --color-surface: #BDD8E9;
     --font-sans:
         "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
