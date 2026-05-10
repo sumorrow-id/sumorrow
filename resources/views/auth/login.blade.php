@@ -36,6 +36,11 @@
                 <form action="{{ route('login') }}" method="POST" class="space-y-6 mb-8">
                     @csrf
                     
+                    @if (session('success'))
+                        <div class="bg-green-500/10 border border-green-500 text-green-500 p-4 rounded-lg mb-6">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     {{-- Input Email --}}
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-[#094174]">
@@ -60,6 +65,11 @@
                             <i class="fa-solid fa-eye-slash text-lg" id="eyeIcon"></i>
                         </button>
                     </div>
+                    @if ($errors->has('email'))
+                        <div class="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6">
+                            {{ $errors->first('email') }}
+                        </div>
+                    @endif
 
                     <div class="text-right">
                         <a href="#" class="text-[#094174] text-sm font-bold hover:underline opacity-80">Forgot password?</a>
@@ -69,6 +79,15 @@
                         class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide">
                         Login to Account
                     </button>
+
+                <div class="flex items-center">
+                    <input type="checkbox" name="remember" id="remember" 
+                        class="w-4 h-4 rounded cursor-pointer"
+                        style="accent-color: #094174;">
+                    <label for="remember" class="ml-2 text-sm text-gray-400 cursor-pointer select-none">
+                        Remember Me
+                    </label>
+                </div>
 
                     <!-- Divider (OR) -->
                 <div class="flex items-center gap-3 mb-6"> {{-- Jarak bawah dikurangi dikit --}}

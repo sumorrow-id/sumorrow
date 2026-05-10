@@ -39,4 +39,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    setInterval(function() {
+        fetch('/api/check-verification')
+            .then(response => response.json())
+            .then(data => {
+                if (data.verified) {
+                    window.location.href = "{{ route('home') }}";
+                }
+            });
+    }, 3000);
+</script>
 @endsection
+
+<!-- abis regis->verif email->home page -->
