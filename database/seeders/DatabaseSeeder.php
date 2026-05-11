@@ -18,12 +18,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'username' => 'testuser',
-            'email' => 'test@example.com',
-            'password_hash' => Hash::make('password'),
-            'is_active' => true,
-        ]);
+        // User::factory()->create([
+        //     'username' => 'testuser',
+        //     'email' => 'test@example.com',
+        //     'password_hash' => Hash::make('password'),
+        // ]);
 
         $this->call([
             MountainSeeder::class,

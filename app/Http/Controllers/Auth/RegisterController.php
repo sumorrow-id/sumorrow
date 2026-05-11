@@ -30,17 +30,16 @@ class RegisterController extends Controller
 
         // 2. Simpan ke Database
         $user = User::create([
-            'id' => (string) \Illuminate\Support\Str::uuid(),
             'username' => $request->username,
             'email' => $request->email,
             'password_hash' => Hash::make($request->password),
-            'is_active' => true,
         ]);
 
         event(new Registered($user));
+        $user->sendEmailVerificationNotification();
         Auth::login($user);
         // return redirect()->route('login')->with('success', 'Account created successfully! Please login');
 
-        return view('auth.verify-email', ['email' => $user->email]);
+        return redirect()->route('verification.notice');
     }
 }

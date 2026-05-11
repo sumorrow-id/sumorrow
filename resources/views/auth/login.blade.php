@@ -71,25 +71,28 @@
                         </div>
                     @endif
 
-                    <div class="text-right">
-                        <a href="#" class="text-[#094174] text-sm font-bold hover:underline opacity-80">Forgot password?</a>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="remember" id="remember" 
+                                value="1"
+                                class="w-4 h-4 rounded cursor-pointer"
+                                style="accent-color: #094174;">
+                            <label for="remember" class="ml-2 text-sm text-gray-400 cursor-pointer select-none">
+                                Remember Me
+                            </label>
+                        </div>
+                        <div class="text-right">
+                            <a href="#" class="text-[#094174] text-sm font-bold hover:underline opacity-80">Forgot password?</a>
+                        </div>
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide">
+                        class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide mt-2">
                         Login to Account
                     </button>
+                </form>
 
-                <div class="flex items-center">
-                    <input type="checkbox" name="remember" id="remember" 
-                        class="w-4 h-4 rounded cursor-pointer"
-                        style="accent-color: #094174;">
-                    <label for="remember" class="ml-2 text-sm text-gray-400 cursor-pointer select-none">
-                        Remember Me
-                    </label>
-                </div>
-
-                    <!-- Divider (OR) -->
+                <!-- Divider (OR) -->
                 <div class="flex items-center gap-3 mb-6"> {{-- Jarak bawah dikurangi dikit --}}
                     <div class="flex-1 border-t-2 border-dashed border-gray-200"></div>
                     <span class="text-gray-300 text-xs font-bold tracking-widest uppercase">Or</span>
