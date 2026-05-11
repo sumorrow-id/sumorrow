@@ -33,7 +33,9 @@ return new class extends Migration {
         });
 
         //  MYSQL DB Statement
-        DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_name_fulltext (name), ADD FULLTEXT mountains_description_fulltext (description)');
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_name_fulltext (name), ADD FULLTEXT mountains_description_fulltext (description)');
+        }
     }
 
     /**
