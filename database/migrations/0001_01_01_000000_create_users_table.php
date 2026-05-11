@@ -15,9 +15,12 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->string('password_hash');
+            $table->string('google_id')->nullable()->unique();
+            $table->string('password_hash')->nullable();
             $table->string('avatar_url')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('created_at')->useCurrent();
+            $table->rememberToken();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
