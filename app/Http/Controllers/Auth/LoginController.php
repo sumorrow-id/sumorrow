@@ -25,7 +25,7 @@ class LoginController extends Controller
         ]);
 
         $remember = $request->has('remember');
-        $user = User::where('email', $request->email)->first();
+        $user = User::query()->where('email', $request->email)->first();
 
         // Cek apakah user ada DAN passwordnya cocok
         if ($user && Hash::check($request->password, $user->password_hash)) {
@@ -40,10 +40,10 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')->user();
 
             // Cari user berdasarkan email
-            $user = User::where('google_id', $googleUser->id)
+            $user = User::query()->where('google_id', $googleUser->id)
                         ->orWhere('email', $googleUser->email)
                         ->first();
 
@@ -77,7 +77,7 @@ class LoginController extends Controller
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->stateless()->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     public function logout(Request $request)
