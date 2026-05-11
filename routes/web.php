@@ -27,7 +27,7 @@ Guest Routes (Unauthenticated Users Only)
 */
 Route::middleware('guest')->group(function () {
     // Login
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLogin');
     Route::post('/login', [LoginController::class, 'login']);
 
     // Register
