@@ -47,7 +47,6 @@ class LoginController extends Controller
                 $user = User::create([
                     // 'id' => (string) Str::uuid(), 
                     'username' => $googleUser->name,
-                    // 'username' => strtolower(Str::slug($googleUser->name)) . '-' . Str::random(5),
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
                     'email_verified_at' => now(),
