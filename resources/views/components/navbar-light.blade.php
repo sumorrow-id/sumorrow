@@ -18,7 +18,29 @@
         </div>
 
         <div class="hidden md:flex flex-1 justify-end">
-            <a href="{{ route('showLogin') }}" class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md transition hover:bg-[#105DA3] hover:shadow-lg hover:-translate-y-0.5">Log in</a>
+            @auth
+                <div class="relative group">
+                    <button class="flex items-center gap-3 focus:outline-none">
+                        <span class="text-sm font-medium text-[#1a2b4c]">{{ Auth::user()->username }}</span>
+                    </button>
+                    <!-- Simple dropdown for light navbar -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <div class="px-4 py-3 border-b border-gray-100">
+                            <p class="text-sm text-gray-500 whitespace-nowrap overflow-hidden text-ellipsis">{{ Auth::user()->email }}</p>
+                        </div>
+                        <div class="p-2">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                                    Log out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('showLogin') }}" class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md transition hover:bg-[#105DA3] hover:shadow-lg hover:-translate-y-0.5">Log in</a>
+            @endauth
         </div>
 
         <button id="hamburger-btn" class="md:hidden ml-auto text-[#1a2b4c] focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-[#094174]/10 transition">
@@ -34,7 +56,17 @@
             <a href="/" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Home</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Explore</a>
             <a href="#" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Community</a>
-            <a href="{{ route('showLogin') }}" class="mt-2 px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md hover:shadow-lg transition hover:bg-[#105DA3] mx-auto w-fit">Log in</a>
+            <div class="pt-4 border-t border-gray-200/60 flex flex-col gap-2">
+                @auth
+                    <p class="text-sm text-gray-500 mb-2">Logged in as {{ Auth::user()->username }}</p>
+                    <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                        @csrf
+                        <button type="submit" class="font-bold text-red-500 py-2 rounded-lg hover:bg-red-50 transition w-full">Log out</button>
+                    </form>
+                @else
+                    <a href="{{ route('showLogin') }}" class="mt-2 px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md hover:shadow-lg transition hover:bg-[#105DA3] mx-auto w-fit">Log in</a>
+                @endauth
+            </div>
         </div>
     </div>
 
