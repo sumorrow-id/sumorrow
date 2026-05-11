@@ -3,11 +3,6 @@
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-[#F8F9FA] px-4">
     <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
-        <!-- Icon -->
-        <div class="w-20 h-20 bg-[#094174]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i class="fa-regular fa-envelope-open text-3xl text-[#094174]"></i>
-        </div>
-
         <h2 class="text-2xl font-bold text-[#094174] mb-4">Verify Your Email</h2>
         
         <p class="text-gray-500 mb-8">
