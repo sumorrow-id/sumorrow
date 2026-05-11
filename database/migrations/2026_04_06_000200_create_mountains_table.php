@@ -32,9 +32,9 @@ return new class extends Migration {
             $table->index('elevation_masl');
         });
 
-        //  MYSQL DB Statement
         if (DB::getDriverName() === 'mysql') {
-            DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_name_fulltext (name), ADD FULLTEXT mountains_description_fulltext (description)');
+            DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_name_fulltext (name)');
+            DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_description_fulltext (description)');
         }
     }
 
