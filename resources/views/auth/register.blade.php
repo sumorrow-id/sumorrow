@@ -100,7 +100,7 @@
                     </button>
 
                     <p class="text-center text-sm text-gray-400 mt-8 font-medium">
-                        Already have an account? <a href="{{ route('login') }}" class="text-[#094174] font-bold hover:underline">Sign In</a>
+                        Already have an account? <a href="{{ route('showLogin') }}" class="text-[#094174] font-bold hover:underline">Sign In</a>
                     </p>
                 </form>
             </div>
