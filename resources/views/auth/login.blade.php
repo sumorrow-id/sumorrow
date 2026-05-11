@@ -33,7 +33,7 @@
                 <p class="text-gray-400 text-sm mb-10 text-center md:text-left font-medium">Ready for your next summit?</p>
 
                 <!-- Login Form -->
-                <form action="{{ route('login') }}" method="POST" class="space-y-6 mb-8">
+                <form action="{{ route('showLogin') }}" method="POST" class="space-y-6 mb-8">
                     @csrf
                     
                     @if (session('success'))
