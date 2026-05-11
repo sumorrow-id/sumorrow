@@ -12,6 +12,11 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -45,7 +50,7 @@ class LoginController extends Controller
             if (!$user) {
                 // Jika user belum ada di DB Sumorrow, buat baru sesuai ERD
                 $user = User::create([
-                    // 'id' => (string) Str::uuid(), 
+                    // 'id' => (string) Str::uuid(),
                     'username' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
