@@ -40,7 +40,7 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
             // Cari user berdasarkan email
             $user = User::where('google_id', $googleUser->id)
@@ -71,17 +71,13 @@ class LoginController extends Controller
             return redirect()->route('home');
 
         } catch (\Exception $e) {
-            echo "<h1>Error Terdeteksi:</h1>";
-            echo "<p>" . $e->getMessage() . "</p>";
-            dd($e);
-            // Jika ada error (misal koneksi atau user cancel)
-            // return redirect('/login')->with('error', 'Gagal login menggunakan Google: '. $e->getMessage());
+            return redirect('/login')->with('error', 'Gagal login menggunakan Google: ' . $e->getMessage());
         }
     }
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
     public function logout(Request $request)
