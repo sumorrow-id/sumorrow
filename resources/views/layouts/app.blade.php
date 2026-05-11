@@ -14,10 +14,16 @@
 <body
     class="bg-[#E7E7E7] antialiased font-sans text-gray-900 flex flex-col min-h-screen"
 >
-    <x-navbar />
+    @if (request()->is('/'))
+        <x-navbar />
+    @else
+        <x-navbar-light />
+    @endif
+
     <main class="flex-grow">
         @yield ('content')
     </main>
+
     <x-footer />
 </body>
 </html>
