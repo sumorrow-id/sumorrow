@@ -18,7 +18,7 @@
         </div>
 
         <div class="hidden md:flex flex-1 justify-end">
-            <a href="#" class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md transition hover:bg-[#105DA3] hover:shadow-lg hover:-translate-y-0.5">Log in</a>
+            <a href="{{ route('showLogin') }}" class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md transition hover:bg-[#105DA3] hover:shadow-lg hover:-translate-y-0.5">Log in</a>
         </div>
 
         <button id="hamburger-btn" class="md:hidden ml-auto text-[#1a2b4c] focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-[#094174]/10 transition">
@@ -34,7 +34,7 @@
             <a href="/" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Home</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Explore</a>
             <a href="#" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Community</a>
-            <a href="#" class="mt-2 px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md hover:shadow-lg transition hover:bg-[#105DA3] mx-auto w-fit">Log in</a>
+            <a href="{{ route('showLogin') }}" class="mt-2 px-8 py-3 bg-[#094174] text-white font-bold rounded-full shadow-md hover:shadow-lg transition hover:bg-[#105DA3] mx-auto w-fit">Log in</a>
         </div>
     </div>
 
