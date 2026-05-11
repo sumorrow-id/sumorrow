@@ -14,11 +14,11 @@
 <body
     class="bg-[#E7E7E7] antialiased font-sans text-gray-900 flex flex-col min-h-screen"
 >
-    @if (request()->is('/'))
+    {{-- @if (request()->routeIs('home') || request()->is('/'))
         <x-navbar />
-    @else
+    @else --}}
         <x-navbar-light />
-    @endif
+    {{-- @endif --}}
 
     <main class="flex-grow">
         @yield ('content')
