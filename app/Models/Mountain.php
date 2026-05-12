@@ -14,13 +14,17 @@ class Mountain extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'province_id',
         'name',
         'elevation_masl',
+        'length_km',
+        'elevation_gain_m',
         'coordinates',
         'description',
         'is_active',
         'closed_since',
         'difficulty',
+        'avg_rating',
     ];
 
     protected function casts(): array

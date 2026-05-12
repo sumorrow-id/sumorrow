@@ -26,7 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'google_id',
         'password_hash',
-        'email_verified_at',
+        'created_at',
         'avatar_url',
     ];
 
@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'created_at' => 'datetime',
             'password_hash' => 'hashed',
         ];
     }
@@ -50,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasVerifiedEmail()
     {
-        return ! is_null($this->email_verified_at) || ! is_null($this->google_id);
+        return ! is_null($this->created_at) || ! is_null($this->google_id);
     }
 
     public function ratings(): HasMany
