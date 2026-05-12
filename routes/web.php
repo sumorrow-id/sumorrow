@@ -16,7 +16,6 @@ Public Routes
 --------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
