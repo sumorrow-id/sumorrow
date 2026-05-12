@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -18,7 +19,6 @@ Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-
 
 /*
 --------------------------------------------------------------------------
@@ -48,6 +48,9 @@ Authenticated Routes (Logged In Users Only)
 Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     // Email Verification Configuration
     Route::prefix('email')->group(function () {
