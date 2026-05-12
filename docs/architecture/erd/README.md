@@ -17,14 +17,14 @@ MOUNTAIN {
   int province_id FK → PROVINCE.id
   string name
   int elevation_masl       -- absolute height of the peak
-  int length_km            -- distance from basecamp to the peak (route-specific)
+  float length_km          -- distance from basecamp to the peak (route-specific)
   int elevation_gain_m     -- elevation gain for this route
   string coordinates       -- coordinates of the peak itself
   text description
   boolean is_active        -- default false
   date closed_since        -- nullable
   enum difficulty          -- (easy, moderate, hard, strenuous)
-  float avg_rating         -- denormalized cache, updated on each rating
+  float avg_rating         -- denormalized cache, updated on each rating (default 0)
 }
 ```
 
@@ -53,6 +53,8 @@ BASECAMP {
 ```
 
 > Basecamp now stores only the entry-point name. All route metrics (length, elevation gain) are stored on the MOUNTAIN row itself.
+
+> ⚠️ **Model drift:** `App\Models\Basecamp::$fillable` currently lists `regency_id`, `base_elevation_masl`, `length_km`, `elevation_gain_m`, and `est_duration_minutes`, none of which exist in the `basecamps` table created by the migration. Likewise, `App\Models\Regency` and the `regencies` relations on `Province`/`Basecamp` reference a `regencies` table that has no migration. Either drop the unbacked fields/relations or add the migrations — see the code-review notes accompanying this update.
 
 ### MOUNTAIN_RATING
 ```
@@ -85,10 +87,11 @@ USER {
   uuid id PK
   string username UNIQUE
   string email UNIQUE
-  string password_hash
+  string google_id UNIQUE  -- nullable (set only for OAuth-linked accounts)
+  string password_hash     -- nullable (null for OAuth-only accounts)
   string avatar_url        -- nullable
+  timestamp email_verified_at  -- nullable (set when the email is verified or via OAuth)
   timestamp created_at
-  string google_id
   string remember_token
 }
 ```
@@ -184,12 +187,17 @@ POST_TAG {
 
 ### Nullable fields
 - USER.avatar_url → nullable: user may not have a profile photo
+- USER.google_id → nullable: only OAuth-linked accounts carry a Google subject id
+- USER.password_hash → nullable: OAuth-only accounts have no local password
+- USER.email_verified_at → nullable: null until the user clicks the verification link (OAuth flows set this on first login)
 - MOUNTAIN.closed_since → nullable: only set when the mountain is closed
 - MOUNTAIN_RATING.review → nullable: user may submit a score without a written review
 - POST_REPLY.parent_reply_id → nullable: null means it is a top-level reply directly under the post; a value means it is a nested reply to another reply
 
 ### Default values
 - MOUNTAIN.is_active → default false: mountains are assumed inactive unless stated otherwise
+- MOUNTAIN.avg_rating → default 0: no ratings yet
+- MOUNTAIN_IMAGE.is_cover → default false: only one image per mountain should be the cover
 
 ---
 
@@ -231,11 +239,14 @@ For keyword search functionality:
 ## Design Notes
 
 ### avg_rating maintenance strategy
-- MOUNTAIN.avg_rating is a denormalized cache — it does not auto-update. You need to keep it in sync using one of these approaches:
-  - **Database trigger:** automatically recalculate avg_rating on every INSERT, UPDATE, or DELETE on MOUNTAIN_RATING
+- MOUNTAIN.avg_rating is a denormalized cache. It is kept in sync via **database triggers** created in the `2026_04_06_000500_create_mountain_ratings_table` migration.
+- A driver-specific trigger fires AFTER INSERT/UPDATE/DELETE on MOUNTAIN_RATING and recomputes `AVG(score)` for the affected `mountain_id` (and the old `mountain_id` when the rating is re-pointed during UPDATE).
+- The score range (1–5) is enforced by a `CHECK` constraint on MySQL/PostgreSQL and by an equivalent `BEFORE INSERT/UPDATE` trigger on SQLite, where `ALTER TABLE ADD CONSTRAINT` is not supported.
 
 ### POST_REPLY depth limit
 - Cap at 2 levels deep (reply to post → reply to reply)
+- Enforced at the application layer in `App\Models\PostReply::booted()` (validates `parent_reply_id` belongs to the same post and is itself top-level).
+- A matching MySQL `BEFORE INSERT/UPDATE` trigger (`post_replies_depth_guard_*`) provides the same guard at the database layer for MySQL deployments. SQLite/PostgreSQL deployments rely only on the application-level guard.
 
 ### Multiple routes per mountain
 - Each distinct hiking route is stored as its own MOUNTAIN row

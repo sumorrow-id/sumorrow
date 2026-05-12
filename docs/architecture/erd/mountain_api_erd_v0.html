@@ -27,7 +27,7 @@
     int province_id FK
     string name
     int elevation_masl
-    int length_km
+    float length_km
     int elevation_gain_m
     string coordinates
     text description
@@ -69,11 +69,12 @@
     uuid id PK
     string username
     string email
+    string google_id
     string password_hash
     string avatar_url
-    string google_id
-    string remember_token
+    timestamp email_verified_at
     timestamp created_at
+    string remember_token
   }
   POST {
     int id PK
