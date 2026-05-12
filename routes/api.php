@@ -1,14 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::get('/check-verification', function (Request $request) {
-    return response()->json([
-        'verified' => $request->user() && $request->user()->hasVerifiedEmail()
-    ]);
-})->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UserController::class, 'show']);
+    Route::get('/check-verification', [UserController::class, 'checkVerification']);
+});

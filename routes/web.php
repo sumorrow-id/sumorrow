@@ -14,9 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 Public Routes
 --------------------------------------------------------------------------
 */
-Route::get('/', function() {
-    return redirect()->route('home');
-});
+Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
@@ -29,9 +27,7 @@ Guest Routes (Unauthenticated Users Only)
 */
 Route::middleware('guest')->group(function () {
     // Login
-    Route::get('/login', function () {
-        return view('auth.login');
-    })->name('login');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLogin');
     Route::post('/login', [LoginController::class, 'login']);
 
     // Register

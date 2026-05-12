@@ -12,6 +12,11 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -20,7 +25,7 @@ class LoginController extends Controller
         ]);
 
         $remember = $request->has('remember');
-        $user = User::where('email', $request->email)->first();
+        $user = User::query()->where('email', $request->email)->first();
 
         // Cek apakah user ada DAN passwordnya cocok
         if ($user && Hash::check($request->password, $user->password_hash)) {
@@ -38,14 +43,14 @@ class LoginController extends Controller
             $googleUser = Socialite::driver('google')->user();
 
             // Cari user berdasarkan email
-            $user = User::where('google_id', $googleUser->id)
+            $user = User::query()->where('google_id', $googleUser->id)
                         ->orWhere('email', $googleUser->email)
                         ->first();
 
             if (!$user) {
                 // Jika user belum ada di DB Sumorrow, buat baru sesuai ERD
                 $user = User::create([
-                    // 'id' => (string) Str::uuid(), 
+                    // 'id' => (string) Str::uuid(),
                     'username' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
@@ -66,11 +71,7 @@ class LoginController extends Controller
             return redirect()->route('home');
 
         } catch (\Exception $e) {
-            echo "<h1>Error Terdeteksi:</h1>";
-            echo "<p>" . $e->getMessage() . "</p>";
-            dd($e);
-            // Jika ada error (misal koneksi atau user cancel)
-            // return redirect('/login')->with('error', 'Gagal login menggunakan Google: '. $e->getMessage());
+            return redirect('/login')->with('error', 'Gagal login menggunakan Google: ' . $e->getMessage());
         }
     }
 

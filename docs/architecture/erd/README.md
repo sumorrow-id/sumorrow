@@ -88,6 +88,8 @@ USER {
   string password_hash
   string avatar_url        -- nullable
   timestamp created_at
+  string google_id
+  string remember_token
 }
 ```
 
