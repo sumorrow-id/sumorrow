@@ -1,0 +1,225 @@
+{
+  "info": {
+    "name": "Sumorrow API v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000/api/v1" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has token', () => pm.expect(json.token).to.be.a('string'));",
+                  "pm.collectionVariables.set('token', json.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"henrychristian.test@gmail.com\",\n  \"password\": \"henrychristian.test@gmail.com\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provinces",
+      "item": [
+        {
+          "name": "List provinces",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has data array', () => pm.expect(json.data).to.be.an('array'));",
+                  "pm.collectionVariables.set('province_id', json.data[0]?.id ?? '');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/provinces", "host": ["{{base_url}}"], "path": ["provinces"] }
+          }
+        },
+        {
+          "name": "Show province",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/provinces/{{province_id}}", "host": ["{{base_url}}"], "path": ["provinces", "{{province_id}}"] }
+          }
+        },
+        {
+          "name": "Province mountains",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/provinces/{{province_id}}/mountains", "host": ["{{base_url}}"], "path": ["provinces", "{{province_id}}", "mountains"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mountains",
+      "item": [
+        {
+          "name": "List mountains",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Response has data array', () => pm.expect(json.data).to.be.an('array'));",
+                  "pm.collectionVariables.set('mountain_id', json.data[0]?.id ?? '');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/mountains", "host": ["{{base_url}}"], "path": ["mountains"] }
+          }
+        },
+        {
+          "name": "Show mountain",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/mountains/{{mountain_id}}", "host": ["{{base_url}}"], "path": ["mountains", "{{mountain_id}}"] }
+          }
+        },
+        {
+          "name": "Mountain images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/mountains/{{mountain_id}}/images", "host": ["{{base_url}}"], "path": ["mountains", "{{mountain_id}}", "images"] }
+          }
+        },
+        {
+          "name": "Mountain basecamps",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/mountains/{{mountain_id}}/basecamps", "host": ["{{base_url}}"], "path": ["mountains", "{{mountain_id}}", "basecamps"] }
+          }
+        },
+        {
+          "name": "Mountain ratings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/mountains/{{mountain_id}}/ratings", "host": ["{{base_url}}"], "path": ["mountains", "{{mountain_id}}", "ratings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth context",
+      "item": [
+        {
+          "name": "Get current user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/user", "host": ["{{base_url}}"], "path": ["user"] }
+          }
+        }
+      ]
+    }
+  ]
+}

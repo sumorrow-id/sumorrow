@@ -5,7 +5,23 @@ use App\Http\Controllers\Api\V1\BasecampController;
 use App\Http\Controllers\Api\V1\MountainController;
 use App\Http\Controllers\Api\V1\ProvinceController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/v1/login', function (Request $request) {
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Invalid credentials.', 'status' => 401], 401);
+    }
+
+    $token = $request->user()->createToken('api-token')->plainTextToken;
+
+    return response()->json(['token' => $token, 'status' => 200]);
+});
 
 Route::prefix('v1')
     ->middleware(['auth:sanctum', 'throttle:api'])
