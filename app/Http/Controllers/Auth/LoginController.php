@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Auth;
 use App\Contracts\SocialAuthInterface;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Socialite\Facades\Socialite;
 use Exception;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Http\Request;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 
 class LoginController extends Controller
 {
     public function __construct(
-        protected SocialAuthInterface $socialAuth
+        protected SocialAuthInterface $socialAuth,
+        protected AuthManager $auth,
+        protected Hasher $hasher,
+        protected SocialiteFactory $socialite,
     ) {}
 
     public function showLoginForm()
@@ -32,9 +35,8 @@ class LoginController extends Controller
         $remember = $request->has('remember');
         $user = User::query()->where('email', $request->email)->first();
 
-        // Cek apakah user ada DAN passwordnya cocok
-        if ($user && Hash::check($request->password, $user->password_hash)) {
-            Auth::login($user, $remember);
+        if ($user && $this->hasher->check($request->password, $user->password_hash)) {
+            $this->auth->login($user, $remember);
             $request->session()->regenerate();
             return redirect()->route('home');
         }
@@ -45,9 +47,9 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = $this->socialite->driver('google')->user();
             $user = $this->socialAuth->findOrCreateUser($googleUser);
-            Auth::login($user, true);
+            $this->auth->login($user, true);
             return redirect()->route('home');
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Gagal login menggunakan Google: ' . $e->getMessage());
@@ -56,12 +58,12 @@ class LoginController extends Controller
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return $this->socialite->driver('google')->redirect();
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        $this->auth->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

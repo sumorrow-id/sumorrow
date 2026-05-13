@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\MountainImage;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
+use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Str;
 
 class DownloadMountainImages extends Command
@@ -15,6 +15,13 @@ class DownloadMountainImages extends Command
                             {--delay=500 : Delay in milliseconds between each request}';
 
     protected $description = 'Download mountain images from external URLs and save to storage disk';
+
+    public function __construct(
+        private HttpFactory $http,
+        private FilesystemFactory $storage,
+    ) {
+        parent::__construct();
+    }
 
     public function handle(): int
     {
@@ -41,7 +48,7 @@ class DownloadMountainImages extends Command
 
         foreach ($images as $image) {
             try {
-                $response = Http::withoutVerifying()
+                $response = $this->http->withoutVerifying()
                     ->withHeaders([
                         'User-Agent' => config('app.name') . '/1.0 (mountain-image-downloader)',
                     ])->timeout(30)->get($image->getRawOriginal('image_url'));
@@ -61,8 +68,7 @@ class DownloadMountainImages extends Command
                 $slug = Str::slug($image->mountain->name);
                 $path = "mountains/{$slug}-{$image->position}.{$ext}";
 
-                Storage::disk($disk)->put($path, $response->body());
-                // Only update image_url; source_url stays as the permanent fallback
+                $this->storage->disk($disk)->put($path, $response->body());
                 $image->updateQuietly(['image_url' => $path]);
 
                 $success++;
