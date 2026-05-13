@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class MountainImage extends Model
 {
@@ -17,6 +19,7 @@ class MountainImage extends Model
     protected $fillable = [
         'mountain_id',
         'image_url',
+        'source_url',
         'position',
         'is_cover',
         'uploaded_at',
@@ -28,6 +31,24 @@ class MountainImage extends Model
             'is_cover' => 'boolean',
             'uploaded_at' => 'datetime',
         ];
+    }
+
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (!$value) {
+                    return $this->source_url;
+                }
+                if (str_starts_with($value, 'http')) {
+                    return $value;
+                }
+                if (Storage::exists($value)) {
+                    return Storage::url($value);
+                }
+                return $this->source_url;
+            },
+        );
     }
 
     public function mountain(): BelongsTo
