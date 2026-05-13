@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 
 class MountainImage extends Model
 {
@@ -43,8 +43,9 @@ class MountainImage extends Model
                 if (str_starts_with($value, 'http')) {
                     return $value;
                 }
-                if (Storage::exists($value)) {
-                    return Storage::url($value);
+                $filesystem = app(FilesystemFactory::class)->disk('public');
+                if ($filesystem->exists($value)) {
+                    return asset('storage/' . $value);
                 }
                 return $this->source_url;
             },
