@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\SocialAuthInterface;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use Exception;
 
 class LoginController extends Controller
 {
+    public function __construct(
+        protected SocialAuthInterface $socialAuth
+    ) {}
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -41,36 +46,10 @@ class LoginController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-
-            // Cari user berdasarkan email
-            $user = User::query()->where('google_id', $googleUser->id)
-                        ->orWhere('email', $googleUser->email)
-                        ->first();
-
-            if (!$user) {
-                // Jika user belum ada di DB Sumorrow, buat baru sesuai ERD
-                $user = User::create([
-                    // 'id' => (string) Str::uuid(),
-                    'username' => $googleUser->name,
-                    'email' => $googleUser->email,
-                    'google_id' => $googleUser->id,
-                    'email_verified_at' => now(),
-                    'password_hash' => null,
-                    'avatar_url' => $googleUser->getAvatar(),
-                ]);
-            } else {
-                // Jika sudah ada
-                $user->update([
-                    'google_id' => $googleUser->id,
-                    'avatar_url' => $googleUser->getAvatar(),
-                    'email_verified_at' => $user->email_verified_at ?? now(),
-                ]);
-            }
-
+            $user = $this->socialAuth->findOrCreateUser($googleUser);
             Auth::login($user, true);
             return redirect()->route('home');
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect('/login')->with('error', 'Gagal login menggunakan Google: ' . $e->getMessage());
         }
     }
