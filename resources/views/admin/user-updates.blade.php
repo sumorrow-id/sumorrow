@@ -42,7 +42,7 @@
             <tbody class="divide-y divide-morning-mist">
                 @forelse ($recentUsers as $user)
                     <tr>
-                        <td class="px-8 py-6 text-sm font-bold text-deep-midnight">{{ $user->name }}</td>
+                        <td class="px-8 py-6 text-sm font-bold text-deep-midnight">{{ $user->username }}</td>
                         <td class="px-8 py-6 text-sm text-lithic-blue">{{ $user->email }}</td>
                         <td class="px-8 py-6">
                             <span class="px-3 py-1 text-[10px] font-bold bg-sky-oxygen/20 text-summit-blue rounded-full uppercase">
