@@ -9,6 +9,7 @@ use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AdminController;
 
 /*
 --------------------------------------------------------------------------
@@ -38,7 +39,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
 });
 
-
 /*
 --------------------------------------------------------------------------
 Authenticated Routes (Logged In Users Only)
@@ -66,5 +66,13 @@ Route::middleware('auth')->group(function () {
             $request->user()->sendEmailVerificationNotification();
             return back()->with('message', 'Verification link sent!');
         })->middleware('throttle:6,1')->name('verification.send');
+    });
+
+    // Admin route
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/forum-moderation', [AdminController::class, 'forumModeration'])->name('admin.forum-moderation');
+        Route::get('/user-updates', [AdminController::class, 'userUpdates'])->name('admin.user-updates');
+        Route::get('/mountain-data', [AdminController::class, 'mountainData'])->name('admin.mountain-data');
     });
 });
