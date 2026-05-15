@@ -12,7 +12,11 @@ class AdminController extends Controller
     public function dashboard()
     {
         $recentUsers = User::orderBy('created_at', 'desc')->take(5)->get();
-        return view('admin.dashboard', compact('recentUsers'));
+        $newUsersCount = User::where('created_at', '>=', now()->subDays(7))->count();
+        $forumPostsCount = Post::count();
+        $recentPosts = Post::with('author')->latest()->take(5)->get();
+        
+        return view('admin.dashboard', compact('recentUsers', 'newUsersCount', 'forumPostsCount', 'recentPosts'));
     }
 
     public function forumModeration()

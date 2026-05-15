@@ -38,6 +38,11 @@ class LoginController extends Controller
         if ($user && $this->hasher->check($request->password, $user->password_hash)) {
             $this->auth->login($user, $remember);
             $request->session()->regenerate();
+            
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+            
             return redirect()->route('home');
         }
 
@@ -50,6 +55,11 @@ class LoginController extends Controller
             $googleUser = $this->socialite->driver('google')->user();
             $user = $this->socialAuth->findOrCreateUser($googleUser);
             $this->auth->login($user, true);
+            
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+            
             return redirect()->route('home');
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Gagal login menggunakan Google: ' . $e->getMessage());

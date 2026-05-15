@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Admin route
-    Route::prefix('admin')->group(function () {
+    Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/forum-moderation', [AdminController::class, 'forumModeration'])->name('admin.forum-moderation');
         Route::get('/user-updates', [AdminController::class, 'userUpdates'])->name('admin.user-updates');

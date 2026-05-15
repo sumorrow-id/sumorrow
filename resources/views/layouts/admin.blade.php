@@ -103,11 +103,11 @@
             <div class="p-4 border-t border-morning-mist pb-6 mb-safe">
                 <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-morning-mist/30 transition-colors cursor-pointer">
                     <div class="w-10 h-10 rounded-full bg-summit-blue flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                        A
+                        {{ strtoupper(substr(Auth::user()->username ?? 'A', 0, 1)) }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-bold text-deep-midnight truncate">Administrator</p>
-                        <p class="text-xs text-blue-bird truncate">admin@sumorrow.id</p>
+                        <p class="text-sm font-bold text-deep-midnight truncate">{{ Auth::user()->username ?? 'Administrator' }}</p>
+                        <p class="text-xs text-blue-bird truncate">{{ Auth::user()->email ?? 'admin@sumorrow.id' }}</p>
                     </div>
                 </div>
             </div>
@@ -130,12 +130,15 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <a href="#" class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-morning-mist/20 text-sm font-bold text-summit-blue hover:bg-summit-blue hover:text-white transition-all duration-300 shadow-sm active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Logout
-                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-morning-mist/20 text-sm font-bold text-summit-blue hover:bg-summit-blue hover:text-white transition-all duration-300 shadow-sm active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </header>
 
