@@ -30,4 +30,11 @@ class UserFactory extends Factory
             'avatar_url' => null,
         ];
     }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
 }
