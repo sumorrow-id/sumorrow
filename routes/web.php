@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 --------------------------------------------------------------------------
@@ -19,6 +19,14 @@ Public Routes
 Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+
+Route::get('/api/docs', function () {
+    if (! Auth::check()) {
+        return redirect('/home')->with('warning', 'You need to register or log in first to access the API documentation.');
+    }
+
+    return view('api.docs');
+})->name('api.docs');
 
 /*
 --------------------------------------------------------------------------
@@ -59,11 +67,13 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
             $request->fulfill();
+
             return redirect()->route('home')->with('verified', true);
         })->middleware('signed')->name('verification.verify');
 
         Route::post('/verification-notification', function (Request $request) {
             $request->user()->sendEmailVerificationNotification();
+
             return back()->with('message', 'Verification link sent!');
         })->middleware('throttle:6,1')->name('verification.send');
     });

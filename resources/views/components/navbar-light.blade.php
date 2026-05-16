@@ -25,9 +25,9 @@
                     </button>
                     <!-- Simple dropdown for light navbar -->
                     <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                        <div class="px-4 py-3 border-b border-gray-100">
+                        <a href="{{ route('profile') }}" class="block px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors">
                             <p class="text-sm text-gray-500 whitespace-nowrap overflow-hidden text-ellipsis">{{ Auth::user()->email }}</p>
-                        </div>
+                        </a>
                         <div class="p-2">
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf

@@ -39,7 +39,7 @@
 
                     <div
                         class="absolute right-0 mt-2 w-48 bg-[#1A1A1A] border border-white/20 rounded-xl shadow-xl py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <a href="{{ route('home') }}"
+                        <a href="{{ route('profile') }}"
                             class="block px-4 py-2 text-sm text-white hover:bg-[#094174]/20">Profile</a>
                         <hr class="border-white/10 my-1">
                         <form action="{{ route('logout') }}" method="POST">
@@ -78,7 +78,7 @@
             <div class="pt-4 border-t border-white/10">
                 @auth
                     <p class="text-sm mb-2 text-gray-400">Logged in as {{ Auth::user()->username }}</p>
-                    <a href="{{ route('home') }}" class="block py-2 font-semibold text-white">Profile</a>
+                    <a href="{{ route('profile') }}" class="block py-2 font-semibold text-white">Profile</a>
                     <form action="{{ route('logout') }}" method="POST" class="mt-2">
                         @csrf
                         <button type="submit" class="text-red-400 font-bold">Log out</button>
