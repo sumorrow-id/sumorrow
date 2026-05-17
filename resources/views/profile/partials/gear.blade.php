@@ -1,5 +1,5 @@
 <div class="mt-8">
-    <div class="bg-gradient-to-br from-[#E6EEF8] to-[#EBF2FA] rounded-3xl p-8 relative overflow-hidden mb-8 shadow-sm">
+    <div class="bg-linear-to-br from-[#E6EEF8] to-[#EBF2FA] rounded-3xl p-8 relative overflow-hidden mb-8 shadow-sm">
         <div class="absolute -top-10 -right-10 opacity-5 w-80 h-80 pointer-events-none">
             <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-[#1E40AF]">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
@@ -63,7 +63,7 @@
                             <!-- TODO BACKEND: Nama item dinamis -->
                             <h4 class="text-[14px] font-bold text-[#0F172A] leading-tight">Carrier 60L Pro</h4>
                             <!-- TODO BACKEND: Desckripsi item dinamis -->
-                            <p class="text-[11px] text-[#94A3B8] mt-0.5 max-w-[200px] truncate sm:max-w-none">Expedition Grade High-Capacity Pack</p>
+                            <p class="text-[11px] text-[#94A3B8] mt-0.5 max-w-50 truncate sm:max-w-none">Expedition Grade High-Capacity Pack</p>
                         </div>
                     </div>
 
@@ -87,9 +87,9 @@
                 <!-- TODO BACKEND: END LOOP tab pane -->
             </div>
 
-            <div class="mt-6 rounded-[24px] overflow-hidden relative h-48 group shadow-sm">
+            <div class="mt-6 rounded-3xl overflow-hidden relative h-48 group shadow-sm">
                 <img src="https://images.unsplash.com/photo-1506509536894-386f671bb572?q=80&w=800&fit=crop" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 max-w-sm">
                     <h3 class="text-white text-[22px] font-light tracking-wide mb-1">Your Gear, Your Legacy.</h3>
                     <p class="text-white/70 text-[11px] font-light leading-relaxed">Every gram counts when you're reaching for the clouds.<br>Keep your pack lean and your legs strong.</p>
@@ -99,7 +99,7 @@
 
         <div class="flex flex-col gap-6 mt-8 xl:mt-0">
 
-            <div class="bg-[#E5E6FF] rounded-[24px] p-6 shadow-sm">
+            <div class="bg-[#E5E6FF] rounded-3xl p-6 shadow-sm">
                 <h3 class="font-bold text-[#0F172A] text-[15px] mb-5">Weight Breakdown</h3>
                 <ul class="space-y-3.5">
                     <!-- TODO BACKEND: Loop jenis kategori berat (misal: foreach($weightBreakdowns as $breakdown)) -->
@@ -121,7 +121,7 @@
                 </div>
             </div>
 
-            <div class="bg-[#0A1F2D] rounded-[24px] p-6 relative overflow-hidden shadow-sm">
+            <div class="bg-[#0A1F2D] rounded-3xl p-6 relative overflow-hidden shadow-sm">
                 <div class="absolute -right-6 -top-6 opacity-10">
                     <svg viewBox="0 0 24 24" fill="currentColor" class="w-32 h-32 text-white"><path d="M14 6l-4 4 4 4m-8-8l4 4-4 4"/></svg>
                 </div>
@@ -140,13 +140,13 @@
                                 <p class="text-[8px] sm:text-[9px] text-white/50 truncate">Critical for scree slopes</p>
                             </div>
                         </div>
-                        <span class="text-white/30 text-xs shrink-0">›</span>
+                        <span class="text-white/30 text-xs shrink-0">&#62;</span>
                     </div>
                     <!-- TODO BACKEND: END LOOP missing safety gear -->
                 </div>
 
                 <div class="mt-5 relative z-10">
-                    <button class="w-full bg-[#FF8E5E] hover:bg-[#E57B43] text-white text-[13px] font-bold py-3 rounded-[12px] transition shadow-md">
+                    <button class="w-full bg-[#FF8E5E] hover:bg-[#E57B43] text-white text-[13px] font-bold py-3 rounded-xl transition shadow-md">
                         View Full Safety Checklist
                     </button>
                 </div>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="pt-32 bg-[#F8F9FA] min-h-screen">
-        <div class="w-[95%] max-w-[1400px] mx-auto pb-20">
+        <div class="w-[95%] max-w-350 mx-auto pb-20">
 
             {{-- Hero --}}
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12 mb-8">
@@ -389,26 +389,26 @@
                         </p>
                         <ul class="flex flex-col gap-2 text-sm text-[#1a2b4c]">
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span><span
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span><span
                                         class="font-mono font-semibold">POST /mountains/{id}/ratings</span> &mdash; submit
                                     a rating</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span><span
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span><span
                                         class="font-mono font-semibold">POST / PATCH / DELETE
                                         /mountains/{id}/comments</span> &mdash; comment lifecycle</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span>Forum
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Forum
                                     endpoints &mdash; <span class="font-mono">/posts</span>, replies</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span>User
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>User
                                     endpoints &mdash; <span class="font-mono">/auth/register</span>, <span
                                         class="font-mono">/auth/login</span>, <span
                                         class="font-mono">/users/me</span></span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span>Administrative
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Administrative
                                     region drilldown &mdash; regencies, districts, villages</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] flex-shrink-0"></span><span>Personal
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Personal
                                     access token issuance &mdash; <span class="font-mono">POST
                                         /api/v1/auth/tokens</span></span></li>
                         </ul>

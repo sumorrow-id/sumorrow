@@ -4,7 +4,7 @@
             <a href="/">
                 <img src="{{ asset('images/logo/SUMORROW-LOGO-BLACK.png') }}" alt="Sumorrow Logo" class="h-12 w-auto" />
             </a>
-            <p class="text-gray-500 text-sm leading-relaxed max-w-[185px]">Connecting the spirit of adventure with
+            <p class="text-gray-500 text-sm leading-relaxed max-w-46.25">Connecting the spirit of adventure with
                 Indonesia's highest peaks and archipelago's majestic peaks</p>
         </div>
 

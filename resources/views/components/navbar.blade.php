@@ -1,5 +1,5 @@
 <nav
-    class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-[1400px] rounded-2xl z-50 flex flex-col bg-[#1A1A1A]/80 border border-white/20 px-6 py-4 text-white backdrop-blur-md shadow-lg transition-all duration-300">
+    class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-350 rounded-2xl z-50 flex flex-col bg-[#1A1A1A]/80 border border-white/20 px-6 py-4 text-white backdrop-blur-md shadow-lg transition-all duration-300">
     <div class="flex flex-row justify-between items-center w-full relative">
         <div class="hidden md:flex flex-1 text-l font-bold gap-2">
             <a href="/"

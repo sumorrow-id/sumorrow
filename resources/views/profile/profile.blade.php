@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="w-[95%] max-w-[1400px] mx-auto pt-32 pb-8">
+    <div class="w-[95%] max-w-350 mx-auto pt-32 pb-8">
 
         <div class="mb-6 pb-0">
             <div class="h-64 sm:h-80 w-full relative rounded-3xl overflow-hidden shadow-sm">
                 <!-- TODO BACKEND: Ganti src dengan URL cover image dari user (misal:  {$user->cover_image_url }) -->
                 <img src="{{ asset('images/cover-kucing.jpg') }}" alt="Cover Kucing" class="w-full h-full object-cover">
 
-                <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/70 to-transparent"></div>
 
                 <div class="absolute bottom-4 sm:bottom-6 left-4 md:left-56 right-4 sm:right-auto flex justify-start z-10 overflow-visible">
                     <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 pl-32 md:pl-0 pr-2">
@@ -30,13 +30,13 @@
 
             <div class="relative px-4 sm:px-8 pt-4 pb-6">
                 <div class="absolute -top-16 md:-top-20 left-4 md:left-8 z-20">
-                    <div class="w-28 h-28 md:w-44 md:h-44 rounded-full border-[4px] md:border-[6px] border-[#E7E7E7] overflow-hidden bg-gray-200">
+                    <div class="w-28 h-28 md:w-44 md:h-44 rounded-full border-4 md:border-[6px] border-[#E7E7E7] overflow-hidden bg-gray-200">
                         <!-- TODO BACKEND: Ganti src dengan URL foto profil/avatar dari user (misal: { $user->avatar_url }) -->
                         <img src="{{ asset('images/avatar-rosita.jpg') }}" alt="Rosita Puspita" class="w-full h-full object-cover">
                     </div>
                 </div>
 
-                <div class="ml-0 md:ml-[200px] mt-16 md:mt-2">
+                <div class="ml-0 md:ml-50 mt-16 md:mt-2">
                     <div class="flex gap-8 text-sm mt-2">
                         <div class="flex items-center gap-2">
                             <img src="{{ asset('images/profile/post.png') }}" alt="Post Icon" class="w-6 h-6 object-contain">

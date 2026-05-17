@@ -1,4 +1,4 @@
-<nav class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-[1400px] rounded-2xl z-50 flex flex-col bg-white/85 border border-white/60 px-6 py-4 text-[#1a2b4c] backdrop-blur-xl shadow-lg shadow-gray-200/50 transition-all duration-300">
+<nav class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-350 rounded-2xl z-50 flex flex-col bg-white/85 border border-white/60 px-6 py-4 text-[#1a2b4c] backdrop-blur-xl shadow-lg shadow-gray-200/50 transition-all duration-300">
     <div class="flex flex-row justify-between items-center w-full relative">
 
         <div class="hidden md:flex flex-1 text-l font-bold gap-2">

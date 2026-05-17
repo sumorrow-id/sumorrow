@@ -30,10 +30,10 @@
                 <!-- Kita gunakan grid-cols-2 untuk HP, dan grid-cols-4 untuk ukuran iPad/Desktop agar gambar responsive/fleksibel dan tidak bocor -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 w-full xl:w-[70%]">
                     <!-- TODO BACKEND: Looping max 4 gambar dipasang disini -->
-                    <img src="https://images.unsplash.com/photo-1542220152-36c84c4e7235?q=80&w=300&fit=crop" alt="Mt Semeru 1" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=300&fit=crop" alt="Mt Semeru 2" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=300&fit=crop" alt="Mt Semeru 3" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1542220152-36c84c4e7235?q=80&w=300&fit=crop" alt="Mt Semeru 1" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=300&fit=crop" alt="Mt Semeru 2" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=300&fit=crop" alt="Mt Semeru 3" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <div class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
                         <img src="https://images.unsplash.com/photo-1522079184545-d8cf01b1cb91?q=80&w=300&fit=crop" alt="Mt Semeru 4" class="w-full h-full object-cover">
                         <!-- TODO BACKEND: Logika penjumlahan sisa gambar dimunculkan disini (misal +12) -->
                         <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">+12</div>
@@ -69,10 +69,10 @@
                 <!-- Kita gunakan grid-cols-2 untuk HP, dan grid-cols-4 untuk ukuran iPad/Desktop agar gambar responsive/fleksibel dan tidak bocor -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 w-full xl:w-[70%]">
                     <!-- TODO BACKEND: Looping max 4 gambar dipasang disini -->
-                    <img src="https://images.unsplash.com/photo-1542281286-9e0a16bb7366?q=80&w=300&fit=crop" alt="Mt Merapi 1" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1600298882283-40b4dcb8b211?q=80&w=300&fit=crop" alt="Mt Merapi 2" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1516900448138-898720b93707?q=80&w=300&fit=crop" alt="Mt Merapi 3" class="w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <div class="relative w-full aspect-[4/3] sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
+                    <img src="https://images.unsplash.com/photo-1542281286-9e0a16bb7366?q=80&w=300&fit=crop" alt="Mt Merapi 1" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <img src="https://images.unsplash.com/photo-1600298882283-40b4dcb8b211?q=80&w=300&fit=crop" alt="Mt Merapi 2" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <img src="https://images.unsplash.com/photo-1516900448138-898720b93707?q=80&w=300&fit=crop" alt="Mt Merapi 3" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                    <div class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
                         <img src="https://images.unsplash.com/photo-1628126235206-5260b9ea6441?q=80&w=300&fit=crop" alt="Mt Merapi 4" class="w-full h-full object-cover">
                         <!-- TODO BACKEND: Logika penjumlahan sisa gambar dimunculkan disini (misal +3) -->
                         <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">+3</div>
@@ -93,7 +93,7 @@
                 <span class="bg-gray-100 text-gray-500 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md">Recent</span>
             </div>
 
-            <div class="flex-grow flex flex-col gap-5">
+            <div class="grow flex flex-col gap-5">
                 <!-- Person 1 -->
                 <div class="flex items-center justify-between group cursor-pointer">
                     <div class="flex items-center gap-3">
