@@ -13,7 +13,7 @@
     
     <div class="pt-32 pb-20 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
         
-        <div class="w-[95%] max-w-6xl bg-white rounded-[1rem] shadow-xl overflow-hidden flex flex-col md:flex-row min-h-[600px] border border-gray-100">
+        <div class="w-[95%] max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row min-h-150 border border-gray-100">
             
             <!-- Left Side: Image Section (Sama dengan Login) -->
             <div class="hidden md:block md:w-1/2 relative">

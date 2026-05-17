@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="pt-32 bg-[#F8F9FA] min-h-screen">
-        <form id="explore-form" method="GET" action="{{ route('explore') }}" class="w-[95%] max-w-[1400px] mx-auto pb-20 flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-            <div id="filter-backdrop" class="fixed inset-0 bg-black/50 z-[90] hidden lg:hidden"></div>
+        <form id="explore-form" method="GET" action="{{ route('explore') }}" class="w-[95%] max-w-350 mx-auto pb-20 flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
+            <div id="filter-backdrop" class="fixed inset-0 bg-black/50 z-90 hidden lg:hidden"></div>
 
             <aside id="filter-drawer"
-                class="fixed inset-y-0 right-0 z-[100] w-80 bg-white shadow-2xl p-6 transform pl-8 translate-x-full transition-transform duration-300 overflow-y-auto lg:relative lg:translate-x-0 lg:shadow-none lg:p-0 lg:bg-transparent lg:z-auto lg:w-64 lg:flex lg:flex-col lg:gap-5 lg:sticky lg:top-32 lg:h-fit lg:overflow-y-visible lg:flex-shrink-0 lg:pl-2">
+                class="fixed inset-y-0 right-0 z-100 w-80 bg-white shadow-2xl p-6 transform pl-8 translate-x-full transition-transform duration-300 overflow-y-auto lg:sticky lg:translate-x-0 lg:shadow-none lg:p-0 lg:bg-transparent lg:z-auto lg:w-64 lg:flex lg:flex-col lg:gap-5 lg:top-32 lg:h-fit lg:overflow-y-visible lg:shrink-0 lg:pl-2">
 
                 <div class="flex items-center justify-between lg:justify-start gap-2 mb-6 lg:mb-0">
                     <div class="flex items-center gap-2 lg:hidden">
@@ -74,7 +74,7 @@
                             class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 w-full text-sm text-[#1a2b4c] placeholder-gray-500 font-medium" />
                         <button type="submit" class="hidden">Search</button>
                     </div>
-                    <button type="button" id="mobile-filter-btn" class="lg:hidden flex items-center justify-center bg-gray-200/60 text-gray-500 rounded-full w-[44px] h-[44px] flex-shrink-0 hover:bg-gray-300/60 transition">
+                    <button type="button" id="mobile-filter-btn" class="lg:hidden flex items-center justify-center bg-gray-200/60 text-gray-500 rounded-full w-11 h-11 shrink-0 hover:bg-gray-300/60 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
@@ -91,7 +91,7 @@
                             <img src="{{ $finalImage }}" alt="{{ $mountain->name }}"
                                 class="w-full h-56 object-cover rounded-2xl" />
 
-                            <div class="pt-5 pb-2 px-2 flex flex-col flex-grow">
+                            <div class="pt-5 pb-2 px-2 flex flex-col grow">
                                 <h3 class="font-bold text-xl text-[#1a2b4c] mb-1">
                                     {{ $mountain->name }}
                                 </h3>

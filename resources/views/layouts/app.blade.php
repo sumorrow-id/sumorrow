@@ -24,9 +24,9 @@
         <div
             id="flash-warning"
             role="alert"
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-[60] w-[92%] max-w-md bg-white border border-amber-200 rounded-2xl shadow-lg shadow-amber-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
+            class="fixed top-24 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-amber-200 rounded-2xl shadow-lg shadow-amber-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
         >
-            <div class="flex-shrink-0 w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+            <div class="shrink-0 w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008zM10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                 </svg>
@@ -43,7 +43,7 @@
                 type="button"
                 onclick="document.getElementById('flash-warning').remove()"
                 aria-label="Dismiss"
-                class="flex-shrink-0 text-gray-400 hover:text-[#1a2b4c] transition"
+                class="shrink-0 text-gray-400 hover:text-[#1a2b4c] transition"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -60,7 +60,7 @@
         </script>
     @endif
 
-    <main class="flex-grow">
+    <main class="grow">
         @yield ('content')
     </main>
 
