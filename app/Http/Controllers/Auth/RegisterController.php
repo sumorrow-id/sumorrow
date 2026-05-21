@@ -29,10 +29,18 @@ class RegisterController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        $words = explode(' ', trim($request->username));
+        $initials = strtoupper(substr($words[0], 0, 1));
+        if (count($words) > 1) {
+            $initials .= strtoupper(substr($words[1], 0, 1));
+        }
+        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($initials) . '&background=random';
+
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
             'password_hash' => $this->hasher->make($request->password),
+            'avatar_url' => $avatarUrl,
         ]);
 
         event(new Registered($user));
