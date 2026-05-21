@@ -21,7 +21,7 @@
                                 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wide drop-shadow-md leading-tight line-clamp-2">
                                 {{ Auth::user()->username }}</h1>
 
-                            @if(Auth::user()->hasVerifiedEmail())
+                            @if(Auth::user()->email_verified_at)
                                 <img src="{{ asset('images/profile/verified.png') }}" alt="Verified"
                                     class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 drop-shadow-sm shrink-0">
                             @endif
