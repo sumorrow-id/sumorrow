@@ -10,7 +10,19 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     public function index(){
-        return view('profile.profile');
+        $user = Auth::user();
+        
+        $posts = $user->posts()
+            ->with(['mountain', 'images' => function ($query) {
+                $query->orderBy('position', 'asc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $gears = $user->gears()->orderBy('category')->get();
+        $achievements = $user->achievements()->orderByPivot('unlocked_at', 'desc')->get();
+
+        return view('profile.profile', compact('posts', 'gears', 'achievements', 'user'));
     }
 
     public function edit() {

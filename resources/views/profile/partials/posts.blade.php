@@ -6,83 +6,51 @@
             <a href="#" class="text-sm font-bold text-[#2A5C9A] hover:underline">View All Activities</a>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col justify-between">
+        @forelse($posts as $post)
+            <div class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col justify-between">
 
-            <div class="mb-6">
-                <div>
-                    <div class="flex items-center justify-between gap-3 w-3/4">
-                        <!-- TODO BACKEND: Ganti dengan Nama Gunung -->
-                        <h3 class="text-[22px] font-bold text-[#0F172A]">Mt. Semeru</h3>
-                        <!-- TODO BACKEND: Ganti dengan Tipe Ekspedisi (cth: 2D Expedition) -->
-                        <span class="bg-[#BDE0FE] text-[#1E40AF] text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap">2D Expedition</span>
-                    </div>
-                    <!-- TODO BACKEND: Ganti dengan Lokasi Gunung dan Tanggal Pendakian -->
-                    <p class="text-[13px] text-gray-500 mt-1">Java, Indonesia • May 14, 2026</p>
-                    <div class="flex items-center gap-2 mt-3 text-sm text-gray-600">
-                        <img src="{{ asset('images/profile/route.png') }}" alt="Route" class="w-4 h-4 object-contain">
-                        <!-- TODO BACKEND: Ganti dengan Nama Rute -->
-                        <span>Route: Ranu Pani via Mahameru Summit</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mt-auto gap-6">
-                <!-- Kita gunakan grid-cols-2 untuk HP, dan grid-cols-4 untuk ukuran iPad/Desktop agar gambar responsive/fleksibel dan tidak bocor -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 w-full xl:w-[70%]">
-                    <!-- TODO BACKEND: Looping max 4 gambar dipasang disini -->
-                    <img src="https://images.unsplash.com/photo-1542220152-36c84c4e7235?q=80&w=300&fit=crop" alt="Mt Semeru 1" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=300&fit=crop" alt="Mt Semeru 2" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=300&fit=crop" alt="Mt Semeru 3" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <div class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
-                        <img src="https://images.unsplash.com/photo-1522079184545-d8cf01b1cb91?q=80&w=300&fit=crop" alt="Mt Semeru 4" class="w-full h-full object-cover">
-                        <!-- TODO BACKEND: Logika penjumlahan sisa gambar dimunculkan disini (misal +12) -->
-                        <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">+12</div>
+                <div class="mb-6">
+                    <div>
+                        <div class="flex items-center justify-between gap-3 w-full">
+                            <h3 class="text-[22px] font-bold text-[#0F172A] break-words">{{ $post->mountain->name ?? $post->title }}</h3>
+                            @if($post->duration_days)
+                                <span class="bg-[#BDE0FE] text-[#1E40AF] text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap">{{ $post->duration_days }}D Expedition</span>
+                            @endif
+                        </div>
+                        <p class="text-[13px] text-gray-500 mt-1">
+                            {{ $post->mountain?->province?->name ?? 'Indonesia' }} • {{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                        </p>
+                        <div class="mt-3 text-sm text-gray-600 line-clamp-2">
+                             {!! Str::markdown($post->body) !!}
+                        </div>
+                        
                     </div>
                 </div>
 
-                <!-- TODO BACKEND: Ganti href diarahkan ke halaman ID dari View Full Log postingan -->
-                <button class="w-full xl:w-auto bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">View Full Log</button>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col justify-between">
-
-            <div class="mb-6">
-                <div>
-                    <div class="flex items-center justify-between gap-3 w-3/4">
-                        <!-- TODO BACKEND: Ganti dengan Nama Gunung -->
-                        <h3 class="text-[22px] font-bold text-[#0F172A]">Mt. Merapi</h3>
-                        <!-- TODO BACKEND: Ganti dengan Tipe Ekspedisi -->
-                        <span class="bg-[#D1E1EF] text-[#2A5C9A] text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap">1D Expedition</span>
+                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mt-auto gap-6">
+                    @if($post->images->count() > 0)
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 w-full xl:w-[70%]">
+                        @foreach($post->images->take(4) as $index => $image)
+                            @if($index == 3 && $post->images->count() > 4)
+                                <div class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
+                                    <img src="{{ $image->image_url }}" alt="{{ $post->title }} image" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">+{{ $post->images->count() - 4 }}</div>
+                                </div>
+                            @else
+                                <img src="{{ $image->image_url }}" alt="{{ $post->title }} image" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
+                            @endif
+                        @endforeach
                     </div>
-                    <!-- TODO BACKEND: Ganti dengan Lokasi Gunung dan Tanggal Pendakian -->
-                    <p class="text-[13px] text-gray-500 mt-1">Java, Indonesia • Jan 22, 2026</p>
-                    <div class="flex items-center gap-2 mt-3 text-sm text-gray-600">
-                        <img src="{{ asset('images/profile/route.png') }}" alt="Route" class="w-4 h-4 object-contain">
-                        <!-- TODO BACKEND: Ganti dengan Nama Rute -->
-                        <span>Route: New Selo Trail</span>
-                    </div>
+                    @endif
+
+                    <a href="#" class="w-full xl:w-auto text-center bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">View Full Log</a>
                 </div>
             </div>
-
-            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mt-auto gap-6">
-                <!-- Kita gunakan grid-cols-2 untuk HP, dan grid-cols-4 untuk ukuran iPad/Desktop agar gambar responsive/fleksibel dan tidak bocor -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 w-full xl:w-[70%]">
-                    <!-- TODO BACKEND: Looping max 4 gambar dipasang disini -->
-                    <img src="https://images.unsplash.com/photo-1542281286-9e0a16bb7366?q=80&w=300&fit=crop" alt="Mt Merapi 1" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1600298882283-40b4dcb8b211?q=80&w=300&fit=crop" alt="Mt Merapi 2" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <img src="https://images.unsplash.com/photo-1516900448138-898720b93707?q=80&w=300&fit=crop" alt="Mt Merapi 3" class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
-                    <div class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
-                        <img src="https://images.unsplash.com/photo-1628126235206-5260b9ea6441?q=80&w=300&fit=crop" alt="Mt Merapi 4" class="w-full h-full object-cover">
-                        <!-- TODO BACKEND: Logika penjumlahan sisa gambar dimunculkan disini (misal +3) -->
-                        <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">+3</div>
-                    </div>
-                </div>
-
-                <!-- TODO BACKEND: Ganti href diarahkan ke halaman ID dari View Full Log postingan -->
-                <button class="w-full xl:w-auto bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">View Full Log</button>
+        @empty
+            <div class="bg-white rounded-3xl p-6 shadow-sm text-center py-12">
+                <p class="text-gray-500">No hiking history yet.</p>
             </div>
-        </div>
+        @endforelse
 
     </div>
 
