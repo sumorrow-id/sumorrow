@@ -38,3 +38,15 @@
         font-family: var(--font-heading);
     }
 }
+
+@layer utilities {
+    /* Menyembunyikan scrollbar untuk Chrome, Safari, dan Opera */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* Menyembunyikan scrollbar untuk IE, Edge, dan Firefox */
+    .hide-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  }
