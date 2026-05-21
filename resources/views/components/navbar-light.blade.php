@@ -4,7 +4,7 @@
         <div class="hidden md:flex flex-1 text-l font-bold gap-2">
             <a href="/" class="px-4 py-2 rounded-lg transition text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174]">Home</a>
             <a href="/explore" class="px-4 py-2 rounded-lg transition text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174]">Explore</a>
-            <a href="#" class="px-4 py-2 rounded-lg transition text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174]">Community</a>
+            <a href="/community" class="px-4 py-2 rounded-lg transition text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174]">Community</a>
         </div>
 
         <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center z-10 w-fit pointer-events-none">

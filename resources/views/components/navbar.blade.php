@@ -6,7 +6,7 @@
                 class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Home</a>
             <a href="/explore"
                 class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Explore</a>
-            <a href="#"
+            <a href="/community"
                 class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Community</a>
         </div>
 
