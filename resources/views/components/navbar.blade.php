@@ -24,7 +24,12 @@
                     <button class="flex items-center focus:outline-none transition-transform hover:scale-105">
                         @php
                             $avatar = Auth::user()->avatar_url;
-                            $src = str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar);
+                            $src = null;
+
+                            if ($avatar) {
+                                $src = str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar);
+                            }
+
                             $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
                         @endphp
 
