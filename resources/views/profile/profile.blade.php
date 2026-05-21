@@ -43,7 +43,7 @@
                         class="w-28 h-28 md:w-44 md:h-44 rounded-full border-4 md:border-[6px] border-[#E7E7E7] overflow-hidden bg-gray-200">
                         @php
                             $avatar = Auth::user()->avatar_url;
-                            $src = str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar);
+                            $src = $avatar ? (str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) : null;
                             $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
                         @endphp
                         <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="{{ Auth::user()->username }}"
