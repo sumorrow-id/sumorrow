@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MountainSeeder::class,
+            PostSeeder::class,
+            GearAndAchievementSeeder::class,
         ]);
     }
 }

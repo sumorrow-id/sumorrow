@@ -13,13 +13,28 @@ class Post extends Model
 
     protected $fillable = [
         'author_id',
+        'mountain_id',
+        'climbing_date',
+        'duration_days',
         'title',
         'body',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'climbing_date' => 'date',
+        ];
+    }
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function mountain(): BelongsTo
+    {
+        return $this->belongsTo(Mountain::class, 'mountain_id');
     }
 
     public function images(): HasMany

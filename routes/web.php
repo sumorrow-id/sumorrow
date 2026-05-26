@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+    // Gear
+    Route::post('/gears', [\App\Http\Controllers\GearController::class, 'store'])->name('gears.store');
+    Route::put('/gears/{gear}', [\App\Http\Controllers\GearController::class, 'update'])->name('gears.update');
+    Route::delete('/gears/{gear}', [\App\Http\Controllers\GearController::class, 'destroy'])->name('gears.destroy');
+
     // Email Verification Configuration
     Route::prefix('email')->group(function () {
         Route::get('/verify', function () {

@@ -78,4 +78,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(PostReply::class, 'author_id');
     }
+
+    public function gears(): HasMany
+    {
+        return $this->hasMany(Gear::class);
+    }
+
+    public function achievements() // BelongsToMany relationship
+    {
+        return $this->belongsToMany(Achievement::class)->withPivot('unlocked_at');
+    }
 }

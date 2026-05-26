@@ -6,11 +6,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Mountain;
 
 class ProfileController extends Controller
 {
-    public function index(){
-        return view('profile.profile');
+    public function index()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // 1. Ambil data kontribusi user
+        $posts = $user->posts()
+            ->with(['mountain.province', 'images' => function ($query) {
+                $query->orderBy('position', 'asc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $gears = $user->gears()->orderBy('category')->get();
+        $achievements = $user->achievements()->orderByPivot('unlocked_at', 'desc')->get();
+
+        // 2. Ambil data gunung terpopuler untuk sidebar
+        $topMountains = Mountain::with(['province', 'images'])
+            ->withAvg('ratings', 'score')
+            ->orderByDesc('ratings_avg_score')
+            ->take(5)
+            ->get();
+
+        // 3. Kirim semua variabel ke view profile
+        return view('profile.profile', compact('posts', 'gears', 'achievements', 'user', 'topMountains'));
     }
 
     public function edit() {
@@ -19,7 +43,9 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $request->validate([
