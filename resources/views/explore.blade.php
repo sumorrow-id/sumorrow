@@ -121,7 +121,7 @@
                                 <p class="text-xs text-gray-500 mb-6 line-clamp-3 leading-relaxed mt-auto">
                                     {{ $mountain->description }}</p>
 
-                                <a href="#"
+                                <a href="{{ route('explore.show', $mountain->id) }}"
                                     class="block w-full text-center bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-2.5 rounded-full text-sm transition shadow-md mt-auto">
                                     Explore Now
                                 </a>

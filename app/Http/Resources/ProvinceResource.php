@@ -10,7 +10,7 @@ class ProvinceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'   => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'mountains_count' => $this->whenCounted('mountains'),
         ];

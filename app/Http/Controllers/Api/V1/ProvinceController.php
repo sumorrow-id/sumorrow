@@ -15,7 +15,7 @@ class ProvinceController extends Controller
         $query = Province::query()->withCount('mountains')->orderBy('name');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->string('search') . '%');
+            $query->where('name', 'like', '%'.$request->string('search').'%');
         }
 
         return ProvinceResource::collection(

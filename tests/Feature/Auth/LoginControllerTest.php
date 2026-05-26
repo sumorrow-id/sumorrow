@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
@@ -32,7 +31,7 @@ class LoginControllerTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'password',
         ]);
 
@@ -49,7 +48,7 @@ class LoginControllerTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
@@ -60,7 +59,7 @@ class LoginControllerTest extends TestCase
     public function test_user_cannot_login_with_non_existent_email(): void
     {
         $response = $this->post('/login', [
-            'email'    => 'nobody@example.com',
+            'email' => 'nobody@example.com',
             'password' => 'password',
         ]);
 
@@ -93,7 +92,7 @@ class LoginControllerTest extends TestCase
     public function test_login_requires_valid_email_format(): void
     {
         $response = $this->post('/login', [
-            'email'    => 'not-an-email',
+            'email' => 'not-an-email',
             'password' => 'password',
         ]);
 

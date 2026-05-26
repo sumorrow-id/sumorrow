@@ -13,7 +13,9 @@ class GearAndAchievementSeeder extends Seeder
     public function run(): void
     {
         $user = User::first();
-        if (!$user) return;
+        if (! $user) {
+            return;
+        }
 
         // Seed Achievements
         $firstClimb = Achievement::updateOrCreate(

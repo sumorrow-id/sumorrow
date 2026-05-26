@@ -6,5 +6,5 @@ use App\Models\User;
 
 interface SocialAuthInterface
 {
-    public function findOrCreateUser(object $social): User; 
+    public function findOrCreateUser(object $social): User;
 }

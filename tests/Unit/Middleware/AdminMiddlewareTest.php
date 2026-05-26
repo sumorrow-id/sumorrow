@@ -20,7 +20,7 @@ class AdminMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->middleware = new AdminMiddleware();
+        $this->middleware = new AdminMiddleware;
     }
 
     /**

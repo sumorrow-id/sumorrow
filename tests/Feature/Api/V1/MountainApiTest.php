@@ -32,16 +32,16 @@ class MountainApiTest extends TestCase
     private function mountain(Province $province, array $overrides = []): Mountain
     {
         return Mountain::create(array_merge([
-            'province_id'      => $province->id,
-            'name'             => 'Test Mountain',
-            'elevation_masl'   => 3000,
-            'length_km'        => 10.0,
+            'province_id' => $province->id,
+            'name' => 'Test Mountain',
+            'elevation_masl' => 3000,
+            'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => 'A test mountain description.',
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 3.0,
+            'coordinates' => '7.45S 110.44E',
+            'description' => 'A test mountain description.',
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 3.0,
         ], $overrides));
     }
 
@@ -49,10 +49,10 @@ class MountainApiTest extends TestCase
     {
         return MountainImage::create([
             'mountain_id' => $mountain->id,
-            'image_url'   => "https://example.com/img{$position}.jpg",
-            'source_url'  => null,
-            'position'    => $position,
-            'is_cover'    => $isCover,
+            'image_url' => "https://example.com/img{$position}.jpg",
+            'source_url' => null,
+            'position' => $position,
+            'is_cover' => $isCover,
             'uploaded_at' => now(),
         ]);
     }
@@ -61,7 +61,7 @@ class MountainApiTest extends TestCase
     {
         return Basecamp::create([
             'mountain_id' => $mountain->id,
-            'name'        => $name,
+            'name' => $name,
         ]);
     }
 
@@ -69,9 +69,9 @@ class MountainApiTest extends TestCase
     {
         return MountainRating::create([
             'mountain_id' => $mountain->id,
-            'user_id'     => $user->id,
-            'score'       => $score,
-            'review'      => $review,
+            'user_id' => $user->id,
+            'score' => $score,
+            'review' => $review,
         ]);
     }
 
@@ -378,7 +378,7 @@ class MountainApiTest extends TestCase
 
     public function test_show_returns_detail_with_expected_fields(): void
     {
-        $prov     = $this->province('Bali');
+        $prov = $this->province('Bali');
         $mountain = $this->mountain($prov, ['name' => 'Agung', 'avg_rating' => 4.5]);
 
         $response = $this->actingAs($this->user(), 'sanctum')
@@ -400,9 +400,9 @@ class MountainApiTest extends TestCase
 
     public function test_show_counts_reflect_related_records(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
-        $rater    = User::factory()->create();
+        $rater = User::factory()->create();
 
         $this->image($mountain, 0, true);
         $this->image($mountain, 1, false);
@@ -413,23 +413,23 @@ class MountainApiTest extends TestCase
             ->getJson("/api/v1/mountains/{$mountain->id}");
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.counts.images',    2)
+            ->assertJsonPath('data.counts.images', 2)
             ->assertJsonPath('data.counts.basecamps', 1)
-            ->assertJsonPath('data.counts.ratings',   1);
+            ->assertJsonPath('data.counts.ratings', 1);
     }
 
     public function test_show_cover_image_is_the_is_cover_image(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
         $this->image($mountain, 0, false);
 
         MountainImage::create([
             'mountain_id' => $mountain->id,
-            'image_url'   => 'https://example.com/cover.jpg',
-            'source_url'  => null,
-            'position'    => 1,
-            'is_cover'    => true,
+            'image_url' => 'https://example.com/cover.jpg',
+            'source_url' => null,
+            'position' => 1,
+            'is_cover' => true,
             'uploaded_at' => now(),
         ]);
 
@@ -442,7 +442,7 @@ class MountainApiTest extends TestCase
 
     public function test_show_cover_image_falls_back_to_first_image_when_no_is_cover(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
         $this->image($mountain, 0, false);
 
@@ -455,7 +455,7 @@ class MountainApiTest extends TestCase
 
     public function test_show_cover_image_is_null_when_no_images(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
 
         $response = $this->actingAs($this->user(), 'sanctum')
@@ -480,7 +480,7 @@ class MountainApiTest extends TestCase
 
     public function test_images_returns_images_ordered_by_position(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
         $this->image($mountain, 2, false);
         $this->image($mountain, 0, true);
@@ -498,7 +498,7 @@ class MountainApiTest extends TestCase
 
     public function test_images_returns_expected_fields(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
         $this->image($mountain);
 
@@ -513,7 +513,7 @@ class MountainApiTest extends TestCase
 
     public function test_images_returns_empty_data_when_no_images(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
 
         $response = $this->actingAs($this->user(), 'sanctum')
@@ -536,13 +536,13 @@ class MountainApiTest extends TestCase
 
     public function test_basecamps_returns_basecamps_for_mountain(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
-        $other    = $this->mountain($prov, ['name' => 'Other Peak']);
+        $other = $this->mountain($prov, ['name' => 'Other Peak']);
 
         $this->basecamp($mountain, 'Camp Alpha');
         $this->basecamp($mountain, 'Camp Beta');
-        $this->basecamp($other,   'Camp Gamma');
+        $this->basecamp($other, 'Camp Gamma');
 
         $response = $this->actingAs($this->user(), 'sanctum')
             ->getJson("/api/v1/mountains/{$mountain->id}/basecamps");
@@ -556,7 +556,7 @@ class MountainApiTest extends TestCase
 
     public function test_basecamps_returns_empty_data_when_no_basecamps(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
 
         $response = $this->actingAs($this->user(), 'sanctum')
@@ -579,9 +579,9 @@ class MountainApiTest extends TestCase
 
     public function test_ratings_returns_paginated_ratings_with_user_info(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
-        $rater    = User::factory()->create(['username' => 'hikergirl']);
+        $rater = User::factory()->create(['username' => 'hikergirl']);
 
         $this->rating($mountain, $rater, 5, 'Worth every step.');
 
@@ -600,9 +600,9 @@ class MountainApiTest extends TestCase
 
     public function test_ratings_does_not_expose_user_email(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
-        $rater    = User::factory()->create(['email' => 'secret@private.com']);
+        $rater = User::factory()->create(['email' => 'secret@private.com']);
 
         $this->rating($mountain, $rater);
 
@@ -615,7 +615,7 @@ class MountainApiTest extends TestCase
 
     public function test_ratings_returns_most_recent_first(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
 
         $rater1 = User::factory()->create();
@@ -637,7 +637,7 @@ class MountainApiTest extends TestCase
 
     public function test_ratings_returns_empty_data_when_no_ratings(): void
     {
-        $prov     = $this->province();
+        $prov = $this->province();
         $mountain = $this->mountain($prov);
 
         $response = $this->actingAs($this->user(), 'sanctum')

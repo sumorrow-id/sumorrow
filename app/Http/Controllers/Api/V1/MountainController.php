@@ -22,7 +22,7 @@ class MountainController extends Controller
             $term = $request->string('search');
             $query->where(function (Builder $q) use ($term) {
                 $q->where('name', 'like', "%{$term}%")
-                  ->orWhere('description', 'like', "%{$term}%");
+                    ->orWhere('description', 'like', "%{$term}%");
             });
         }
 
@@ -48,7 +48,7 @@ class MountainController extends Controller
     public function show(Mountain $mountain)
     {
         $mountain->load(['province', 'images'])
-                 ->loadCount(['images', 'basecamps', 'ratings']);
+            ->loadCount(['images', 'basecamps', 'ratings']);
 
         return MountainDetailResource::make($mountain);
     }

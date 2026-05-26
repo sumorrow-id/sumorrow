@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -20,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'admin' => AdminMiddleware::class,
         ]);
         $middleware->redirectTo(
             guests: '/login',
@@ -34,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($wantsJson($request)) {
                 return response()->json([
                     'message' => 'Unauthenticated.',
-                    'status'  => 401,
+                    'status' => 401,
                 ], 401);
             }
         });
@@ -43,8 +44,8 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($wantsJson($request)) {
                 return response()->json([
                     'message' => $e->getMessage(),
-                    'status'  => 422,
-                    'errors'  => $e->errors(),
+                    'status' => 422,
+                    'errors' => $e->errors(),
                 ], 422);
             }
         });
@@ -53,7 +54,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($wantsJson($request)) {
                 return response()->json([
                     'message' => 'Resource not found.',
-                    'status'  => 404,
+                    'status' => 404,
                 ], 404);
             }
         });
@@ -62,7 +63,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($wantsJson($request)) {
                 return response()->json([
                     'message' => 'Endpoint not found.',
-                    'status'  => 404,
+                    'status' => 404,
                 ], 404);
             }
         });
@@ -70,8 +71,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (ThrottleRequestsException $e, Request $request) use ($wantsJson) {
             if ($wantsJson($request)) {
                 return response()->json([
-                    'message'     => 'Too many requests. Slow down.',
-                    'status'      => 429,
+                    'message' => 'Too many requests. Slow down.',
+                    'status' => 429,
                     'retry_after' => (int) ($e->getHeaders()['Retry-After'] ?? 60),
                 ], 429, $e->getHeaders());
             }
