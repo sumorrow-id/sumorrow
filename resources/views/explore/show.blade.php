@@ -11,28 +11,37 @@
         <div class="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh]">
             <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/40"></div>
-            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent">
-                <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
-                <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
-                    <span class="flex items-center gap-1">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        {{ $mountain->province->name ?? 'Indonesia' }}
-                    </span>
-                    <span class="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
-                        <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
-                            </path>
-                        </svg>
-                        {{ number_format($mountain->avg_rating, 1) }} ({{ $mountain->ratings->count() }} reviews)
-                    </span>
-                    <span class="bg-[#001E3A] text-white px-3 py-1 rounded-full font-semibold">
-                        {{ ucfirst($mountain->difficulty) }}
-                    </span>
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
+                    <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
+                        <span class="flex items-center gap-1">
+                            <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            {{ $mountain->province->name ?? 'Indonesia' }}
+                        </span>
+                        <span class="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                </path>
+                            </svg>
+                            {{ number_format($mountain->avg_rating, 1) }} ({{ $mountain->ratings->count() }} reviews)
+                        </span>
+                        <span class="bg-[#001E3A] text-white px-3 py-1 rounded-full font-semibold">
+                            {{ ucfirst($mountain->difficulty) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Weather Card -->
+                <div id="hero-weather-card" class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg">
+                    <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1" id="hero-weather-desc"></span>
+                    <div id="hero-weather-icon-container"></div>
+                    <div class="mt-1 font-bold text-xl md:text-2xl" id="hero-weather-temp"></div>
                 </div>
             </div>
         </div>
@@ -384,6 +393,34 @@
             const lat = weatherContainer.dataset.lat;
             const lng = weatherContainer.dataset.lng;
 
+            // Helper for beautiful SVG weather icons using Tailwind colors
+            const getWeatherSvg = (iconCode, classes) => {
+                const code = iconCode.substring(0, 2);
+                const isDay = iconCode.endsWith('d');
+                
+                const sunSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const moonSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
+                const cloudPath = `<path d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
+                const partlyCloudySvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
+                const cloudSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
+                const rainSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const thunderSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
+                const snowSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
+                
+                switch(code) {
+                    case '01': return isDay ? sunSvg : moonSvg;
+                    case '02': return partlyCloudySvg;
+                    case '03':
+                    case '04':
+                    case '50': return cloudSvg;
+                    case '09':
+                    case '10': return rainSvg;
+                    case '11': return thunderSvg;
+                    case '13': return snowSvg;
+                    default: return cloudSvg;
+                }
+            };
+
             // Mengambil API Key dari config services Laravel
             const API_KEY = '{{ config('services.openweathermap.key') }}';
 
@@ -403,6 +440,21 @@
                 return response.json();
             })
             .then(data => {
+                const currentItem = data.list[0];
+                if (currentItem) {
+                    const heroCard = document.getElementById('hero-weather-card');
+                    const heroIconContainer = document.getElementById('hero-weather-icon-container');
+                    const heroTemp = document.getElementById('hero-weather-temp');
+                    const heroDesc = document.getElementById('hero-weather-desc');
+                    if (heroCard && heroIconContainer && heroTemp && heroDesc) {
+                        heroIconContainer.innerHTML = getWeatherSvg(currentItem.weather[0].icon, "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
+                        heroTemp.innerHTML = `${Math.round(currentItem.main.temp)}&deg;C`;
+                        heroDesc.innerHTML = currentItem.weather[0].main;
+                        heroCard.classList.remove('hidden');
+                        heroCard.classList.add('flex');
+                    }
+                }
+
                 const dailyData = {};
                 data.list.forEach(item => {
                     const date = new Date(item.dt * 1000).toLocaleDateString('en-US', {
@@ -426,13 +478,12 @@
                     const info = dailyData[day];
                     const maxTemp = Math.round(Math.max(...info.temp));
                     const minTemp = Math.round(Math.min(...info.temp));
-                    const iconUrl = `https://openweathermap.org/img/wn/${info.icon}@2x.png`;
 
                     html += `
                                 <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
                                     <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
-                                    <img src="${iconUrl}" alt="${info.desc}" class="w-16 h-16 object-contain" />
-                                    <span class="text-sm font-medium text-gray-700 capitalize">${info.desc}</span>
+                                    ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
+                                    <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
                                     <div class="mt-2 text-[#2A9D8F] font-bold">
                                         ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
                                     </div>
@@ -448,6 +499,19 @@
 
         function injectMockWeather(container) {
             const today = new Date();
+            
+            const heroCard = document.getElementById('hero-weather-card');
+            const heroIconContainer = document.getElementById('hero-weather-icon-container');
+            const heroTemp = document.getElementById('hero-weather-temp');
+            const heroDesc = document.getElementById('hero-weather-desc');
+            if (heroCard && heroIconContainer && heroTemp && heroDesc) {
+                heroIconContainer.innerHTML = getWeatherSvg("01d", "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
+                heroTemp.innerHTML = "22&deg;C";
+                heroDesc.innerHTML = "Clear";
+                heroCard.classList.remove('hidden');
+                heroCard.classList.add('flex');
+            }
+
             let mockHtml = '';
             for (let i = 0; i < 3; i++) {
                 const d = new Date(today);
@@ -469,8 +533,8 @@
                     mockHtml += `
                         <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
                             <span class="font-semibold text-[#001E3A] mb-1">${dayStr}</span>
-                            <img src="https://openweathermap.org/img/wn/${iconMap[status]}@2x.png" alt="${status}" class="w-16 h-16 object-contain" />
-                            <span class="text-sm font-medium text-gray-700 capitalize">${status}</span>
+                            ${getWeatherSvg(iconMap[status], "w-16 h-16 drop-shadow-sm")}
+                            <span class="text-sm font-medium text-gray-700 capitalize mt-1">${status}</span>
                             <div class="mt-2 text-[#2A9D8F] font-bold">
                                 ${22 + i}&deg; <span class="text-gray-400 text-sm font-normal">/ ${15 + i}&deg;</span>
                             </div>
