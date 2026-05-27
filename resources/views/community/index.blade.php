@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-[95%] sm:w-[90%] max-w-screen-xl mx-auto pt-24 md:pt-32 pb-8">
+<div class="w-[95%] sm:w-[90%] max-w-7xl mx-auto pt-24 md:pt-32 pb-8">
 
     <div class="relative rounded-2xl md:rounded-3xl overflow-hidden mb-6 md:mb-8 shadow-md">
 
-        {{-- Ganti URL di bawah ini dengan gambar asli nantinya --}}
         <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2670&auto=format&fit=crop"
              alt="Mountain Background"
              class="absolute inset-0 w-full h-full object-cover z-0" />
@@ -32,23 +31,20 @@
                 <button
                     onclick="switchTab('explore')"
                     id="tab-explore"
-                    class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap"
-                >
+                    class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap">
                     Explore
                 </button>
                 <button
                     onclick="switchTab('community')"
                     id="tab-community"
-                    class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap"
-                >
+                    class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
                     My Community
                 </button>
             </div>
 
             <button
                 onclick="toggleMobileSidebar()"
-                class="pb-3 text-sm sm:text-base cursor-pointer text-gray-500 hover:text-[#094174] transition whitespace-nowrap flex items-center gap-1.5 lg:hidden"
-            >
+                class="pb-3 text-sm sm:text-base cursor-pointer text-gray-500 hover:text-[#094174] transition whitespace-nowrap flex items-center gap-1.5 lg:hidden">
                 <span class="font-bold">Discover</span>
             </button>
         </div>
@@ -71,8 +67,8 @@
         </div>
     </div>
 
-    <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-[100] hidden backdrop-blur-sm transition-opacity opacity-0" onclick="toggleMobileSidebar()"></div>
-    <div id="mobile-sidebar-drawer" class="fixed top-0 right-0 h-full w-[85%] sm:w-[60%] max-w-sm bg-gray-50 z-[110] transform translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
+    <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-100 hidden backdrop-blur-sm transition-opacity opacity-0" onclick="toggleMobileSidebar()"></div>
+    <div id="mobile-sidebar-drawer" class="fixed top-0 right-0 h-full w-[85%] sm:w-[60%] max-w-sm bg-gray-50 z-110 transform translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
         <div class="p-5 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0 z-10">
             <h2 class="font-bold text-lg text-[#1a2b4c]">Discover</h2>
             <button onclick="toggleMobileSidebar()" class="text-gray-400 hover:text-gray-600 transition p-1 bg-gray-100 rounded-full">

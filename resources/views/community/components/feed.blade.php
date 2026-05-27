@@ -3,7 +3,7 @@
     {{-- Composer --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-4 md:p-5 flex items-center gap-3">
         <img src="{{ asset('images/dummymountain/rinjani.png') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="Avatar">
-        <div class="flex-grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
+        <div class="grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
             <input type="text" placeholder="What is New, Rosita Puspita?" class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-sm md:text-base text-gray-800 placeholder-gray-400 w-full font-medium">
             <div class="flex items-center gap-3 text-gray-400 shrink-0">
                 <button class="hover:text-[#094174] transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></button>

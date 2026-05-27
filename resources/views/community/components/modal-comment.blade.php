@@ -1,5 +1,5 @@
 {{-- Comment Overlay Modal --}}
-<div id="comment-modal" class="fixed inset-0 z-[100] hidden items-center justify-center">
+<div id="comment-modal" class="fixed inset-0 z-100 hidden items-center justify-center">
     {{-- Backdrop --}}
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeCommentModal()"></div>
 
@@ -18,7 +18,7 @@
         <div class="px-6 py-4 flex gap-4">
             <div class="flex flex-col items-center">
                 <img src="{{ asset('images/dummymountain/rinjani.png') }}" class="w-10 h-10 rounded-full object-cover z-10" alt="Avatar">
-                <div class="w-[2px] bg-gray-200 flex-grow mt-2"></div>
+                <div class="w-0.5 bg-gray-200 grow mt-2"></div>
             </div>
             <div class="pb-6">
                 <div class="flex items-center gap-2 mb-1">
@@ -36,7 +36,7 @@
             {{-- User Avatar --}}
             <img src="{{ asset('images/dummymountain/batur.jpg') }}" class="w-10 h-10 rounded-full object-cover shrink-0" alt="My Avatar">
 
-            <div class="flex-grow flex flex-col">
+            <div class="grow flex flex-col">
                 <textarea rows="4" placeholder="Post your reply" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-gray-800 placeholder-gray-400 text-sm md:text-base p-0 mt-2"></textarea>
 
                 <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-2">
