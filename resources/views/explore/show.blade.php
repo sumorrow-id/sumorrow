@@ -185,7 +185,7 @@
                         @else
                             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center mb-6">
                                 <p class="text-gray-600 mb-3">Login to share your experience on this mountain.</p>
-                                <a href="{{ route('login') }}" class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Login</a>
+                                <a href="{{ route('showLogin') }}" class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Login</a>
                             </div>
                         @endauth
 
@@ -195,12 +195,12 @@
                                     <div class="flex items-center gap-3 mb-2">
                                         <div
                                             class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-[#001E3A] font-bold text-sm uppercase">
-                                            {{ substr($rating->user->name ?? 'U', 0, 1) }}
+                                            {{ substr($rating->user->username ?? 'U', 0, 1) }}
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900">
-                                                {{ $rating->user->name ?? 'Anonymous Hiker' }}</h4>
-                                            <div class="flex text-yellow-400 text-xs">
+                                                {{ $rating->user->username ?? 'Unknown Hiker' }}</h4>
+                                            <div class="flex text-yellow-400 text-xs mt-1">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <svg class="w-4 h-4 {{ $i <= $rating->score ? 'text-yellow-400' : 'text-gray-200' }}"
                                                         fill="currentColor" viewBox="0 0 20 20">
@@ -307,7 +307,7 @@
                             <ul class="space-y-4">
                                 @foreach ($mountain->basecamps as $basecamp)
                                     <li
-                                        class="flex items-start gap-3 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
+                                        class="flex items-center gap-3 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
                                         <div class="bg-[#2A9D8F]/10 p-2 rounded-lg text-[#2A9D8F]">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -318,20 +318,6 @@
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900">{{ $basecamp->name }}</h4>
-                                            @if ($basecamp->contact_number)
-                                                <p class="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
-                                                        </path>
-                                                    </svg>
-                                                    {{ $basecamp->contact_number }}
-                                                </p>
-                                            @endif
-                                            <p class="text-xs text-gray-400 mt-1">Price: Rp
-                                                {{ number_format($basecamp->price, 0, ',', '.') }}</p>
                                         </div>
                                     </li>
                                 @endforeach
@@ -448,7 +434,7 @@
                                     <img src="${iconUrl}" alt="${info.desc}" class="w-16 h-16 object-contain" />
                                     <span class="text-sm font-medium text-gray-700 capitalize">${info.desc}</span>
                                     <div class="mt-2 text-[#2A9D8F] font-bold">
-                                        ${maxTemp}� <span class="text-gray-400 text-sm font-normal">/ ${minTemp}�</span>
+                                        ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
                                     </div>
                                 </div>
                             `;
@@ -486,7 +472,7 @@
                             <img src="https://openweathermap.org/img/wn/${iconMap[status]}@2x.png" alt="${status}" class="w-16 h-16 object-contain" />
                             <span class="text-sm font-medium text-gray-700 capitalize">${status}</span>
                             <div class="mt-2 text-[#2A9D8F] font-bold">
-                                ${22 + i}� <span class="text-gray-400 text-sm font-normal">/ ${15 + i}�</span>
+                                ${22 + i}&deg; <span class="text-gray-400 text-sm font-normal">/ ${15 + i}&deg;</span>
                             </div>
                         </div>
                     `;
