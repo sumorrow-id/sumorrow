@@ -49,7 +49,7 @@
     ];
 @endphp
 <div class="mt-8">
-    <div class="bg-gradient-to-br from-[#E6EEF8] to-[#EBF2FA] rounded-3xl p-8 relative overflow-hidden mb-8 shadow-sm">
+    <div class="bg-linear-to-br from-[#E6EEF8] to-[#EBF2FA] rounded-3xl p-8 relative overflow-hidden mb-8 shadow-sm">
         <div class="absolute -top-10 -right-10 opacity-5 w-80 h-80 pointer-events-none">
             <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-[#1E40AF]">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
@@ -148,7 +148,7 @@
 
             <div class="mt-6 rounded-3xl overflow-hidden relative h-48 group shadow-sm">
                 <img src="{{ asset('images/profile/gear.jpeg') }}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 max-w-sm">
                     <h3 class="text-white text-[22px] font-light tracking-wide mb-1">Your Gear, Your Legacy.</h3>
                     <p class="text-white/70 text-[11px] font-light leading-relaxed">Every gram counts when you're reaching for the clouds.<br>Keep your pack lean and your legs strong.</p>
@@ -196,7 +196,7 @@
 </div>
 
 <!-- Gear Modal -->
-<div id="gear-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden">
+<div id="gear-modal" class="fixed inset-0 z-100 flex items-center justify-center hidden">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm" onclick="closeGearModal()"></div>
     

@@ -35,7 +35,7 @@
 
                 <!-- Description Card -->
                 <div class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex-1 flex flex-col justify-center">
-                    <p class="text-xs md:text-[13px] font-medium text-[#2A5C9A] mb-1.5 uppercase font-bold tracking-wider">
+                    <p class="text-xs md:text-[13px] text-[#2A5C9A] mb-1.5 uppercase font-bold tracking-wider">
                         {{ ucfirst($achievement->tier) }} Tier
                     </p>
                     <p class="text-xs md:text-[13px] font-medium text-gray-500 leading-relaxed">

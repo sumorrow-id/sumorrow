@@ -11,7 +11,7 @@
         <div class="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh]">
             <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/40"></div>
-            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent">
                 <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
                 <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
                     <span class="flex items-center gap-1">
@@ -144,7 +144,7 @@
                     <section>
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Location</h2>
                         <div
-                            class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-[400px] w-full overflow-hidden">
+                            class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-100 w-full overflow-hidden">
                             <iframe width="100%" height="100%" frameborder="0" style="border:0; border-radius: 0.5rem;"
                                 src="https://maps.google.com/maps?q={{ $lat }},{{ $lng }}&t=&z=12&ie=UTF8&iwloc=&output=embed"
                                 allowfullscreen>
@@ -331,7 +331,7 @@
                             <div class="space-y-4">
                                 @foreach ($nearbyMountains as $nearby)
                                     <a href="{{ route('explore.show', $nearby->id) }}"
-                                        class="group block flex min-h-[80px] gap-3 hover:bg-gray-50 p-2 rounded-xl transition-colors">
+                                        class="group flex min-h-20 gap-3 hover:bg-gray-50 p-2 rounded-xl transition-colors">
                                         @php
                                             $thumb = $nearby->images->first()
                                                 ? $nearby->images->first()->image_url
@@ -362,7 +362,7 @@
                     @endif
 
                     <div
-                        class="bg-gradient-to-br from-[#001E3A] to-[#003865] rounded-2xl shadow-sm text-white p-6 relative overflow-hidden">
+                        class="bg-linear-to-br from-[#001E3A] to-[#003865] rounded-2xl shadow-sm text-white p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white/10 blur-2xl"></div>
                         <h3 class="font-bold text-xl mb-2">Ready to conquer?</h3>
                         <p class="text-sm text-white/80 mb-6">Log your hike, track your achievements, and share your
