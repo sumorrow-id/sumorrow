@@ -29,4 +29,3 @@ class Regency extends Model
         return $this->hasMany(Basecamp::class);
     }
 }
-

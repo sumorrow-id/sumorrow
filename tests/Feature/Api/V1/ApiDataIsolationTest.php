@@ -30,9 +30,13 @@ class ApiDataIsolationTest extends TestCase
     // -------------------------------------------------------------------------
 
     private User $actor;
+
     private Province $provinceA;
+
     private Province $provinceB;
+
     private Mountain $mountainA;
+
     private Mountain $mountainB;
 
     protected function setUp(): void
@@ -55,16 +59,16 @@ class ApiDataIsolationTest extends TestCase
     private function makeMountain(Province $province, string $name): Mountain
     {
         return Mountain::create([
-            'province_id'      => $province->id,
-            'name'             => $name,
-            'elevation_masl'   => 3000,
-            'length_km'        => 10.0,
+            'province_id' => $province->id,
+            'name' => $name,
+            'elevation_masl' => 3000,
+            'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => "Description for {$name}.",
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 0,
+            'coordinates' => '7.45S 110.44E',
+            'description' => "Description for {$name}.",
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 0,
         ]);
     }
 
@@ -72,10 +76,10 @@ class ApiDataIsolationTest extends TestCase
     {
         return MountainImage::create([
             'mountain_id' => $mountain->id,
-            'image_url'   => "https://example.com/{$mountain->id}-{$position}.jpg",
-            'source_url'  => null,
-            'position'    => $position,
-            'is_cover'    => $position === 0,
+            'image_url' => "https://example.com/{$mountain->id}-{$position}.jpg",
+            'source_url' => null,
+            'position' => $position,
+            'is_cover' => $position === 0,
             'uploaded_at' => now(),
         ]);
     }
@@ -84,7 +88,7 @@ class ApiDataIsolationTest extends TestCase
     {
         return Basecamp::create([
             'mountain_id' => $mountain->id,
-            'name'        => $name,
+            'name' => $name,
         ]);
     }
 
@@ -92,9 +96,9 @@ class ApiDataIsolationTest extends TestCase
     {
         return MountainRating::create([
             'mountain_id' => $mountain->id,
-            'user_id'     => $user->id,
-            'score'       => $score,
-            'review'      => null,
+            'user_id' => $user->id,
+            'score' => $score,
+            'review' => null,
         ]);
     }
 

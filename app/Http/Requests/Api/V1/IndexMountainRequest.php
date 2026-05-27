@@ -14,14 +14,14 @@ class IndexMountainRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search'      => ['sometimes', 'string', 'max:120'],
+            'search' => ['sometimes', 'string', 'max:120'],
             'province_id' => ['sometimes', 'integer', 'exists:provinces,id'],
-            'difficulty'  => ['sometimes', 'string', 'in:easy,moderate,hard,strenuous'],
-            'is_active'   => ['sometimes', 'boolean'],
-            'sort'        => ['sometimes', 'string', 'in:avg_rating,elevation_masl,name'],
-            'order'       => ['sometimes', 'string', 'in:asc,desc'],
-            'page'        => ['sometimes', 'integer', 'min:1'],
-            'limit'       => ['sometimes', 'integer', 'min:1', 'max:50'],
+            'difficulty' => ['sometimes', 'string', 'in:easy,moderate,hard,strenuous'],
+            'is_active' => ['sometimes', 'boolean'],
+            'sort' => ['sometimes', 'string', 'in:avg_rating,elevation_masl,name'],
+            'order' => ['sometimes', 'string', 'in:asc,desc'],
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'limit' => ['sometimes', 'integer', 'min:1', 'max:50'],
         ];
     }
 

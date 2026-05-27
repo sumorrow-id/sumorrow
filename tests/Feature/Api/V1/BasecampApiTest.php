@@ -30,16 +30,16 @@ class BasecampApiTest extends TestCase
     private function mountain(Province $province, array $overrides = []): Mountain
     {
         return Mountain::create(array_merge([
-            'province_id'      => $province->id,
-            'name'             => 'Test Mountain',
-            'elevation_masl'   => 3000,
-            'length_km'        => 10.0,
+            'province_id' => $province->id,
+            'name' => 'Test Mountain',
+            'elevation_masl' => 3000,
+            'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => 'A test description.',
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 4.0,
+            'coordinates' => '7.45S 110.44E',
+            'description' => 'A test description.',
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 4.0,
         ], $overrides));
     }
 
@@ -47,7 +47,7 @@ class BasecampApiTest extends TestCase
     {
         return Basecamp::create([
             'mountain_id' => $mountain->id,
-            'name'        => $name,
+            'name' => $name,
         ]);
     }
 
@@ -67,7 +67,7 @@ class BasecampApiTest extends TestCase
 
     public function test_show_returns_basecamp_with_mountain_reference(): void
     {
-        $prov     = $this->province('Jawa Tengah');
+        $prov = $this->province('Jawa Tengah');
         $mountain = $this->mountain($prov, ['name' => 'Merbabu']);
         $basecamp = $this->basecamp($mountain, 'Cunthel');
 

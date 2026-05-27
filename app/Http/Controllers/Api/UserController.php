@@ -15,7 +15,7 @@ class UserController extends Controller
     public function checkVerification(Request $request)
     {
         return response()->json([
-            'verified' => $request->user() && $request->user()->hasVerifiedEmail()
+            'verified' => $request->user() && $request->user()->hasVerifiedEmail(),
         ]);
     }
 }

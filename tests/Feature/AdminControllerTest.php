@@ -31,16 +31,16 @@ class AdminControllerTest extends TestCase
     private function mountain(Province $province, array $overrides = []): Mountain
     {
         return Mountain::create(array_merge([
-            'province_id'      => $province->id,
-            'name'             => 'Test Mountain',
-            'elevation_masl'   => 3000,
-            'length_km'        => 10.0,
+            'province_id' => $province->id,
+            'name' => 'Test Mountain',
+            'elevation_masl' => 3000,
+            'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => 'A test mountain description.',
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 4.0,
+            'coordinates' => '7.45S 110.44E',
+            'description' => 'A test mountain description.',
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 4.0,
         ], $overrides));
     }
 
@@ -48,17 +48,17 @@ class AdminControllerTest extends TestCase
     {
         return Post::create(array_merge([
             'author_id' => $author->id,
-            'title'     => 'Sample Post',
-            'body'      => 'Sample body content.',
+            'title' => 'Sample Post',
+            'body' => 'Sample body content.',
         ], $overrides));
     }
 
     private function reply(Post $post, User $author): PostReply
     {
         return PostReply::create([
-            'post_id'   => $post->id,
+            'post_id' => $post->id,
             'author_id' => $author->id,
-            'content'   => 'A reply.',
+            'content' => 'A reply.',
         ]);
     }
 

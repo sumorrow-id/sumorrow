@@ -16,12 +16,13 @@ class GoogleAuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new GoogleAuthService();
+        $this->service = new GoogleAuthService;
     }
 
     private function createGoogleUserMock(string $id, string $name, string $email, string $avatar = 'https://example.com/avatar.jpg'): object
     {
-        return new class($id, $name, $email, $avatar) {
+        return new class($id, $name, $email, $avatar)
+        {
             public function __construct(
                 public string $id,
                 public string $name,

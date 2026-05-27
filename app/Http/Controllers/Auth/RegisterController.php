@@ -34,7 +34,7 @@ class RegisterController extends Controller
         if (count($words) > 1) {
             $initials .= strtoupper(substr($words[1], 0, 1));
         }
-        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($initials) . '&background=random';
+        $avatarUrl = 'https://ui-avatars.com/api/?name='.urlencode($initials).'&background=random';
 
         $user = User::create([
             'username' => $request->username,

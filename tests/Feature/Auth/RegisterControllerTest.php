@@ -29,9 +29,9 @@ class RegisterControllerTest extends TestCase
     public function test_user_can_register_with_valid_data(): void
     {
         $response = $this->post(route('register.submit'), [
-            'username'              => 'newuser',
-            'email'                 => 'newuser@example.com',
-            'password'              => 'password123',
+            'username' => 'newuser',
+            'email' => 'newuser@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -48,8 +48,8 @@ class RegisterControllerTest extends TestCase
     public function test_registration_requires_username(): void
     {
         $response = $this->post(route('register.submit'), [
-            'email'                 => 'newuser@example.com',
-            'password'              => 'password123',
+            'email' => 'newuser@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -59,8 +59,8 @@ class RegisterControllerTest extends TestCase
     public function test_registration_requires_email(): void
     {
         $response = $this->post(route('register.submit'), [
-            'username'              => 'newuser',
-            'password'              => 'password123',
+            'username' => 'newuser',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -71,7 +71,7 @@ class RegisterControllerTest extends TestCase
     {
         $response = $this->post(route('register.submit'), [
             'username' => 'newuser',
-            'email'    => 'newuser@example.com',
+            'email' => 'newuser@example.com',
         ]);
 
         $response->assertSessionHasErrors('password');
@@ -80,9 +80,9 @@ class RegisterControllerTest extends TestCase
     public function test_registration_requires_password_confirmation(): void
     {
         $response = $this->post(route('register.submit'), [
-            'username'              => 'newuser',
-            'email'                 => 'newuser@example.com',
-            'password'              => 'password123',
+            'username' => 'newuser',
+            'email' => 'newuser@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'different-password',
         ]);
 
@@ -92,9 +92,9 @@ class RegisterControllerTest extends TestCase
     public function test_registration_requires_minimum_password_length(): void
     {
         $response = $this->post(route('register.submit'), [
-            'username'              => 'newuser',
-            'email'                 => 'newuser@example.com',
-            'password'              => 'short1',        // 6 chars — under 8
+            'username' => 'newuser',
+            'email' => 'newuser@example.com',
+            'password' => 'short1',        // 6 chars — under 8
             'password_confirmation' => 'short1',
         ]);
 
@@ -108,9 +108,9 @@ class RegisterControllerTest extends TestCase
         ]);
 
         $response = $this->post(route('register.submit'), [
-            'username'              => 'brandnewuser',
-            'email'                 => 'taken@example.com',
-            'password'              => 'password123',
+            'username' => 'brandnewuser',
+            'email' => 'taken@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -124,9 +124,9 @@ class RegisterControllerTest extends TestCase
         ]);
 
         $response = $this->post(route('register.submit'), [
-            'username'              => 'takenusername',
-            'email'                 => 'unique@example.com',
-            'password'              => 'password123',
+            'username' => 'takenusername',
+            'email' => 'unique@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 

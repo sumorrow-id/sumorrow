@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -34,7 +35,8 @@ return new class extends Migration {
 
         //  MYSQL DB Statement
         DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_name_fulltext (name)');
-        DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_description_fulltext (description)');    }
+        DB::statement('ALTER TABLE mountains ADD FULLTEXT mountains_description_fulltext (description)');
+    }
 
     /**
      * Reverse the migrations.

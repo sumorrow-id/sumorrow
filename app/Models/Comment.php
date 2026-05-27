@@ -26,4 +26,3 @@ class Comment extends Model
         return $this->belongsTo(Mountain::class);
     }
 }
-

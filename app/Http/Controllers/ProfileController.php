@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Mountain;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Mountain;
 
 class ProfileController extends Controller
 {
     public function index()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // 1. Ambil data kontribusi user
@@ -37,7 +37,8 @@ class ProfileController extends Controller
         return view('profile.profile', compact('posts', 'gears', 'achievements', 'user', 'topMountains'));
     }
 
-    public function edit() {
+    public function edit()
+    {
         return view('profile.edit', [
             'user' => Auth::user(),
         ]);
@@ -45,18 +46,18 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $request->validate([
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'username' => 'required|string|max:255|unique:users,username,'.$user->id,
             'bio' => 'nullable|string|max:500',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar_url && !str_contains($user->avatar_url, 'http')) {
+            if ($user->avatar_url && ! str_contains($user->avatar_url, 'http')) {
                 Storage::disk('public')->delete($user->avatar_url);
             }
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
@@ -64,7 +65,7 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('cover')) {
-            if ($user->cover_url && !str_contains($user->cover_url, 'http')) {
+            if ($user->cover_url && ! str_contains($user->cover_url, 'http')) {
                 Storage::disk('public')->delete($user->cover_url);
             }
             $coverPath = $request->file('cover')->store('covers', 'public');

@@ -15,7 +15,7 @@ class AdminController extends Controller
         $newUsersCount = User::where('created_at', '>=', now()->subDays(7))->count();
         $forumPostsCount = Post::count();
         $recentPosts = Post::with('author')->latest()->take(5)->get();
-        
+
         return view('admin.dashboard', compact('recentUsers', 'newUsersCount', 'forumPostsCount', 'recentPosts'));
     }
 
