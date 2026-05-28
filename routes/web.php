@@ -73,6 +73,11 @@ Route::middleware('auth')->group(function () {
     // Explore / Mountain
     Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
 
+    // Posts
+    Route::get('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'index'])->name('profile.posts.index');
+    Route::get('/profile/posts/create', [\App\Http\Controllers\ProfilePostController::class, 'create'])->name('profile.posts.create');
+    Route::post('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'store'])->name('profile.posts.store');
+
     // Email Verification Configuration
     Route::prefix('email')->group(function () {
         Route::get('/verify', function () {

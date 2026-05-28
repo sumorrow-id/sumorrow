@@ -11,7 +11,8 @@
         <div class="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh]">
             <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/40"></div>
-            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
+            <div
+                class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
                 <div>
                     <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
                     <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
@@ -38,8 +39,10 @@
                 </div>
 
                 <!-- Weather Card -->
-                <div id="hero-weather-card" class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg">
-                    <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1" id="hero-weather-desc"></span>
+                <div id="hero-weather-card"
+                    class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg">
+                    <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1"
+                        id="hero-weather-desc"></span>
                     <div id="hero-weather-icon-container"></div>
                     <div class="mt-1 font-bold text-xl md:text-2xl" id="hero-weather-temp"></div>
                 </div>
@@ -103,29 +106,29 @@
                     <!-- Weather Forecasting (OpenWeatherMap) -->
                     @php
                         // Fungsi pembantu untuk mengubah format "8 deg 16' 0" S" menjadi desimal
-                        $dmsToDecimal = function ($dmsStr) {
-                            $dmsStr = trim(preg_replace('/\s+/', ' ', $dmsStr));
+$dmsToDecimal = function ($dmsStr) {
+    $dmsStr = trim(preg_replace('/\s+/', ' ', $dmsStr));
 
-                            // Regex untuk menangkap derajat, menit, detik, dan arah
-                            if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+)\s*"\s*([NSEW])/i', $dmsStr, $matches)) {
-                                $degrees = (float) $matches[1];
-                                $minutes = (float) $matches[2];
-                                $seconds = (float) $matches[3];
-                                $direction = strtoupper($matches[4]);
+    // Regex untuk menangkap derajat, menit, detik, dan arah
+    if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+)\s*"\s*([NSEW])/i', $dmsStr, $matches)) {
+        $degrees = (float) $matches[1];
+        $minutes = (float) $matches[2];
+        $seconds = (float) $matches[3];
+        $direction = strtoupper($matches[4]);
 
-                                $decimal = $degrees + $minutes / 60 + $seconds / 3600;
+        $decimal = $degrees + $minutes / 60 + $seconds / 3600;
 
-                                if ($direction === 'S' || $direction === 'W') {
-                                    $decimal = -$decimal;
-                                }
+        if ($direction === 'S' || $direction === 'W') {
+            $decimal = -$decimal;
+        }
 
-                                return number_format($decimal, 6, '.', '');
-                            }
-                            return null;
-                        };
+        return number_format($decimal, 6, '.', '');
+    }
+    return null;
+};
 
-                        // Pecah koordinat database menjadi bagian Lat dan Lng
-                        // Format asli DB: 8 deg 16' 0" S, 115 deg 25' 0" E
+// Pecah koordinat database menjadi bagian Lat dan Lng
+// Format asli DB: 8 deg 16' 0" S, 115 deg 25' 0" E
                         $parts = explode(',', $mountain->coordinates);
 
                         $lat = isset($parts[0]) ? $dmsToDecimal($parts[0]) : '-8.2666'; // Default fallback
@@ -152,8 +155,7 @@
                     <!-- Map Location -->
                     <section>
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Location</h2>
-                        <div
-                            class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-100 w-full overflow-hidden">
+                        <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-100 w-full overflow-hidden">
                             <iframe width="100%" height="100%" frameborder="0" style="border:0; border-radius: 0.5rem;"
                                 src="https://maps.google.com/maps?q={{ $lat }},{{ $lng }}&t=&z=12&ie=UTF8&iwloc=&output=embed"
                                 allowfullscreen>
@@ -164,7 +166,7 @@
                     <!-- Reviews Section -->
                     <section>
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Reviews ({{ $mountain->ratings->count() }})</h2>
-                        
+
                         <!-- Add Review Form -->
                         @auth
                             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
@@ -174,27 +176,37 @@
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
                                         <div class="flex gap-2 flex-row-reverse justify-end">
-                                            @for($i = 5; $i >= 1; $i--)
-                                                <input type="radio" id="star-{{ $i }}" name="score" value="{{ $i }}" class="peer hidden" required>
-                                                <label for="star-{{ $i }}" class="cursor-pointer text-gray-200 peer-checked:text-yellow-400 hover:text-yellow-400 [&:hover~label]:text-yellow-400 transition-colors">
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <input type="radio" id="star-{{ $i }}" name="score"
+                                                    value="{{ $i }}" class="peer hidden" required>
+                                                <label for="star-{{ $i }}"
+                                                    class="cursor-pointer text-gray-200 peer-checked:text-yellow-400 hover:text-yellow-400 [&:hover~label]:text-yellow-400 transition-colors">
                                                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                        <path
+                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                        </path>
                                                     </svg>
                                                 </label>
                                             @endfor
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="review" class="block text-sm font-medium text-gray-700 mb-1">Your Experience</label>
-                                        <textarea id="review" name="review" rows="3" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#001E3A] focus:border-[#001E3A] p-3 text-sm border" placeholder="Tell us about your hike..."></textarea>
+                                        <label for="review" class="block text-sm font-medium text-gray-700 mb-1">Your
+                                            Experience</label>
+                                        <textarea id="review" name="review" rows="3"
+                                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#001E3A] focus:border-[#001E3A] p-3 text-sm border"
+                                            placeholder="Tell us about your hike..."></textarea>
                                     </div>
-                                    <button type="submit" class="bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Submit Review</button>
+                                    <button type="submit"
+                                        class="bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Submit
+                                        Review</button>
                                 </form>
                             </div>
                         @else
                             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center mb-6">
                                 <p class="text-gray-600 mb-3">Login to share your experience on this mountain.</p>
-                                <a href="{{ route('showLogin') }}" class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Login</a>
+                                <a href="{{ route('showLogin') }}"
+                                    class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Login</a>
                             </div>
                         @endauth
 
@@ -397,27 +409,41 @@
             const getWeatherSvg = (iconCode, classes) => {
                 const code = iconCode.substring(0, 2);
                 const isDay = iconCode.endsWith('d');
-                
-                const sunSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const moonSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
+
+                const sunSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const moonSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
                 const cloudPath = `<path d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
-                const partlyCloudySvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
-                const cloudSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
-                const rainSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const thunderSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
-                const snowSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
-                
-                switch(code) {
-                    case '01': return isDay ? sunSvg : moonSvg;
-                    case '02': return partlyCloudySvg;
+                const partlyCloudySvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
+                const cloudSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
+                const rainSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const thunderSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
+                const snowSvg =
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
+
+                switch (code) {
+                    case '01':
+                        return isDay ? sunSvg : moonSvg;
+                    case '02':
+                        return partlyCloudySvg;
                     case '03':
                     case '04':
-                    case '50': return cloudSvg;
+                    case '50':
+                        return cloudSvg;
                     case '09':
-                    case '10': return rainSvg;
-                    case '11': return thunderSvg;
-                    case '13': return snowSvg;
-                    default: return cloudSvg;
+                    case '10':
+                        return rainSvg;
+                    case '11':
+                        return thunderSvg;
+                    case '13':
+                        return snowSvg;
+                    default:
+                        return cloudSvg;
                 }
             };
 
@@ -447,7 +473,8 @@
                     const heroTemp = document.getElementById('hero-weather-temp');
                     const heroDesc = document.getElementById('hero-weather-desc');
                     if (heroCard && heroIconContainer && heroTemp && heroDesc) {
-                        heroIconContainer.innerHTML = getWeatherSvg(currentItem.weather[0].icon, "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
+                        heroIconContainer.innerHTML = getWeatherSvg(currentItem.weather[0].icon,
+                            "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
                         heroTemp.innerHTML = `${Math.round(currentItem.main.temp)}&deg;C`;
                         heroDesc.innerHTML = currentItem.weather[0].main;
                         heroCard.classList.remove('hidden');
@@ -480,15 +507,15 @@
                     const minTemp = Math.round(Math.min(...info.temp));
 
                     html += `
-                                <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
-                                    <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
-                                    ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
-                                    <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
-                                    <div class="mt-2 text-[#2A9D8F] font-bold">
-                                        ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
+                                    <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
+                                        <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
+                                        ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
+                                        <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
+                                        <div class="mt-2 text-[#2A9D8F] font-bold">
+                                            ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
                 });
                 weatherContainer.innerHTML = html;
             })
@@ -499,7 +526,7 @@
 
         function injectMockWeather(container) {
             const today = new Date();
-            
+
             const heroCard = document.getElementById('hero-weather-card');
             const heroIconContainer = document.getElementById('hero-weather-icon-container');
             const heroTemp = document.getElementById('hero-weather-temp');

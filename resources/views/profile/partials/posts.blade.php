@@ -4,8 +4,8 @@
         <div class="flex justify-between items-end mb-6">
             <h2 class="text-2xl font-bold text-[#0F172A]">Hiking History</h2>
             <div class="flex gap-4 items-center">
-                <a href="#" class="text-sm font-bold text-[#2A5C9A] hover:underline">View All Activities</a>
-                <a href="#"
+                <a href="{{ route('profile.posts.index') }}" class="text-sm font-bold text-[#2A5C9A] hover:underline">View All Activities</a>
+                <a href="{{ route('profile.posts.create') }}"
                     class="bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2 px-4 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">+
                     New Activity</a>
             </div>
