@@ -26,6 +26,16 @@ class ProfilePostController extends Controller
         return view('profile.posts.create', compact('mountains'));
     }
 
+    public function show($id)
+    {
+        $post = Auth::user()->posts()
+            ->with(['mountain.province', 'images' => function ($query) {
+                $query->orderBy('position', 'asc');
+            }])->findOrFail($id);
+
+        return view('profile.posts.show', compact('post'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -34,7 +44,7 @@ class ProfilePostController extends Controller
             'mountain_id' => 'nullable|exists:mountains,id',
             'climbing_date' => 'nullable|date',
             'duration_days' => 'nullable|integer|min:1',
-            'images' => 'nullable|array',
+            'images' => 'nullable|array|max:5',
             'images.*' => 'image|max:5120'
         ]);
 

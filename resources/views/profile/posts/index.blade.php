@@ -23,11 +23,11 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($posts as $post)
-            <div class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col h-full">
+            <a href="{{ route('profile.posts.show', $post->id) }}" class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col h-full hover:-translate-y-1 transition duration-300">
                 <!-- Images Carousel if applicable, keeping simple for lists -->
                 @if($post->images && $post->images->count() > 0)
                     <div class="w-full h-48 rounded-2xl overflow-hidden mb-4 bg-gray-100">
-                        <img src="{{ asset('storage/' . $post->images->first()->image_url) }}" alt="Post Image" class="w-full h-full object-cover">
+                        <img src="{{ str_contains($post->images->first()->image_url, 'http') ? $post->images->first()->image_url : asset('storage/' . $post->images->first()->image_url) }}" alt="Post Image" class="w-full h-full object-cover">
                     </div>
                 @endif
                 
@@ -44,7 +44,7 @@
                     </div>
                     
                     @if ($post->mountain)
-                        <p class="text-[12px] text-[#094174] font-semibold mb-1">📍 {{ $post->mountain->name }}</p>
+                        <p class="text-[12px] text-[#094174] font-semibold mb-1">{{ $post->mountain->name }}</p>
                     @endif
                     
                     <p class="text-[12px] text-gray-500 mb-3">
@@ -56,7 +56,7 @@
                         {!! Str::markdown($post->body) !!}
                     </div>
                 </div>
-            </div>
+            </a>
         @empty
             <div class="col-span-full py-12 text-center bg-white rounded-3xl shadow-sm border border-gray-100">
                 <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">

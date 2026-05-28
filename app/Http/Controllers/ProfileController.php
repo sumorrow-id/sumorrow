@@ -21,6 +21,7 @@ class ProfileController extends Controller
                 $query->orderBy('position', 'asc');
             }])
             ->orderBy('created_at', 'desc')
+            ->take(2)
             ->get();
 
         $gears = $user->gears()->orderBy('category')->get();

@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'index'])->name('profile.posts.index');
     Route::get('/profile/posts/create', [\App\Http\Controllers\ProfilePostController::class, 'create'])->name('profile.posts.create');
     Route::post('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'store'])->name('profile.posts.store');
+    Route::get('/profile/posts/{post}', [\App\Http\Controllers\ProfilePostController::class, 'show'])->name('profile.posts.show');
 
     // Email Verification Configuration
     Route::prefix('email')->group(function () {

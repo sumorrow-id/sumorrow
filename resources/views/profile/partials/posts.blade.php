@@ -56,7 +56,7 @@
                                 @if ($index == 3 && $post->images->count() > 4)
                                     <div
                                         class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
-                                        <img src="{{ $image->image_url }}" alt="{{ $post->title }} image"
+                                        <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
                                             class="w-full h-full object-cover">
                                         <div
                                             class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">
@@ -64,14 +64,14 @@
                                         </div>
                                     </div>
                                 @else
-                                    <img src="{{ $image->image_url }}" alt="{{ $post->title }} image"
+                                    <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
                                         class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
                                 @endif
                             @endforeach
                         </div>
                     @endif
 
-                    <a href="{{ route('explore') /* Ganti ke route detail post kamu jika sudah ada */ }}"
+                    <a href="{{ route('profile.posts.show', $post->id) }}"
                         class="w-full xl:w-auto text-center bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">
                         View Full Log
                     </a>
