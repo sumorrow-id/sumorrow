@@ -4,10 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Community;
@@ -19,7 +19,9 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens, HasFactory, HasUuids, Notifiable;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public const UPDATED_AT = null;
 
     protected $fillable = [
@@ -81,5 +83,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function communities() {
         return $this->belongsToMany(Community::class);
+    }
+    public function gears(): HasMany
+    {
+        return $this->hasMany(Gear::class);
+    }
+
+    public function achievements() // BelongsToMany relationship
+    {
+        return $this->belongsToMany(Achievement::class)->withPivot('unlocked_at');
     }
 }

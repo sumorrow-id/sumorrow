@@ -35,6 +35,7 @@ class DownloadMountainImages extends Command
 
         if ($images->isEmpty()) {
             $this->info('No external image URLs found. All images are already stored locally.');
+
             return self::SUCCESS;
         }
 
@@ -50,13 +51,14 @@ class DownloadMountainImages extends Command
             try {
                 $response = $this->http->withoutVerifying()
                     ->withHeaders([
-                        'User-Agent' => config('app.name') . '/1.0 (mountain-image-downloader)',
+                        'User-Agent' => config('app.name').'/1.0 (mountain-image-downloader)',
                     ])->timeout(30)->get($image->getRawOriginal('image_url'));
 
-                if (!$response->successful()) {
+                if (! $response->successful()) {
                     $failed++;
                     $errors[] = "{$image->mountain->name}: HTTP {$response->status()}";
                     $bar->advance();
+
                     continue;
                 }
 
@@ -84,7 +86,7 @@ class DownloadMountainImages extends Command
         $bar->finish();
         $this->newLine(2);
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->warn('Failed downloads:');
             foreach ($errors as $error) {
                 $this->line("  - {$error}");
@@ -105,9 +107,9 @@ class DownloadMountainImages extends Command
     {
         $map = [
             'image/jpeg' => 'jpg',
-            'image/png'  => 'png',
+            'image/png' => 'png',
             'image/webp' => 'webp',
-            'image/gif'  => 'gif',
+            'image/gif' => 'gif',
         ];
 
         $cleanType = $contentType ? explode(';', $contentType)[0] : '';

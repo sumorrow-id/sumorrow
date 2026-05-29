@@ -11,21 +11,22 @@ class MountainResource extends JsonResource
     {
         $cover = $this->whenLoaded('images', function () {
             $cover = $this->images->firstWhere('is_cover', true) ?? $this->images->first();
+
             return $cover?->image_url;
         });
 
         return [
-            'id'             => $this->id,
-            'name'           => $this->name,
-            'province'       => $this->whenLoaded('province', fn () => [
-                'id'   => $this->province->id,
+            'id' => $this->id,
+            'name' => $this->name,
+            'province' => $this->whenLoaded('province', fn () => [
+                'id' => $this->province->id,
                 'name' => $this->province->name,
             ]),
-            'difficulty'     => $this->difficulty,
+            'difficulty' => $this->difficulty,
             'elevation_masl' => $this->elevation_masl,
-            'avg_rating'     => (float) $this->avg_rating,
-            'is_active'      => (bool) $this->is_active,
-            'cover_image'    => $cover,
+            'avg_rating' => (float) $this->avg_rating,
+            'is_active' => (bool) $this->is_active,
+            'cover_image' => $cover,
         ];
     }
 }

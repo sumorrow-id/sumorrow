@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\GearController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -20,6 +21,7 @@ Public Routes
 Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
 Route::get('/community', [CommunityController::class, 'index'])->name('community');
 
 Route::get('/api/docs', function () {
@@ -63,10 +65,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
+    // MyCommunity
     Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
     Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
     Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
-        
+
+    // Gear
+    Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
+    Route::put('/gears/{gear}', [GearController::class, 'update'])->name('gears.update');
+    Route::delete('/gears/{gear}', [GearController::class, 'destroy'])->name('gears.destroy');
+
+    // Explore / Mountain
+    Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
+
     // Email Verification Configuration
     Route::prefix('email')->group(function () {
         Route::get('/verify', function () {

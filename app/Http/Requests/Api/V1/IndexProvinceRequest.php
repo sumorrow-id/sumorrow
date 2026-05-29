@@ -15,8 +15,8 @@ class IndexProvinceRequest extends FormRequest
     {
         return [
             'search' => ['sometimes', 'string', 'max:120'],
-            'page'   => ['sometimes', 'integer', 'min:1'],
-            'limit'  => ['sometimes', 'integer', 'min:1', 'max:50'],
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'limit' => ['sometimes', 'integer', 'min:1', 'max:50'],
         ];
     }
 

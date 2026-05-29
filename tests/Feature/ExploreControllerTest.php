@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Mountain;
 use App\Models\Province;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,22 +26,21 @@ class ExploreControllerTest extends TestCase
     /**
      * Create a Mountain belonging to the given Province.
      *
-     * @param  Province  $province
      * @param  array<string, mixed>  $overrides
      */
     private function makeMountain(Province $province, array $overrides = []): Mountain
     {
         return Mountain::create(array_merge([
-            'province_id'      => $province->id,
-            'name'             => 'Test Mountain',
-            'elevation_masl'   => 3000,
-            'length_km'        => 10.0,
+            'province_id' => $province->id,
+            'name' => 'Test Mountain',
+            'elevation_masl' => 3000,
+            'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => 'A test mountain description.',
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 4.0,
+            'coordinates' => '7.45S 110.44E',
+            'description' => 'A test mountain description.',
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 4.0,
         ], $overrides));
     }
 
@@ -112,15 +110,15 @@ class ExploreControllerTest extends TestCase
         $province = $this->makeProvince('Jawa Tengah');
 
         $this->makeMountain($province, [
-            'name'             => 'Merbabu',
-            'elevation_masl'   => 3142,
-            'length_km'        => 10.0,
+            'name' => 'Merbabu',
+            'elevation_masl' => 3142,
+            'length_km' => 10.0,
             'elevation_gain_m' => 2000,
-            'coordinates'      => '7.45S 110.44E',
-            'description'      => 'A beautiful mountain',
-            'is_active'        => true,
-            'difficulty'       => 'moderate',
-            'avg_rating'       => 4.5,
+            'coordinates' => '7.45S 110.44E',
+            'description' => 'A beautiful mountain',
+            'is_active' => true,
+            'difficulty' => 'moderate',
+            'avg_rating' => 4.5,
         ]);
 
         $response = $this->get('/explore');

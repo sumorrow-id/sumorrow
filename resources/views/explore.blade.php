@@ -98,6 +98,14 @@
 
                                 <div class="flex flex-wrap items-center gap-3 mb-3">
                                     <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                        <span class="text-xs font-bold text-[#094174]">
+                                            {{ number_format($mountain->avg_rating ?? 0, 1) }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
                                         <img src="{{ asset('images/explore/mountainelevation.png') }}" alt="Elevation"
                                             class="h-4 w-4 object-contain" />
                                         <span class="text-xs font-bold text-[#094174]">{{ $mountain->elevation_masl }}
@@ -121,7 +129,7 @@
                                 <p class="text-xs text-gray-500 mb-6 line-clamp-3 leading-relaxed mt-auto">
                                     {{ $mountain->description }}</p>
 
-                                <a href="#"
+                                <a href="{{ route('explore.show', $mountain->id) }}"
                                     class="block w-full text-center bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-2.5 rounded-full text-sm transition shadow-md mt-auto">
                                     Explore Now
                                 </a>
