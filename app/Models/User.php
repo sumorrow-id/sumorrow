@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Community;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -22,7 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public const UPDATED_AT = null;
 
     protected $fillable = [
-        // 'id', dikomen aja biar ga dimanipulasi orang luar pake req form
         'username',
         'email',
         'google_id',
@@ -77,5 +77,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function postReplies(): HasMany
     {
         return $this->hasMany(PostReply::class, 'author_id');
+    }
+
+    public function communities() {
+        return $this->belongsToMany(Community::class);
     }
 }
