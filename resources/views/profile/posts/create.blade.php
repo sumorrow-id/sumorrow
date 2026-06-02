@@ -80,7 +80,7 @@
                 <label for="images" class="block text-sm font-bold text-gray-700 mb-2">Photos</label>
                 <input type="file" name="images[]" id="images" multiple accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E2E8F0] file:text-[#094174] hover:file:bg-[#CBD5E1] transition">
-                <p class="text-xs text-gray-500 mt-2">Select up to 5 images. Maximum 2MB per image to ensure successful upload.</p>
+                <p class="text-xs text-gray-500 mt-2">Select up to 12 images. Maximum 2MB per image to ensure successful upload.</p>
                 <p id="image-error" class="text-sm text-red-600 mt-2 hidden"></p>
             </div>
 
@@ -102,8 +102,8 @@
         let errorMsg = '';
         let totalSize = 0;
 
-        if (files.length > 5) {
-            errorMsg = 'You can only upload a maximum of 5 images.';
+        if (files.length > 12) {
+            errorMsg = 'You can only upload a maximum of 12 images.';
         } else {
             for (let i = 0; i < files.length; i++) {
                 totalSize += files[i].size;
@@ -112,8 +112,8 @@
                     break;
                 }
             }
-            if (!errorMsg && totalSize > 8 * 1024 * 1024) { // 8MB
-                errorMsg = 'Total size of all images cannot exceed 8MB.';
+            if (!errorMsg && totalSize > 24 * 1024 * 1024) { 
+                errorMsg = 'Total size of all images cannot exceed 24MB.';
             }
         }
 

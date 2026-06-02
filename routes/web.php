@@ -8,6 +8,7 @@ use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GearController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilePostController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,10 +80,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
 
     // Posts
-    Route::get('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'index'])->name('profile.posts.index');
-    Route::get('/profile/posts/create', [\App\Http\Controllers\ProfilePostController::class, 'create'])->name('profile.posts.create');
-    Route::post('/profile/posts', [\App\Http\Controllers\ProfilePostController::class, 'store'])->name('profile.posts.store');
-    Route::get('/profile/posts/{post}', [\App\Http\Controllers\ProfilePostController::class, 'show'])->name('profile.posts.show');
+    Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
+    Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
+    Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
+    Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
 
     // Email Verification Configuration
     Route::prefix('email')->group(function () {

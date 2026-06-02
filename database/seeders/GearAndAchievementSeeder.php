@@ -18,51 +18,51 @@ class GearAndAchievementSeeder extends Seeder
         }
 
         // ==========================================
-        // 1. Pilar Jalur Ekspedisi (Climber Posts)
+        // Pilar Jalur Ekspedisi
         // ==========================================
         $firstClimb = Achievement::updateOrCreate(
             ['title' => 'First Summit'],
-            ['description' => 'Successfully logged your first mountain climbing activity.']
+            ['description' => 'Successfully logged your first mountain climbing activity.', 'icon_url' => '⛰️']
         );
 
         $explorer = Achievement::updateOrCreate(
             ['title' => 'The Explorer'],
-            ['description' => 'Successfully conquered 5 different mountains.']
+            ['description' => 'Successfully conquered 5 different mountains.', 'icon_url' => '🗺️']
         );
 
         $altitudeJunkie = Achievement::updateOrCreate(
             ['title' => 'Altitude Junkie'],
-            ['description' => 'Conquered 3 mountains above 3.000 MASL.']
+            ['description' => 'Conquered 3 mountains above 3.000 MASL.', 'icon_url' => '☁️']
         );
 
         $enduranceMaster = Achievement::updateOrCreate(
             ['title' => 'Endurance Master'],
-            ['description' => 'Completed a grueling expedition lasting 3 days or more.']
+            ['description' => 'Completed a grueling expedition lasting 3 days or more.', 'icon_url' => '🏕️']
         );
 
         // ==========================================
-        // 2. Pilar Komunitas (Reviews & Ratings)
+        // Pilar Komunitas
         // ==========================================
         $localGuide = Achievement::updateOrCreate(
             ['title' => 'Local Guide'],
-            ['description' => 'Wrote 5 detailed mountain reviews to help the community.']
+            ['description' => 'Wrote 5 detailed mountain reviews to help the community.', 'icon_url' => '✍️']
         );
 
         $visualStoryteller = Achievement::updateOrCreate(
             ['title' => 'Visual Storyteller'],
-            ['description' => 'Shared 10 or more stunning photos of your climbing journeys.']
+            ['description' => 'Shared 10 or more stunning photos of your climbing journeys.', 'icon_url' => '📸']
         );
 
         // ==========================================
-        // 3. Pilar Persiapan (Gear List)
+        // Pilar Persiapan
         // ==========================================
         $preparedHiker = Achievement::updateOrCreate(
             ['title' => 'Prepared Hiker'],
-            ['description' => 'Logged at least 10 essential items in your personal gear list.']
+            ['description' => 'Logged at least 10 essential items in your personal gear list.', 'icon_url' => '🎒']
         );
 
         // ------------------------------------------
-        // Attach ke User (Simulasi Dummy Data)
+        // Attach ke User
         // ------------------------------------------
         $user->achievements()->syncWithoutDetaching([
             $firstClimb->id => ['unlocked_at' => Carbon::now()->subMonths(5)],

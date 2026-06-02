@@ -50,7 +50,7 @@ class ProfilePostController extends Controller
             'mountain_id' => 'nullable|exists:mountains,id',
             'climbing_date' => 'nullable|date',
             'duration_days' => 'nullable|integer|min:1',
-            'images' => 'nullable|array|max:5',
+            'images' => 'nullable|array|max:12',
             'images.*' => 'image|max:2048', // Enforce 2MB matching PHP default max file size
         ]);
 
