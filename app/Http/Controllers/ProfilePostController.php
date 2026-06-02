@@ -13,7 +13,7 @@ class ProfilePostController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        $posts = $user()->posts()
+        $posts = $user->posts()
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
