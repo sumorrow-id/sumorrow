@@ -64,6 +64,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // MyCommunity
+    Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
+    Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
+    Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
 
     // Gear
     Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
@@ -87,15 +92,14 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
             $request->fulfill();
-
             return redirect()->route('home')->with('verified', true);
         })->middleware('signed')->name('verification.verify');
 
         Route::post('/verification-notification', function (Request $request) {
             $request->user()->sendEmailVerificationNotification();
-
             return back()->with('message', 'Verification link sent!');
         })->middleware('throttle:6,1')->name('verification.send');
+    
     });
 
     // Admin route
