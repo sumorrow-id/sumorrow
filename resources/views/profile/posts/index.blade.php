@@ -23,7 +23,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($posts as $post)
-            <a href="{{ route('profile.posts.show', $post->id) }}" class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col h-full hover:-translate-y-1 transition duration-300">
+            <div onclick="window.location.href='{{ route('profile.posts.show', $post->id) }}'" class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex flex-col h-full hover:-translate-y-1 transition duration-300 cursor-pointer">
                 <!-- Images Carousel if applicable, keeping simple for lists -->
                 @if($post->images && $post->images->count() > 0)
                     <div class="w-full h-48 rounded-2xl overflow-hidden mb-4 bg-gray-100">
@@ -56,7 +56,7 @@
                         {!! Str::markdown($post->body) !!}
                     </div>
                 </div>
-            </a>
+            </div>
         @empty
             <div class="col-span-full py-12 text-center bg-white rounded-3xl shadow-sm border border-gray-100">
                 <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">

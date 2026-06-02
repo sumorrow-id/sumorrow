@@ -80,16 +80,60 @@
                 <label for="images" class="block text-sm font-bold text-gray-700 mb-2">Photos</label>
                 <input type="file" name="images[]" id="images" multiple accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E2E8F0] file:text-[#094174] hover:file:bg-[#CBD5E1] transition">
-                <p class="text-xs text-gray-500 mt-2">Select up to 5 images (max 5MB each).</p>
+                <p class="text-xs text-gray-500 mt-2">Select up to 5 images. Maximum 2MB per image to ensure successful upload.</p>
+                <p id="image-error" class="text-sm text-red-600 mt-2 hidden"></p>
             </div>
 
             <!-- Submit -->
             <div class="pt-4 flex justify-end">
-                <button type="submit" class="bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-3 px-8 rounded-full transition shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                <button type="submit" id="submit-btn" class="bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-3 px-8 rounded-full transition shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                     Post Activity
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('images').addEventListener('change', function(e) {
+        const files = e.target.files;
+        const errorEl = document.getElementById('image-error');
+        const submitBtn = document.getElementById('submit-btn');
+        let errorMsg = '';
+        let totalSize = 0;
+
+        if (files.length > 5) {
+            errorMsg = 'You can only upload a maximum of 5 images.';
+        } else {
+            for (let i = 0; i < files.length; i++) {
+                totalSize += files[i].size;
+                if (files[i].size > 2 * 1024 * 1024) { // 2MB
+                    errorMsg = 'Each image must be smaller than 2MB.';
+                    break;
+                }
+            }
+            if (!errorMsg && totalSize > 8 * 1024 * 1024) { // 8MB
+                errorMsg = 'Total size of all images cannot exceed 8MB.';
+            }
+        }
+
+        if (errorMsg) {
+            errorEl.textContent = errorMsg;
+            errorEl.classList.remove('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            errorEl.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const submitBtn = document.getElementById('submit-btn');
+        if (submitBtn.disabled) {
+            e.preventDefault();
+        }
+    });
+</script>
 @endsection

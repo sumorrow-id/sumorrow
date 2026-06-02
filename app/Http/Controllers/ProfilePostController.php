@@ -10,7 +10,10 @@ class ProfilePostController extends Controller
 {
     public function index()
     {
-        $posts = Auth::user()->posts()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $posts = $user()->posts()
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
@@ -28,7 +31,10 @@ class ProfilePostController extends Controller
 
     public function show($id)
     {
-        $post = Auth::user()->posts()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $post = $user->posts()
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])->findOrFail($id);
@@ -45,10 +51,13 @@ class ProfilePostController extends Controller
             'climbing_date' => 'nullable|date',
             'duration_days' => 'nullable|integer|min:1',
             'images' => 'nullable|array|max:5',
-            'images.*' => 'image|max:5120'
+            'images.*' => 'image|max:2048', // Enforce 2MB matching PHP default max file size
         ]);
 
-        $post = Auth::user()->posts()->create($request->only(
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $post = $user->posts()->create($request->only(
             'title', 'body', 'mountain_id', 'climbing_date', 'duration_days'
         ));
 
