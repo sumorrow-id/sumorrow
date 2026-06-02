@@ -4,8 +4,8 @@
         <div class="flex justify-between items-end mb-6">
             <h2 class="text-2xl font-bold text-[#0F172A]">Hiking History</h2>
             <div class="flex gap-4 items-center">
-                <a href="#" class="text-sm font-bold text-[#2A5C9A] hover:underline">View All Activities</a>
-                <a href="#"
+                <a href="{{ route('profile.posts.index') }}" class="text-sm font-bold text-[#2A5C9A] hover:underline">View All Activities</a>
+                <a href="{{ route('profile.posts.create') }}"
                     class="bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2 px-4 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">+
                     New Activity</a>
             </div>
@@ -56,7 +56,7 @@
                                 @if ($index == 3 && $post->images->count() > 4)
                                     <div
                                         class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
-                                        <img src="{{ $image->image_url }}" alt="{{ $post->title }} image"
+                                        <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
                                             class="w-full h-full object-cover">
                                         <div
                                             class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">
@@ -64,14 +64,14 @@
                                         </div>
                                     </div>
                                 @else
-                                    <img src="{{ $image->image_url }}" alt="{{ $post->title }} image"
+                                    <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
                                         class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
                                 @endif
                             @endforeach
                         </div>
                     @endif
 
-                    <a href="{{ route('explore') /* Ganti ke route detail post kamu jika sudah ada */ }}"
+                    <a href="{{ route('profile.posts.show', $post->id) }}"
                         class="w-full xl:w-auto text-center bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">
                         View Full Log
                     </a>
@@ -99,7 +99,7 @@
                 @if (isset($topMountains) && $topMountains->count() > 0)
                     @foreach ($topMountains as $mountain)
                         <div class="flex items-center justify-between group cursor-pointer"
-                            onclick="window.location.href='{{ route('explore') }}'">
+                            onclick="window.location.href='{{ route('explore.show', $mountain->id) }}'">
                             <div class="flex items-center gap-3">
                                 <img src="{{ $mountain->images->first()?->image_url ?? 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=100&fit=crop' }}"
                                     class="w-11 h-11 rounded-xl object-cover group-hover:ring-2 ring-[#094174] transition-all">
