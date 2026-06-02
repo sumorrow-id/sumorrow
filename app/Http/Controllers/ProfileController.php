@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Mountain;
 use App\Models\User;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(AchievementService $achievementService)
     {
         /** @var User $user */
         $user = Auth::user();
+
+        // Cek dan unlock achievement baru jika memenuhi kriteria
+        $achievementService->checkAndUnlockAchievements($user);
 
         // 1. Ambil data kontribusi user
         $posts = $user->posts()
@@ -25,7 +29,9 @@ class ProfileController extends Controller
             ->get();
 
         $gears = $user->gears()->orderBy('category')->get();
-        $achievements = $user->achievements()->orderByPivot('unlocked_at', 'desc')->get();
+        
+        $allAchievements = \App\Models\Achievement::all();
+        $userAchievements = $user->achievements()->get()->keyBy('id');
 
         // 2. Ambil data gunung terpopuler untuk sidebar
         $topMountains = Mountain::with(['province', 'images'])
@@ -35,7 +41,7 @@ class ProfileController extends Controller
             ->get();
 
         // 3. Kirim semua variabel ke view profile
-        return view('profile.profile', compact('posts', 'gears', 'achievements', 'user', 'topMountains'));
+        return view('profile.profile', compact('posts', 'gears', 'allAchievements', 'userAchievements', 'user', 'topMountains'));
     }
 
     public function edit()
