@@ -20,6 +20,15 @@ class ExploreController extends Controller
             });
         }
 
+        if ($request->filled('elevation')) {
+            $elevation = (int) $request->elevation;
+            if ($elevation > 0) {
+                // Buffer +/- 300 mdpl
+                $buffer = 300;
+                $query->whereBetween('elevation_masl', [$elevation - $buffer, $elevation + $buffer]);
+            }
+        }
+
         if ($request->filled('difficulty')) {
             $query->whereIn('difficulty', $request->difficulty);
         }
