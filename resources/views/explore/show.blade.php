@@ -119,8 +119,9 @@
             <div class="absolute inset-0 bg-black/40"></div>
             <div
                 class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
-                <div>
-                    <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
+                <div class="min-w-0">
+                    <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2 break-words">
+                        {{ $mountain->name }}</h1>
                     <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
                         <span id="hero-location-pin" role="button" tabindex="0" title="View on map" class="flex items-center gap-1 cursor-pointer transition-colors duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
                             <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -146,7 +147,7 @@
 
                 <!-- Weather Card -->
                 <div id="hero-weather-card" role="button" tabindex="0" title="See full forecast"
-                    class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg cursor-pointer transition-all duration-300 hover:bg-white/20 hover:-translate-y-1 hover:shadow-xl">
+                    class="hidden shrink-0 flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4 min-w-[88px] sm:min-w-[100px] text-white shadow-lg cursor-pointer transition-all duration-300 hover:bg-white/20 hover:-translate-y-1 hover:shadow-xl">
                     <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1"
                         id="hero-weather-desc"></span>
                     <div id="hero-weather-icon-container"></div>
@@ -506,6 +507,14 @@
         </div>
     </div>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" type="button" aria-label="Back to top"
+        class="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#001E3A] text-white shadow-lg ring-1 ring-white/10 opacity-0 translate-y-4 scale-90 pointer-events-none transition-all duration-300 ease-out hover:bg-[#003865] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] active:scale-95">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const weatherContainer = document.getElementById('weather-container');
@@ -547,6 +556,29 @@
                         e.preventDefault();
                         scrollToForecast();
                     }
+                });
+            }
+
+            // Tombol Back to Top: muncul setelah scroll, klik untuk kembali ke atas
+            const backToTopBtn = document.getElementById('back-to-top');
+            if (backToTopBtn) {
+                const hiddenClasses = ['opacity-0', 'translate-y-4', 'scale-90', 'pointer-events-none'];
+                const toggleBackToTop = () => {
+                    if (window.scrollY > 400) {
+                        backToTopBtn.classList.remove(...hiddenClasses);
+                    } else {
+                        backToTopBtn.classList.add(...hiddenClasses);
+                    }
+                };
+                toggleBackToTop();
+                window.addEventListener('scroll', toggleBackToTop, {
+                    passive: true
+                });
+                backToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 });
             }
 
