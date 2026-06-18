@@ -33,11 +33,7 @@
 
                 @if ($errors->any())
                     <div class="mb-5 p-4 rounded-2xl bg-red-50 border border-red-200">
-                        <ul class="text-sm text-red-600">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ rtrim($error, '.') }}</li>
-                            @endforeach
-                        </ul>
+                        <p class="text-sm text-red-600">{{ rtrim($errors->first(), '.') }}</p>
                     </div>
                 @endif
                 <!-- Form Register -->
