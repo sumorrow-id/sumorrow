@@ -30,7 +30,7 @@
                             class="h-11 w-11 rounded-full object-cover border-2 border-gray-200 group-hover:border-[#094174]/40 transition-colors shadow-sm">
                     </button>
                     <!-- Improved dropdown for light navbar -->
-                    <div class="absolute right-0 mt-3 w-56 bg-white/95 border border-gray-200/80 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 backdrop-blur-lg transform origin-top-right group-hover:scale-100 scale-95 z-50 overflow-hidden">
+                    <div class="absolute right-0 mt-3 w-56 bg-white border border-gray-200/80 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 backdrop-blur-lg transform origin-top-right group-hover:scale-100 scale-95 z-50 overflow-hidden">
                         <div class="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
                             <p class="text-sm font-bold text-[#1a2b4c] truncate">{{ Auth::user()->username }}</p>
                             <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
