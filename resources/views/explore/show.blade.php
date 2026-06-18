@@ -69,20 +69,20 @@
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Critical Information</h2>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Height</span>
                                 <span
                                     class="text-xl font-bold text-[#2A9D8F]">{{ number_format($mountain->elevation_masl) }}
                                     <span class="text-sm font-normal">masl</span></span>
                             </div>
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Length</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->length_km ?? '-' }} <span
                                         class="text-sm font-normal">km</span></span>
                             </div>
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Elevation Gain</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->elevation_gain_m ?? '-' }}
                                     <span class="text-sm font-normal">m</span></span>
@@ -95,7 +95,7 @@
                                 }
                             @endphp
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Est. Time</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $estHours > 0 ? $estHours : '-' }} <span
                                         class="text-sm font-normal">hrs</span></span>
@@ -507,7 +507,7 @@ $dmsToDecimal = function ($dmsStr) {
                     const minTemp = Math.round(Math.min(...info.temp));
 
                     html += `
-                                    <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
+                                    <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                         <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
                                         ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
                                         <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
@@ -558,7 +558,7 @@ $dmsToDecimal = function ($dmsStr) {
 
                 // MEMPERBAIKI: Menggunakan backtick (`) untuk injeksi data fallback mock-up
                     mockHtml += `
-                        <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
+                        <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                             <span class="font-semibold text-[#001E3A] mb-1">${dayStr}</span>
                             ${getWeatherSvg(iconMap[status], "w-16 h-16 drop-shadow-sm")}
                             <span class="text-sm font-medium text-gray-700 capitalize mt-1">${status}</span>
