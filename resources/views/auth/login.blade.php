@@ -65,9 +65,9 @@
                             <i class="fa-solid fa-eye-slash text-lg" id="eyeIcon"></i>
                         </button>
                     </div>
-                    @if ($errors->has('email'))
+                    @if ($errors->any())
                         <div class="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6">
-                            {{ $errors->first('email') }}
+                            {{ $errors->first() }}
                         </div>
                     @endif
 

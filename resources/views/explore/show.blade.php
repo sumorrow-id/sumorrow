@@ -1,6 +1,112 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        /* Animasi untuk icon cuaca (SVG) agar terasa hidup */
+        @keyframes weather-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes weather-bob {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-1.5px);
+            }
+        }
+
+        @keyframes weather-rain {
+            0% {
+                transform: translateY(-2px);
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(3px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes weather-flash {
+
+            0%,
+            55%,
+            100% {
+                opacity: 1;
+            }
+
+            65%,
+            85% {
+                opacity: 0.25;
+            }
+        }
+
+        @keyframes weather-pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(0.92);
+            }
+        }
+
+        .weather-spin {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: weather-spin 9s linear infinite;
+        }
+
+        .weather-bob {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: weather-bob 3s ease-in-out infinite;
+        }
+
+        .weather-rain {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: weather-rain 1.2s ease-in infinite;
+        }
+
+        .weather-flash {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: weather-flash 2s ease-in-out infinite;
+        }
+
+        .weather-pulse {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: weather-pulse 3s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .weather-spin,
+            .weather-bob,
+            .weather-rain,
+            .weather-flash,
+            .weather-pulse {
+                animation: none;
+            }
+        }
+    </style>
+
     <div class="bg-[#F8F9FA] min-h-screen">
         <!-- Hero Section -->
         @php
@@ -16,7 +122,7 @@
                 <div>
                     <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2">{{ $mountain->name }}</h1>
                     <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
-                        <span class="flex items-center gap-1">
+                        <span id="hero-location-pin" role="button" tabindex="0" title="View on map" class="flex items-center gap-1 cursor-pointer transition-colors duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
                             <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
@@ -39,12 +145,13 @@
                 </div>
 
                 <!-- Weather Card -->
-                <div id="hero-weather-card"
-                    class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg">
+                <div id="hero-weather-card" role="button" tabindex="0" title="See full forecast"
+                    class="hidden flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 min-w-[100px] text-white shadow-lg cursor-pointer transition-all duration-300 hover:bg-white/20 hover:-translate-y-1 hover:shadow-xl">
                     <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1"
                         id="hero-weather-desc"></span>
                     <div id="hero-weather-icon-container"></div>
                     <div class="mt-1 font-bold text-xl md:text-2xl" id="hero-weather-temp"></div>
+                    <span class="mt-1 text-[10px] text-white/60 uppercase tracking-wider">Tap for forecast</span>
                 </div>
             </div>
         </div>
@@ -69,20 +176,20 @@
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Critical Information</h2>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Height</span>
                                 <span
                                     class="text-xl font-bold text-[#2A9D8F]">{{ number_format($mountain->elevation_masl) }}
                                     <span class="text-sm font-normal">masl</span></span>
                             </div>
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Length</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->length_km ?? '-' }} <span
                                         class="text-sm font-normal">km</span></span>
                             </div>
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Elevation Gain</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->elevation_gain_m ?? '-' }}
                                     <span class="text-sm font-normal">m</span></span>
@@ -95,7 +202,7 @@
                                 }
                             @endphp
                             <div
-                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                                class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">Est. Time</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $estHours > 0 ? $estHours : '-' }} <span
                                         class="text-sm font-normal">hrs</span></span>
@@ -106,36 +213,36 @@
                     <!-- Weather Forecasting (OpenWeatherMap) -->
                     @php
                         // Fungsi pembantu untuk mengubah format "8 deg 16' 0" S" menjadi desimal
-$dmsToDecimal = function ($dmsStr) {
-    $dmsStr = trim(preg_replace('/\s+/', ' ', $dmsStr));
+                        $dmsToDecimal = function ($dmsStr) {
+                            $dmsStr = trim(preg_replace('/\s+/', ' ', $dmsStr));
 
-    // Regex untuk menangkap derajat, menit, detik, dan arah
-    if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+)\s*"\s*([NSEW])/i', $dmsStr, $matches)) {
-        $degrees = (float) $matches[1];
-        $minutes = (float) $matches[2];
-        $seconds = (float) $matches[3];
-        $direction = strtoupper($matches[4]);
+                            // Regex untuk menangkap derajat, menit, detik, dan arah
+                            if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+)\s*"\s*([NSEW])/i', $dmsStr, $matches)) {
+                                $degrees = (float) $matches[1];
+                                $minutes = (float) $matches[2];
+                                $seconds = (float) $matches[3];
+                                $direction = strtoupper($matches[4]);
 
-        $decimal = $degrees + $minutes / 60 + $seconds / 3600;
+                                $decimal = $degrees + $minutes / 60 + $seconds / 3600;
 
-        if ($direction === 'S' || $direction === 'W') {
-            $decimal = -$decimal;
-        }
+                                if ($direction === 'S' || $direction === 'W') {
+                                    $decimal = -$decimal;
+                                }
 
-        return number_format($decimal, 6, '.', '');
-    }
-    return null;
-};
+                                return number_format($decimal, 6, '.', '');
+                            }
+                            return null;
+                        };
 
-// Pecah koordinat database menjadi bagian Lat dan Lng
-// Format asli DB: 8 deg 16' 0" S, 115 deg 25' 0" E
+                        // Pecah koordinat database menjadi bagian Lat dan Lng
+                        // Format asli DB: 8 deg 16' 0" S, 115 deg 25' 0" E
                         $parts = explode(',', $mountain->coordinates);
 
                         $lat = isset($parts[0]) ? $dmsToDecimal($parts[0]) : '-8.2666'; // Default fallback
                         $lng = isset($parts[1]) ? $dmsToDecimal($parts[1]) : '115.4166';
                     @endphp
 
-                    <section>
+                    <section id="weather-forecast" class="scroll-mt-24">
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4 flex items-center gap-2">
                             <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -153,7 +260,7 @@ $dmsToDecimal = function ($dmsStr) {
                     </section>
 
                     <!-- Map Location -->
-                    <section>
+                    <section id="map-location" class="scroll-mt-24">
                         <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Location</h2>
                         <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-100 w-full overflow-hidden">
                             <iframe width="100%" height="100%" frameborder="0" style="border:0; border-radius: 0.5rem;"
@@ -405,26 +512,65 @@ $dmsToDecimal = function ($dmsStr) {
             const lat = weatherContainer.dataset.lat;
             const lng = weatherContainer.dataset.lng;
 
+            // Klik / Enter pada pin lokasi di hero -> scroll ke section map
+            const heroLocationPin = document.getElementById('hero-location-pin');
+            const scrollToMap = () => {
+                document.getElementById('map-location')
+                    ?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+            };
+            if (heroLocationPin) {
+                heroLocationPin.addEventListener('click', scrollToMap);
+                heroLocationPin.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        scrollToMap();
+                    }
+                });
+            }
+
+            // Klik / Enter pada kartu cuaca di hero -> scroll ke section forecast
+            const heroWeatherCard = document.getElementById('hero-weather-card');
+            const scrollToForecast = () => {
+                document.getElementById('weather-forecast')
+                    ?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+            };
+            if (heroWeatherCard) {
+                heroWeatherCard.addEventListener('click', scrollToForecast);
+                heroWeatherCard.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        scrollToForecast();
+                    }
+                });
+            }
+
             // Helper for beautiful SVG weather icons using Tailwind colors
             const getWeatherSvg = (iconCode, classes) => {
                 const code = iconCode.substring(0, 2);
                 const isDay = iconCode.endsWith('d');
 
                 const sunSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path class="weather-spin" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
                 const moonSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
-                const cloudPath = `<path d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="weather-pulse" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
+                const cloudPath =
+                    `<path class="weather-bob" d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
                 const partlyCloudySvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle class="weather-pulse" cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path class="weather-pulse" d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
                 const cloudSvg =
                     `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
                 const rainSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-rain" d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
                 const thunderSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-flash" d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
                 const snowSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
+                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle class="weather-rain" cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
 
                 switch (code) {
                     case '01':
@@ -507,15 +653,15 @@ $dmsToDecimal = function ($dmsStr) {
                     const minTemp = Math.round(Math.min(...info.temp));
 
                     html += `
-                                    <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
-                                        <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
-                                        ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
-                                        <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
-                                        <div class="mt-2 text-[#2A9D8F] font-bold">
-                                            ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
-                                        </div>
-                                    </div>
-                                `;
+                                            <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
+                                                <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
+                                                ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
+                                                <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
+                                                <div class="mt-2 text-[#2A9D8F] font-bold">
+                                                    ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
+                                                </div>
+                                            </div>
+                                        `;
                 });
                 weatherContainer.innerHTML = html;
             })
@@ -558,7 +704,7 @@ $dmsToDecimal = function ($dmsStr) {
 
                 // MEMPERBAIKI: Menggunakan backtick (`) untuk injeksi data fallback mock-up
                     mockHtml += `
-                        <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm">
+                        <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                             <span class="font-semibold text-[#001E3A] mb-1">${dayStr}</span>
                             ${getWeatherSvg(iconMap[status], "w-16 h-16 drop-shadow-sm")}
                             <span class="text-sm font-medium text-gray-700 capitalize mt-1">${status}</span>
