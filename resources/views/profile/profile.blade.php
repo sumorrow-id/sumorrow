@@ -81,7 +81,7 @@
                     id="tab-navigation">
                     <div class="flex gap-6 md:gap-10 w-max">
                         <button onclick="switchTab('posts')" id="btn-posts"
-                            class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] translate-y-[1.5px]">Posts</button>
+                            class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] hover:text-gray-700 translate-y-[1.5px]">Posts</button>
                         <button onclick="switchTab('achievements')" id="btn-achievements"
                             class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">Achievements</button>
                         <button onclick="switchTab('gear')" id="btn-gear"
@@ -121,14 +121,14 @@
 
             // 3. Reset style semua tombol tab (jadikan abu-abu)
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-[#0F172A]', 'text-[#0F172A]', 'font-bold');
+                btn.classList.remove('border-[#094174]', 'text-[#094174]', 'font-bold');
                 btn.classList.add('border-transparent', 'text-gray-400', 'font-semibold');
             });
 
-            // 4. Bikin tombol yang diklik jadi aktif (hitam tebal)
+            // 4. Bikin tombol yang diklik jadi aktif (biru tebal)
             let activeBtn = document.getElementById('btn-' + tabName);
             activeBtn.classList.remove('border-transparent', 'text-gray-400', 'font-semibold');
-            activeBtn.classList.add('border-[#0F172A]', 'text-[#0F172A]', 'font-bold');
+            activeBtn.classList.add('border-[#094174]', 'text-[#094174]', 'font-bold');
         }
     </script>
 @endsection

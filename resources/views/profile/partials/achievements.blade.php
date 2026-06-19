@@ -1,7 +1,6 @@
 <div class="mt-8 px-4 sm:px-0">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-4 sm:mb-6 gap-2 sm:gap-0">
         <h2 class="text-xl md:text-2xl font-bold text-[#0F172A]">Achievement Badges ({{ $userAchievements->count() }} / {{ $allAchievements->count() }})</h2>
-        <a href="#" class="text-xs sm:text-sm font-bold text-[#2A5C9A] hover:underline">View All Collection</a>
     </div>
 
     <div class="flex flex-col gap-4 md:gap-5 relative">
