@@ -52,24 +52,23 @@
         <div class="py-4 md:py-6">
             <div id="content-explore" class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                 <div class="col-span-1 lg:col-span-2">
-                    <!-- Konten Explore Feed -->
                     @include('community.components.feed')
                 </div>
-                <!-- Konten Sidebar Kanan (Desktop View) -->
+                
                 <div class="hidden lg:block lg:col-span-1 border-gray-100 lg:pl-4">
                     @include('community.components.sidebar')
                 </div>
             </div>
 
             <div id="content-community" class="hidden grid-cols-1 gap-6 md:gap-8">
-                <!-- Konten My Community (Grup, Suggested Groups, dll) akan diisi di sini -->
+                
                 {{-- Top Bar: Title & Create Community Button --}}
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold text-heading">My Communities</h2>
                         <p class="text-gray-500 text-sm mt-1">Communities you have joined or managed.</p>
                     </div>
-                    {{-- Tombol Create Community --}}
+                    
                     @auth
                         <button onclick="openModal()" class="bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +90,6 @@
 
                 {{-- Main: Joined Communities Grid --}}
                 @if ($myCommunities->isEmpty())
-                    {{-- Empty State jika belum join grup manapun --}}
                     <div class="text-center py-12 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
                         <div class="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -104,7 +102,6 @@
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($myCommunities as $community)
-                            {{-- Menggunakan komponen reusable card bawaan timmu --}}
                             <x-community-card :community="$community" :joined="true" />
                         @endforeach
                     </div>
@@ -195,50 +192,7 @@
     }
 </style>
 
-<!-- <script>
-    function switchTab(tab) {
-        const exploreTab = document.getElementById('tab-explore');
-        const communityTab = document.getElementById('tab-community');
-        const exploreContent = document.getElementById('content-explore');
-        const communityContent = document.getElementById('content-community');
 
-        if (tab === 'explore') {
-            exploreTab.className = "pb-3 border-b-2 transition-all duration-300 text-lg md:text-base cursor-pointer border-[#094174] text-[#094174] font-bold";
-            communityTab.className = "pb-3 border-b-2 transition-all duration-300 text-lg md:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700";
-            exploreContent.classList.remove('hidden');
-            exploreContent.classList.add('grid');
-            communityContent.classList.add('hidden');
-            communityContent.classList.remove('flex');
-        } else {
-            communityTab.className = "pb-3 border-b-2 transition-all duration-300 text-lg md:text-base cursor-pointer border-[#094174] text-[#094174] font-bold";
-            exploreTab.className = "pb-3 border-b-2 transition-all duration-300 text-lg md:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700";
-            communityContent.classList.remove('hidden');
-            communityContent.classList.add('flex');
-            exploreContent.classList.add('hidden');
-            exploreContent.classList.remove('grid');
-        }
-    }
-
-    function openModal() {
-        document.getElementById('modal-create-community').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.getElementById('modal-create-community').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab');
-        if (activeTab === 'community') {
-            switchTab('community');
-        } else {
-            switchTab('explore');
-        }
-    });
-</script> -->
 
 <script>
     function switchTab(tab) {
@@ -324,20 +278,8 @@
         }
     }
 
-    function toggleFollow(btn) {
-        const isFollowing = btn.innerText.trim() === 'Following';
-        if (isFollowing) {
-            // Unfollow
-            btn.innerText = 'Follow';
-            btn.classList.remove('bg-white', 'text-[#094174]');
-            btn.classList.add('bg-[#094174]', 'text-white');
-        } else {
-            // Followed state
-            btn.innerText = 'Following';
-            btn.classList.remove('bg-[#094174]', 'text-white');
-            btn.classList.add('bg-white', 'text-[#094174]');
-        }
-    }
+
+
     let currentActiveTag = null;
 
     function filterByTag(btn, tagName) {
@@ -376,25 +318,18 @@
             });
         }
 
-        // Otomatis menutup sidebar (drawer) ketika tag diklik di versi mobile
         if (typeof isMobileSidebarOpen !== 'undefined' && isMobileSidebarOpen) {
             toggleMobileSidebar();
         }
     }
 
-    // DOMContentLoaded artinya: Tunggu sampai seluruh HTML selesai dimuat oleh browser
     document.addEventListener("DOMContentLoaded", function() {
-        // 1. Ambil URL string yang sedang aktif di browser saat ini
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // 2. Cari tahu apakah ada parameter bernama 'tab' di dalam URL tersebut
         const activeTab = urlParams.get('tab');
 
-        // 3. Jika parameternya ada dan isinya adalah 'community', jalankan fungsi pindah tab otomatis
         if (activeTab === 'community') {
             switchTab('community');
         } else {
-            // Jika tidak ada parameter (akses normal), default ke tab explore
             switchTab('explore');
         }
     });

@@ -3,43 +3,89 @@
 namespace App\Http\Controllers;
 
 use App\Models\Community;
+use App\Models\Post;
+use App\Models\PostTag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CommunityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // 1. Ambil komunitas yang diikuti oleh user saat ini (My Communities)
-        // Jika user belum login, kita ambil komunitas default atau kosongkan
+        // ----------------------------------------------------------------
+        // 1. My Communities & Suggested Communities
+        // ----------------------------------------------------------------
         $myCommunities = collect();
         if (Auth::check()) {
             $myCommunities = Auth::user()->communities()->withCount('members')->get();
-        } else {
-            // Fallback kalau user guest: tampilkan semua komunitas sebagai sampel
-            $myCommunities = collect();
         }
 
-        // 2. Ambil rekomendasi komunitas (Suggested For You)
-        // Kita ambil komunitas publik yang belum diikuti oleh user
         $myCommunityIds = $myCommunities->pluck('id')->toArray();
         $suggestedCommunities = Community::whereNotIn('id', $myCommunityIds)
             ->withCount('members')
             ->take(6)
             ->get();
 
-        // Kirim kedua variabel ke view
-        return view('community.index', compact('myCommunities', 'suggestedCommunities'));
+        // ----------------------------------------------------------------
+        // 2. Main Feed (required by feed.blade.php component)
+        // ----------------------------------------------------------------
+        $activeTag = $request->query('tag');
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes', 'saves'])->latest();
+
+        if ($activeTag) {
+            $postsQuery->whereHas('tags', function ($query) use ($activeTag) {
+                $query->where('keyword', strtolower(trim($activeTag)));
+            });
+        }
+
+        $posts = $postsQuery->paginate(10)->withQueryString();
+
+        // ----------------------------------------------------------------
+        // 3. Popular Tags (required by sidebar.blade.php component)
+        // ----------------------------------------------------------------
+        $popularTags = PostTag::select('keyword')
+            ->selectRaw('COUNT(DISTINCT post_id) as post_count')
+            ->groupBy('keyword')
+            ->orderByDesc('post_count')
+            ->limit(8)
+            ->get();
+
+        // ----------------------------------------------------------------
+        // 4. Forum Leaders (required by sidebar.blade.php component)
+        // ----------------------------------------------------------------
+        $forumLeaders = User::withCount('posts')
+            ->orderByDesc('posts_count')
+            ->limit(5)
+            ->get();
+
+        // ----------------------------------------------------------------
+        // 5. Who to Follow (required by sidebar.blade.php component)
+        // ----------------------------------------------------------------
+        $whoToFollow = User::when(Auth::check(), function ($query) {
+                $query->where('id', '!=', Auth::id());
+            })
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+
+        return view('community.index', compact(
+            'myCommunities',
+            'suggestedCommunities',
+            'posts',
+            'popularTags',
+            'forumLeaders',
+            'whoToFollow',
+            'activeTag'
+        ));
     }
 
     public function join(Community $community)
     {
         $user = Auth::user();
 
-        // Cek apakah user sudah bergabung atau belum, biar tidak dobel
         if (!$community->isMember($user)) {
-            // Menggunakan relasi belongsToMany yang sudah dibuat timmu untuk attach user baru sebagai 'member'
             $community->members()->attach($user->id, ['role' => 'member']);
             
             return redirect()->route('community', ['tab' => 'community'])
@@ -66,7 +112,7 @@ class CommunityController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'privacy' => $request->privacy,
-            'image_url' => 'https://via.placeholder.com/150', // Placeholder image, bisa diganti dengan upload nanti
+            'image_url' => 'https://via.placeholder.com/150',
             'created_by' => Auth::id(),    
         ]);
 

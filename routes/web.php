@@ -9,6 +9,7 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GearController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePostController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -26,6 +27,22 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
 Route::get('/community', [CommunityController::class, 'index'])->name('community');
+
+/*
+--------------------------------------------------------------------------
+Community Forum Explore Tab Routes
+--------------------------------------------------------------------------
+*/
+// Main explore feed (supports ?tag= query filter)
+Route::get('/community/explore', [PostController::class, 'index'])->name('community.explore');
+
+// Post detail / thread view (public — guests can read)
+Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
+
+// Follow user toggle
+Route::post('/users/{user}/follow', [\App\Http\Controllers\UserController::class, 'toggleFollow'])
+    ->middleware('auth')
+    ->name('users.follow');
 
 Route::get('/api/docs', function () {
     if (! Auth::check()) {
@@ -87,11 +104,23 @@ Route::middleware('auth')->group(function () {
     // Explore / Mountain
     Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
 
-    // Posts
+    // Posts (Profile)
     Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
     Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
     Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
     Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
+
+    // Community Forum — Store a new quick post from the Explore feed composer
+    Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
+
+    // Community Forum — Store a comment on a specific post
+    Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->name('community.posts.comments.store');
+
+    // Community Forum — Toggle like on a post
+    Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
+
+    // Community Forum — Toggle save/bookmark on a post
+    Route::post('/community/posts/{post}/save', [PostController::class, 'toggleSave'])->name('community.posts.save');
 
     // Email Verification Configuration
     Route::prefix('email')->group(function () {
