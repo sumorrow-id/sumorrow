@@ -36,11 +36,6 @@ Community Forum Explore Tab Routes
 // Main explore feed (supports ?tag= query filter)
 Route::get('/community/explore', [PostController::class, 'index'])->name('community.explore');
 
-// My Community tab — placeholder view (another developer is handling this page)
-Route::get('/community/my-community', function () {
-    return view('community.my-community');
-})->name('community.my-community');
-
 // Post detail / thread view (public — guests can read)
 Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
 
