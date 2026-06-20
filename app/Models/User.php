@@ -98,6 +98,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Gear::class);
     }
 
+    public function followings(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id')->withTimestamps();
+    }
+
+    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id')->withTimestamps();
+    }
+
+    public function isFollowing(User $user): bool
+    {
+        return $this->followings()->where('following_id', $user->id)->exists();
+    }
+
     public function achievements() // BelongsToMany relationship
     {
         return $this->belongsToMany(Achievement::class)->withPivot('unlocked_at');
