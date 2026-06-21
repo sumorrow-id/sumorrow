@@ -12,6 +12,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +29,10 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
 Route::get('/community', [CommunityController::class, 'index'])->name('community');
+Route::middleware('throttle:weather')->group(function () {
+    Route::get('/weather/{mountain}', [WeatherController::class, 'show'])->name('weather.show');
+    Route::get('/weather/{mountain}/forecast', [WeatherController::class, 'forecast'])->name('weather.forecast');
+});
 
 /*
 --------------------------------------------------------------------------
@@ -40,7 +46,7 @@ Route::get('/community/explore', [PostController::class, 'index'])->name('commun
 Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
 
 // Follow user toggle
-Route::post('/users/{user}/follow', [\App\Http\Controllers\UserController::class, 'toggleFollow'])
+Route::post('/users/{user}/follow', [UserController::class, 'toggleFollow'])
     ->middleware('auth')
     ->name('users.follow');
 
@@ -90,7 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    
+
     // MyCommunity
     Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
     Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
@@ -130,14 +136,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
             $request->fulfill();
+
             return redirect()->route('home')->with('verified', true);
         })->middleware('signed')->name('verification.verify');
 
         Route::post('/verification-notification', function (Request $request) {
             $request->user()->sendEmailVerificationNotification();
+
             return back()->with('message', 'Verification link sent!');
         })->middleware('throttle:6,1')->name('verification.send');
-    
+
     });
 
     // Admin route

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mountain;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class ExploreController extends Controller
 {
@@ -85,7 +86,10 @@ class ExploreController extends Controller
             ->take(3)
             ->get();
 
-        return view('explore.show', compact('mountain', 'nearbyMountains'));
+        $weatherUrl = URL::temporarySignedRoute('weather.show', now()->addHours(2), ['mountain' => $mountain->id]);
+        $forecastUrl = URL::temporarySignedRoute('weather.forecast', now()->addHours(2), ['mountain' => $mountain->id]);
+
+        return view('explore.show', compact('mountain', 'nearbyMountains', 'weatherUrl', 'forecastUrl'));
     }
 
     public function storeRating(Request $request, $id)

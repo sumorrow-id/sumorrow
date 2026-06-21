@@ -29,5 +29,9 @@ class AppServiceProvider extends ServiceProvider
                 ? Limit::perMinute(30)->by($request->user()->getAuthIdentifier())
                 : Limit::perMinute(10)->by($request->ip());
         });
+
+        RateLimiter::for('weather', function (Request $request) {
+            return Limit::perMinute(20)->by($request->ip());
+        });
     }
 }

@@ -1,8 +1,5 @@
 @php
-    $heroImage = 'https://images.unsplash.com/photo-1543886576-9d32d001cedc?auto=format&fit=crop&q=80&w=2000';
-    $mountain1 = 'https://images.unsplash.com/photo-1627916538356-9a2ebfb1d200?auto=format&fit=crop&q=80&w=500';
-    $mountain2 = 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&q=80&w=500';
-    $mountain3 = 'https://images.unsplash.com/photo-1506501139174-099022df5260?auto=format&fit=crop&q=80&w=500';
+    $heroImage = $weatherData[0]['image'] ?? 'https://images.unsplash.com/photo-1543886576-9d32d001cedc?auto=format&fit=crop&q=80&w=2000';
 @endphp
 @extends('layouts.app')
 
@@ -17,8 +14,8 @@
             <!-- Hero Box -->
             <div
                 class="relative w-full h-[600px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
-                <img src="{{ $heroImage }}" alt="Mountain Background"
-                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem]">
+                <img id="hero-image" src="{{ $heroImage }}" alt="Mountain Background"
+                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] transition-opacity duration-500">
                 <div class="absolute inset-0 bg-black/10 rounded-[2rem]"></div>
 
                 <!-- SUMORROW text -->
@@ -434,36 +431,33 @@
         // Script to cycle weather data
         document.addEventListener('DOMContentLoaded', () => {
             const weatherData = @json($weatherData);
-            const API_KEY = '{{ $openWeatherApiKey ?? '' }}';
 
             let currentIndex = 0;
             const locationEl = document.getElementById('weather-location');
             const tempEl = document.getElementById('weather-temp');
             const widgetEl = document.getElementById('weather-widget');
             const contentEl = document.getElementById('weather-content');
+            const heroImageEl = document.getElementById('hero-image');
 
             function fetchWeatherAndUpdate(index) {
                 const data = weatherData[index];
                 locationEl.innerHTML = data.loc;
                 widgetEl.href = data.url;
-
-                if (API_KEY && data.lat && data.lng) {
-                    const url =
-                        `https://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lng}&units=metric&appid=${API_KEY}`;
-                    fetch(url)
-                        .then(res => {
-                            if (!res.ok) throw new Error('API Error');
-                            return res.json();
-                        })
-                        .then(apiData => {
-                            tempEl.innerHTML = Math.round(apiData.main.temp) + '&deg;';
-                        })
-                        .catch(e => {
-                            tempEl.innerHTML = data.temp;
-                        });
-                } else {
-                    tempEl.innerHTML = data.temp;
+                if (data.image && heroImageEl) {
+                    heroImageEl.src = data.image;
                 }
+
+                fetch(data.weatherUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error('API Error');
+                        return res.json();
+                    })
+                    .then(apiData => {
+                        tempEl.innerHTML = apiData.temp;
+                    })
+                    .catch(() => {
+                        tempEl.innerHTML = data.temp;
+                    });
             }
 
             if (widgetEl && contentEl && weatherData.length > 0) {

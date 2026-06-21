@@ -252,8 +252,7 @@
                             </svg>
                             Weather Forecast
                         </h2>
-                        <div id="weather-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"
-                            data-lat="{{ $lat }}" data-lng="{{ $lng }}">
+                        <div id="weather-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="col-span-3 text-center py-6 text-gray-500">
                                 Loading weather forecast...
                             </div>
@@ -518,236 +517,108 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const weatherContainer = document.getElementById('weather-container');
-            const lat = weatherContainer.dataset.lat;
-            const lng = weatherContainer.dataset.lng;
 
-            // Klik / Enter pada pin lokasi di hero -> scroll ke section map
+            // Scroll: pin lokasi -> map section
             const heroLocationPin = document.getElementById('hero-location-pin');
-            const scrollToMap = () => {
-                document.getElementById('map-location')
-                    ?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-            };
+            const scrollToMap = () => document.getElementById('map-location')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (heroLocationPin) {
                 heroLocationPin.addEventListener('click', scrollToMap);
-                heroLocationPin.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        scrollToMap();
-                    }
-                });
+                heroLocationPin.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToMap(); } });
             }
 
-            // Klik / Enter pada kartu cuaca di hero -> scroll ke section forecast
+            // Scroll: kartu cuaca hero -> forecast section
             const heroWeatherCard = document.getElementById('hero-weather-card');
-            const scrollToForecast = () => {
-                document.getElementById('weather-forecast')
-                    ?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-            };
+            const scrollToForecast = () => document.getElementById('weather-forecast')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (heroWeatherCard) {
                 heroWeatherCard.addEventListener('click', scrollToForecast);
-                heroWeatherCard.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        scrollToForecast();
-                    }
-                });
+                heroWeatherCard.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToForecast(); } });
             }
 
-            // Tombol Back to Top: muncul setelah scroll, klik untuk kembali ke atas
+            // Back to Top button
             const backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
                 const hiddenClasses = ['opacity-0', 'translate-y-4', 'scale-90', 'pointer-events-none'];
                 const toggleBackToTop = () => {
-                    if (window.scrollY > 400) {
-                        backToTopBtn.classList.remove(...hiddenClasses);
-                    } else {
-                        backToTopBtn.classList.add(...hiddenClasses);
-                    }
+                    if (window.scrollY > 400) { backToTopBtn.classList.remove(...hiddenClasses); }
+                    else { backToTopBtn.classList.add(...hiddenClasses); }
                 };
                 toggleBackToTop();
-                window.addEventListener('scroll', toggleBackToTop, {
-                    passive: true
-                });
-                backToTopBtn.addEventListener('click', () => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                });
+                window.addEventListener('scroll', toggleBackToTop, { passive: true });
+                backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
             }
 
-            // Helper for beautiful SVG weather icons using Tailwind colors
+            // SVG weather icon helper
             const getWeatherSvg = (iconCode, classes) => {
                 const code = iconCode.substring(0, 2);
                 const isDay = iconCode.endsWith('d');
-
-                const sunSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path class="weather-spin" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const moonSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="weather-pulse" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
-                const cloudPath =
-                    `<path class="weather-bob" d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
-                const partlyCloudySvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle class="weather-pulse" cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path class="weather-pulse" d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
-                const cloudSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
-                const rainSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-rain" d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const thunderSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-flash" d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
-                const snowSvg =
-                    `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle class="weather-rain" cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
-
+                const sunSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path class="weather-spin" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const moonSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="weather-pulse" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
+                const cloudPath = `<path class="weather-bob" d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
+                const partlyCloudySvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle class="weather-pulse" cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path class="weather-pulse" d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
+                const cloudSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
+                const rainSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-rain" d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+                const thunderSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-flash" d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
+                const snowSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle class="weather-rain" cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
                 switch (code) {
-                    case '01':
-                        return isDay ? sunSvg : moonSvg;
-                    case '02':
-                        return partlyCloudySvg;
-                    case '03':
-                    case '04':
-                    case '50':
-                        return cloudSvg;
-                    case '09':
-                    case '10':
-                        return rainSvg;
-                    case '11':
-                        return thunderSvg;
-                    case '13':
-                        return snowSvg;
-                    default:
-                        return cloudSvg;
+                    case '01': return isDay ? sunSvg : moonSvg;
+                    case '02': return partlyCloudySvg;
+                    case '03': case '04': case '50': return cloudSvg;
+                    case '09': case '10': return rainSvg;
+                    case '11': return thunderSvg;
+                    case '13': return snowSvg;
+                    default: return cloudSvg;
                 }
             };
 
-            // Mengambil API Key dari config services Laravel
-            const API_KEY = '{{ config('services.openweathermap.key') }}';
+            const showHeroCard = (icon, temp, description) => {
+                const heroCard = document.getElementById('hero-weather-card');
+                const heroIconContainer = document.getElementById('hero-weather-icon-container');
+                const heroTemp = document.getElementById('hero-weather-temp');
+                const heroDesc = document.getElementById('hero-weather-desc');
+                if (!heroCard) { return; }
+                heroIconContainer.innerHTML = getWeatherSvg(icon, 'w-12 h-12 md:w-14 md:h-14 drop-shadow-md');
+                heroTemp.innerHTML = temp + 'C';
+                heroDesc.innerHTML = description;
+                heroCard.classList.remove('hidden');
+                heroCard.classList.add('flex');
+            };
 
-            if (!API_KEY) {
-                console.warn('OPENWEATHERMAP_API_KEY is not set in .env. Falling back to mock weather data.');
-                injectMockWeather(weatherContainer);
-                return;
-            }
-
-            // MEMPERBAIKI: Menggunakan template literal backtick (`) agar integrasi variabel rapi
-        const url =
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=metric&appid=${API_KEY}`;
-
-        fetch(url)
-            .then(response => {
-                if (!response.ok) throw new Error('Weather API limit/unauthorized');
-                return response.json();
-            })
-            .then(data => {
-                const currentItem = data.list[0];
-                if (currentItem) {
-                    const heroCard = document.getElementById('hero-weather-card');
-                    const heroIconContainer = document.getElementById('hero-weather-icon-container');
-                    const heroTemp = document.getElementById('hero-weather-temp');
-                    const heroDesc = document.getElementById('hero-weather-desc');
-                    if (heroCard && heroIconContainer && heroTemp && heroDesc) {
-                        heroIconContainer.innerHTML = getWeatherSvg(currentItem.weather[0].icon,
-                            "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
-                        heroTemp.innerHTML = `${Math.round(currentItem.main.temp)}&deg;C`;
-                        heroDesc.innerHTML = currentItem.weather[0].main;
-                        heroCard.classList.remove('hidden');
-                        heroCard.classList.add('flex');
-                    }
-                }
-
+            const renderForecast = (list) => {
                 const dailyData = {};
-                data.list.forEach(item => {
-                    const date = new Date(item.dt * 1000).toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric'
-                    });
-                    if (!dailyData[date]) {
-                        dailyData[date] = {
-                            temp: [],
-                            icon: item.weather[0].icon,
-                            desc: item.weather[0].main
-                        };
-                    }
+                list.forEach(item => {
+                    const date = new Date(item.dt * 1000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    if (!dailyData[date]) { dailyData[date] = { temp: [], icon: item.weather[0].icon, desc: item.weather[0].main }; }
                     dailyData[date].temp.push(item.main.temp);
                 });
                 const days = Object.keys(dailyData).slice(0, 3);
-                let html = '';
-
-                days.forEach(day => {
+                weatherContainer.innerHTML = days.map(day => {
                     const info = dailyData[day];
                     const maxTemp = Math.round(Math.max(...info.temp));
                     const minTemp = Math.round(Math.min(...info.temp));
+                    return `<div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
+                        <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
+                        ${getWeatherSvg(info.icon, 'w-16 h-16 drop-shadow-sm')}
+                        <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
+                        <div class="mt-2 text-[#2A9D8F] font-bold">${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span></div>
+                    </div>`;
+                }).join('');
+            };
 
-                    html += `
-                                            <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                                                <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
-                                                ${getWeatherSvg(info.icon, "w-16 h-16 drop-shadow-sm")}
-                                                <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
-                                                <div class="mt-2 text-[#2A9D8F] font-bold">
-                                                    ${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span>
-                                                </div>
-                                            </div>
-                                        `;
-                });
-                weatherContainer.innerHTML = html;
-            })
-            .catch(err => {
-                console.error('Weather error, injecting mock data for MVP', err);
-                injectMockWeather(weatherContainer);
-            });
+            // Current weather → hero card (same proxy as home.blade.php)
+            fetch('{{ $weatherUrl }}')
+                .then(res => { if (!res.ok) { throw new Error('Weather error'); } return res.json(); })
+                .then(data => showHeroCard(data.icon ?? '01d', data.temp, data.description ?? ''))
+                .catch(() => showHeroCard('01d', '22&deg;', 'Clear'));
 
-        function injectMockWeather(container) {
-            const today = new Date();
-
-            const heroCard = document.getElementById('hero-weather-card');
-            const heroIconContainer = document.getElementById('hero-weather-icon-container');
-            const heroTemp = document.getElementById('hero-weather-temp');
-            const heroDesc = document.getElementById('hero-weather-desc');
-            if (heroCard && heroIconContainer && heroTemp && heroDesc) {
-                heroIconContainer.innerHTML = getWeatherSvg("01d", "w-12 h-12 md:w-14 md:h-14 drop-shadow-md");
-                heroTemp.innerHTML = "22&deg;C";
-                heroDesc.innerHTML = "Clear";
-                heroCard.classList.remove('hidden');
-                heroCard.classList.add('flex');
-            }
-
-            let mockHtml = '';
-            for (let i = 0; i < 3; i++) {
-                const d = new Date(today);
-                d.setDate(d.getDate() + i);
-                const dayStr = d.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric'
-                });
-                const statuses = ['Clear', 'Clouds', 'Rain'];
-                const status = statuses[i % 3];
-                const iconMap = {
-                    'Clear': '01d',
-                    'Clouds': '03d',
-                    'Rain': '10d'
-                };
-
-                // MEMPERBAIKI: Menggunakan backtick (`) untuk injeksi data fallback mock-up
-                    mockHtml += `
-                        <div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                            <span class="font-semibold text-[#001E3A] mb-1">${dayStr}</span>
-                            ${getWeatherSvg(iconMap[status], "w-16 h-16 drop-shadow-sm")}
-                            <span class="text-sm font-medium text-gray-700 capitalize mt-1">${status}</span>
-                            <div class="mt-2 text-[#2A9D8F] font-bold">
-                                ${22 + i}&deg; <span class="text-gray-400 text-sm font-normal">/ ${15 + i}&deg;</span>
-                            </div>
-                        </div>
-                    `;
-                }
-                container.innerHTML = mockHtml;
-            }
+            // 3-day forecast → forecast section
+            fetch('{{ $forecastUrl }}')
+                .then(res => { if (!res.ok) { throw new Error('Forecast error'); } return res.json(); })
+                .then(data => renderForecast(data.list ?? []))
+                .catch(() => renderForecast([
+                    { dt: Date.now() / 1000, main: { temp: 22 }, weather: [{ icon: '01d', main: 'Clear' }] },
+                    { dt: Date.now() / 1000 + 86400, main: { temp: 23 }, weather: [{ icon: '03d', main: 'Clouds' }] },
+                    { dt: Date.now() / 1000 + 172800, main: { temp: 20 }, weather: [{ icon: '10d', main: 'Rain' }] },
+                ]));
         });
     </script>
 @endsection

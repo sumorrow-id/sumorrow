@@ -3,86 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mountain;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\URL;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $mountains = Mountain::with(['province', 'images'])->get();
-        
-        $weatherData = $mountains->map(function ($mountain) {
-            $provinceName = $mountain->province ? $mountain->province->name : 'Indonesia';
-            $provinceName = str_replace('Provinsi ', '', $provinceName);
+        $cached = Cache::remember('mountains.home', now()->addDay(), function () {
+            $mountains = Mountain::with(['province', 'images'])->get();
+            $fallbackImage = 'https://images.unsplash.com/photo-1627916538356-9a2ebfb1d200?auto=format&fit=crop&q=80&w=500';
 
-            // Fungsi pembantu untuk mengubah format "8 deg 16' 0" S" menjadi desimal
-            $dmsToDecimal = function ($dmsStr) {
-                $dmsStr = trim(preg_replace('/\s+/', ' ', $dmsStr));
-                if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+(\.\d+)?)\s*"\s*([NSEW])/i', $dmsStr, $matches)) {
-                    $degrees = (float) $matches[1];
-                    $minutes = (float) $matches[2];
-                    $seconds = (float) $matches[3];
-                    $direction = strtoupper($matches[5]);
+            $weatherData = $mountains->map(function ($mountain) {
+                $provinceName = str_replace('Provinsi ', '', $mountain->province?->name ?? 'Indonesia');
+                $coverImage = $mountain->images->firstWhere('is_cover', true) ?? $mountain->images->first();
 
-                    $decimal = $degrees + $minutes / 60 + $seconds / 3600;
-                    if ($direction === 'S' || $direction === 'W') {
-                        $decimal *= -1;
-                    }
-                    return $decimal;
-                }
-                return 0;
-            };
+                return [
+                    'id' => $mountain->id,
+                    'loc' => $mountain->name.', '.$provinceName,
+                    'url' => '/explore/'.$mountain->id,
+                    'image' => $coverImage?->image_url,
+                    'temp' => '--&deg;',
+                ];
+            })->values()->all();
 
-            $parts = explode(',', $mountain->coordinates);
-            $lat = isset($parts[0]) && trim($parts[0]) !== '' ? $dmsToDecimal($parts[0]) : '-8.2666'; 
-            $lng = isset($parts[1]) && trim($parts[1]) !== '' ? $dmsToDecimal($parts[1]) : '115.4166';
+            $allMountains = $mountains->map(function ($mountain) use ($fallbackImage) {
+                $provinceName = str_replace('Provinsi ', '', $mountain->province?->name ?? '');
+                $firstImage = $mountain->images->first();
 
-            return [
-                'loc' => $mountain->name . ', ' . $provinceName,
-                'url' => '/explore/' . $mountain->id,
-                'lat' => $lat,
-                'lng' => $lng,
-                // Default fallback if API fails
-                'temp' => '22&deg;',
-                'wind' => 'Wind: 10 km/h',
-            ];
-        })->toArray();
+                return [
+                    'id' => $mountain->id,
+                    'name' => $mountain->name,
+                    'location' => $provinceName,
+                    'elevation' => $mountain->elevation_masl ? $mountain->elevation_masl.' mdpl' : 'Unknown',
+                    'difficulty' => $mountain->difficulty ? ucfirst($mountain->difficulty) : 'Moderate',
+                    'image' => $firstImage?->image_url ?? $fallbackImage,
+                ];
+            })->values()->all();
 
-        // Shuffle so it's different each load
+            return ['weatherData' => $weatherData, 'allMountains' => $allMountains];
+        });
+
+        $weatherData = $cached['weatherData'];
         shuffle($weatherData);
 
-        // Get 6 random mountains for the popular section
-        // We will just pick 6 random from the full fetched collection
-        $popularMountains = $mountains->random(min(10, $mountains->count()))->map(function ($mountain) {
-            $provinceName = $mountain->province ? $mountain->province->name : '';
-            $provinceName = str_replace('Provinsi ', '', $provinceName);
-            
-            return [
-                'id' => $mountain->id,
-                'name' => $mountain->name,
-                'location' => $provinceName,
-                'image' => $mountain->images->first() ? $mountain->images->first()->image_url : 'https://images.unsplash.com/photo-1627916538356-9a2ebfb1d200?auto=format&fit=crop&q=80&w=500',
-            ];
-        });
+        // Signed URLs generated fresh per page load (not cached) — expire in 2 hours.
+        // WeatherController rejects any request without a valid signature.
+        $weatherData = array_map(function ($item) {
+            $item['weatherUrl'] = URL::temporarySignedRoute('weather.show', now()->addHours(2), ['mountain' => $item['id']]);
 
-        // Get 3 random peaks for the "Choose Your Peak" section
-        $randomPeaks = $mountains->random(min(3, $mountains->count()))->map(function ($mountain) {
-            $provinceName = $mountain->province ? $mountain->province->name : '';
-            $provinceName = str_replace('Provinsi ', '', $provinceName);
-            
-            return [
-                'id' => $mountain->id,
-                'name' => $mountain->name,
-                'location' => $provinceName,
-                'elevation' => $mountain->elevation_masl ? $mountain->elevation_masl . ' mdpl' : 'Unknown',
-                'difficulty' => $mountain->difficulty ? ucfirst($mountain->difficulty) : 'Moderate',
-                'image' => $mountain->images->first() ? $mountain->images->first()->image_url : 'https://images.unsplash.com/photo-1627916538356-9a2ebfb1d200?auto=format&fit=crop&q=80&w=600',
-            ];
-        });
+            return $item;
+        }, $weatherData);
 
-        // API Key to pass to frontend
-        $openWeatherApiKey = config('services.openweathermap.key');
+        $allMountains = collect($cached['allMountains'])->shuffle();
 
-        return view('home', compact('weatherData', 'openWeatherApiKey', 'popularMountains', 'randomPeaks'));
+        $popularMountains = $allMountains->take(10)->map(fn ($m) => [
+            'id' => $m['id'],
+            'name' => $m['name'],
+            'location' => $m['location'],
+            'image' => $m['image'],
+        ]);
+
+        $randomPeaks = $allMountains->slice(10)->take(3)->map(fn ($m) => [
+            'id' => $m['id'],
+            'name' => $m['name'],
+            'location' => $m['location'],
+            'elevation' => $m['elevation'],
+            'difficulty' => $m['difficulty'],
+            'image' => $m['image'],
+        ]);
+
+        return view('home', compact('weatherData', 'popularMountains', 'randomPeaks'));
     }
 
     public function redirectToHome()
