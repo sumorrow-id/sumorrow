@@ -1,5 +1,5 @@
 @php
-    $heroImage = $weatherData[0]['image'] ?? 'https://images.unsplash.com/photo-1543886576-9d32d001cedc?auto=format&fit=crop&q=80&w=2000';
+    $heroImage = $heroImages[0] ?? 'https://images.unsplash.com/photo-1543886576-9d32d001cedc?auto=format&fit=crop&q=80&w=2000';
 @endphp
 @extends('layouts.app')
 
@@ -14,8 +14,11 @@
             <!-- Hero Box -->
             <div
                 class="relative w-full h-[600px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
+                <!-- Two stacked layers crossfade between curated hero images -->
                 <img id="hero-image" src="{{ $heroImage }}" alt="Mountain Background"
-                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] transition-opacity duration-500">
+                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
+                <img id="hero-image-next" src="" alt="" aria-hidden="true"
+                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-0 transition-opacity duration-[1200ms] ease-in-out">
                 <div class="absolute inset-0 bg-black/10 rounded-[2rem]"></div>
 
                 <!-- SUMORROW text -->
@@ -443,9 +446,6 @@
                 const data = weatherData[index];
                 locationEl.innerHTML = data.loc;
                 widgetEl.href = data.url;
-                if (data.image && heroImageEl) {
-                    heroImageEl.src = data.image;
-                }
 
                 fetch(data.weatherUrl)
                     .then(res => {
@@ -476,6 +476,42 @@
                         contentEl.classList.add('opacity-100');
                     }, 500);
                 }, 8000);
+            }
+
+            // Hero image carousel — crossfades through the 5 curated images only.
+            const heroImages = @json($heroImages);
+            const heroNextEl = document.getElementById('hero-image-next');
+
+            if (heroImageEl && heroNextEl && heroImages.length > 1) {
+                // Preload every image up front so a swap never shows a loading flash.
+                heroImages.forEach((src) => {
+                    const img = new Image();
+                    img.src = src;
+                });
+
+                let heroIndex = 0;
+                let frontEl = heroImageEl; // currently visible layer
+                let backEl = heroNextEl; // hidden layer we fade the next image into
+
+                function crossfadeHero() {
+                    heroIndex = (heroIndex + 1) % heroImages.length;
+                    const nextSrc = heroImages[heroIndex];
+
+                    // Only start the crossfade once the next image is actually decoded.
+                    const loader = new Image();
+                    loader.onload = () => {
+                        backEl.src = nextSrc;
+                        backEl.classList.replace('opacity-0', 'opacity-100');
+                        frontEl.classList.replace('opacity-100', 'opacity-0');
+
+                        // Swap roles for the next cycle.
+                        [frontEl, backEl] = [backEl, frontEl];
+                    };
+                    loader.src = nextSrc; // cached → onload fires immediately
+                }
+
+                // Offset from the 8s weather cycle so the two never change in lockstep.
+                setInterval(crossfadeHero, 6000);
             }
 
             // Elevation slider logic
