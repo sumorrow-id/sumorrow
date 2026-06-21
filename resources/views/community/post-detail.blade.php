@@ -3,6 +3,17 @@
 @section('content')
     <div class="w-[95%] sm:w-[90%] max-w-2xl mx-auto pt-24 md:pt-32 pb-16">
 
+        {{-- Back to Feed Link --}}
+        <a href="{{ route('community.explore') }}"
+           class="inline-flex items-center gap-1.5 text-gray-500 font-semibold text-sm mb-6 transition-colors duration-200 hover:text-[#094174] group">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+            Back to Feed
+        </a>
+
         {{-- ================================================================
          POST DETAIL CARD
          ================================================================ --}}
