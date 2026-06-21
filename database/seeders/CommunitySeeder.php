@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Community;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -21,41 +20,45 @@ class CommunitySeeder extends Seeder
             return;
         }
 
+        // Cycle through whatever users exist so the seeder works even when
+        // fewer than three users are present in the database.
+        $userId = fn (int $index): string => $users[$index % $users->count()]->id;
+
         $communities = [
             [
                 'name' => 'Summit Space',
-                'slug' => 'summit-space-' . Str::random(8),
+                'slug' => 'summit-space-'.Str::random(8),
                 'description' => 'A community for serious mountain climbers sharing summiting experiences and techniques.',
                 'privacy' => 'public',
-                'created_by' => $users[0]->id,
+                'created_by' => $userId(0),
             ],
             [
                 'name' => 'Pendaki Rebahan',
-                'slug' => 'pendaki-rebahan-' . Str::random(8),
+                'slug' => 'pendaki-rebahan-'.Str::random(8),
                 'description' => 'Casual climbing enthusiasts who love the outdoors and mountain adventures.',
                 'privacy' => 'public',
-                'created_by' => $users[1]->id,
+                'created_by' => $userId(1),
             ],
             [
                 'name' => 'HIMIL SQUAD OTW TO PRAU',
-                'slug' => 'himil-squad-otw-to-prau-' . Str::random(8),
+                'slug' => 'himil-squad-otw-to-prau-'.Str::random(8),
                 'description' => 'A dedicated group organizing climbing expeditions to Mount Prau.',
                 'privacy' => 'private',
-                'created_by' => $users[2]->id,
+                'created_by' => $userId(2),
             ],
             [
                 'name' => 'Alpine Fluidity',
-                'slug' => 'alpine-fluidity-' . Str::random(8),
+                'slug' => 'alpine-fluidity-'.Str::random(8),
                 'description' => 'Technical climbing community focused on alpine mountaineering and high-altitude expeditions.',
                 'privacy' => 'public',
-                'created_by' => $users[0]->id,
+                'created_by' => $userId(0),
             ],
             [
                 'name' => 'Rinjani Explorers',
-                'slug' => 'rinjani-explorers-' . Str::random(8),
+                'slug' => 'rinjani-explorers-'.Str::random(8),
                 'description' => 'Community dedicated to exploring Mount Rinjani and its surroundings.',
                 'privacy' => 'public',
-                'created_by' => $users[1]->id,
+                'created_by' => $userId(1),
             ],
         ];
 
