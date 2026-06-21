@@ -55,6 +55,12 @@ class HomeController extends Controller
             return $item;
         }, $weatherData);
 
+        // Curated hero images live in public/images/hero (hero-1.png ... hero-5.png),
+        // independent of the mountain catalog so the hero only shows hand-picked shots.
+        $heroImages = collect(range(1, 5))
+            ->map(fn ($i) => asset("images/hero/hero-{$i}.png"))
+            ->all();
+
         $allMountains = collect($cached['allMountains'])->shuffle();
 
         $popularMountains = $allMountains->take(10)->map(fn ($m) => [
@@ -73,7 +79,7 @@ class HomeController extends Controller
             'image' => $m['image'],
         ]);
 
-        return view('home', compact('weatherData', 'popularMountains', 'randomPeaks'));
+        return view('home', compact('weatherData', 'popularMountains', 'randomPeaks', 'heroImages'));
     }
 
     public function redirectToHome()
