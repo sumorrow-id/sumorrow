@@ -53,7 +53,7 @@ class PostControllerTest extends TestCase
 
         // Images should be stored in the DB
         $this->assertDatabaseCount('post_images', 2);
-        
+
         // Ensure files exist on fake disk
         $image1 = $post->images()->where('position', 1)->first();
         $image2 = $post->images()->where('position', 2)->first();
@@ -73,5 +73,35 @@ class PostControllerTest extends TestCase
 
         $response->assertSessionHasErrors(['body', 'images']);
         $this->assertDatabaseCount('posts', 0);
+    }
+
+    public function test_validation_failure_for_missing_category_flashes_old_body()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('community.posts.store'), [
+            'body' => 'Draft I do not want to lose',
+            // No category_tags selected
+        ]);
+
+        $response->assertSessionHasErrors('category_tags');
+        $response->assertSessionHasInput('body', 'Draft I do not want to lose');
+        $this->assertDatabaseCount('posts', 0);
+    }
+
+    public function test_composer_repopulates_body_from_old_input()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->withSession(['_old_input' => [
+                'body' => 'My draft text',
+                'category_tags' => ['Hiking Stories'],
+            ]])
+            ->get(route('community.explore'));
+
+        $response->assertOk();
+        // The typed text must survive a failed-validation reload.
+        $response->assertSee('value="My draft text"', false);
     }
 }
