@@ -31,7 +31,7 @@
                     class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="Avatar">
 
                 <div class="grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
-                    <input id="post-body-input" type="text" name="body"
+                    <input id="post-body-input" type="text" name="body" value="{{ old('body') }}"
                         placeholder="What is New, {{ Auth::check() ? Auth::user()->username : 'Hiker' }}?"
                         class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-sm md:text-base text-gray-800 placeholder-gray-400 w-full font-medium">
 
@@ -40,7 +40,7 @@
                         class="hidden">
 
                     {{-- Hidden GIF URL — populated by JS when a GIF is chosen --}}
-                    <input type="hidden" name="gif_url" id="gif-url-hidden" value="">
+                    <input type="hidden" name="gif_url" id="gif-url-hidden" value="{{ old('gif_url') }}">
 
                     {{-- ── Toolbar icons + popovers anchored here ── --}}
                     <div class="relative flex items-center gap-3 text-gray-400 shrink-0">
@@ -148,6 +148,7 @@
                         @endphp
                         <label class="cursor-pointer select-none">
                             <input type="checkbox" name="category_tags[]" value="{{ $tag }}"
+                                @checked(in_array($tag, old('category_tags', [])))
                                 class="peer hidden">
                             <div
                                 class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 transition-all border border-transparent peer-checked:border-current {{ $peerClass }}">
