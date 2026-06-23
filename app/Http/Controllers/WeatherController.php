@@ -20,20 +20,24 @@ class WeatherController extends Controller
 
         $data = Cache::remember("weather.mountain.{$mountain->id}", now()->addMinutes(30), function () use ($mountain, $apiKey) {
             if (! $apiKey) {
-                return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
+                return $this->mockCurrentWeather();
             }
 
             $coords = $this->parseCoordinates($mountain->coordinates);
 
-            $response = Http::withoutVerifying()->timeout(5)->get('https://api.openweathermap.org/data/2.5/weather', [
-                'lat' => $coords['lat'],
-                'lon' => $coords['lng'],
-                'units' => 'metric',
-                'appid' => $apiKey,
-            ]);
+            try {
+                $response = Http::timeout(5)->get('https://api.openweathermap.org/data/2.5/weather', [
+                    'lat' => $coords['lat'],
+                    'lon' => $coords['lng'],
+                    'units' => 'metric',
+                    'appid' => $apiKey,
+                ]);
+            } catch (\Throwable $e) {
+                return $this->mockCurrentWeather();
+            }
 
             if (! $response->successful()) {
-                return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
+                return $this->mockCurrentWeather();
             }
 
             $body = $response->json();
@@ -64,12 +68,16 @@ class WeatherController extends Controller
 
             $coords = $this->parseCoordinates($mountain->coordinates);
 
-            $response = Http::withoutVerifying()->timeout(8)->get('https://api.openweathermap.org/data/2.5/forecast', [
-                'lat' => $coords['lat'],
-                'lon' => $coords['lng'],
-                'units' => 'metric',
-                'appid' => $apiKey,
-            ]);
+            try {
+                $response = Http::timeout(8)->get('https://api.openweathermap.org/data/2.5/forecast', [
+                    'lat' => $coords['lat'],
+                    'lon' => $coords['lng'],
+                    'units' => 'metric',
+                    'appid' => $apiKey,
+                ]);
+            } catch (\Throwable $e) {
+                return $this->mockForecastData();
+            }
 
             if (! $response->successful()) {
                 return $this->mockForecastData();
@@ -79,6 +87,11 @@ class WeatherController extends Controller
         });
 
         return response()->json($data);
+    }
+
+    private function mockCurrentWeather(): array
+    {
+        return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
     }
 
     private function mockForecastData(): array

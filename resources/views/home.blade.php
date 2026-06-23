@@ -16,6 +16,7 @@
                 class="relative w-full h-[600px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
                 <!-- Two stacked layers crossfade between curated hero images -->
                 <img id="hero-image" src="{{ $heroImage }}" alt="Mountain Background"
+                    onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                     class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
                 <img id="hero-image-next" src="" alt="" aria-hidden="true"
                     class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-0 transition-opacity duration-[1200ms] ease-in-out">
@@ -182,6 +183,7 @@
                                 class="mtn-card overflow-hidden group shadow-lg cursor-pointer block transition-all duration-700 ease-in-out absolute right-0 top-1/2 w-[160px] sm:w-[200px] h-[220px] sm:h-[260px] rounded-[2rem]"
                                 data-index="{{ $idx }}">
                                 <img src="{{ $popMt['image'] }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                     class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-110"
                                     alt="{{ $popMt['name'] }}">
                                 <div
@@ -275,6 +277,7 @@
                                 <div
                                     class="w-full h-40 sm:h-48 bg-gray-200 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
                                     <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=400"
+                                        onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                         class="w-full h-full object-cover">
                                 </div>
                                 <div class="flex items-center gap-4 text-gray-500 text-xs sm:text-sm font-semibold">
@@ -364,6 +367,7 @@
                             <!-- Image -->
                             <div class="w-full h-48 bg-gray-300 rounded-2xl mb-4 overflow-hidden relative mt-auto">
                                 <img src="{{ $peak['image'] }}"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     alt="{{ $peak['name'] }}">
                                 <div class="absolute inset-0 bg-black/5"></div>

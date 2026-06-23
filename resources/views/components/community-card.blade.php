@@ -5,6 +5,7 @@
     <div class="relative h-40 bg-gradient-to-br from-[#094174] to-[#105DA3] overflow-hidden">
         @if ($community->image_url)
             <img src="{{ $community->image_url }}" alt="{{ $community->name }}"
+                onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                 class="w-full h-full object-cover" />
         @else
             <div class="w-full h-full flex items-center justify-center">
