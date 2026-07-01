@@ -115,7 +115,7 @@
                 : asset('images/dummymountain/rinjani.png');
         @endphp
         <div class="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh]">
-            <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" class="w-full h-full object-cover" />
+            <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/40"></div>
             <div
                 class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
@@ -466,6 +466,7 @@
                                                 : asset('images/dummymountain/rinjani.png');
                                         @endphp
                                         <img src="{{ $thumb }}" alt="{{ $nearby->name }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                             class="w-20 h-20 rounded-lg object-cover bg-gray-100" />
                                         <div class="flex-1 py-1">
                                             <h4

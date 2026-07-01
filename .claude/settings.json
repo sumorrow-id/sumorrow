@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=\"$CLAUDE_PROJECT_DIR/docs/AGENT_HANDOFF.md\"; test -f \"$f\" && jq -Rs '{hookSpecificOutput:{hookEventName:\"SessionStart\",additionalContext:(\"Prior agent/developer handoff log (docs/AGENT_HANDOFF.md). Read it before you start, and append a new entry before the session ends.\\n\\n\"+.)}}' \"$f\" || true",
+            "statusMessage": "Loading handoff log"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '%s' '{\"systemMessage\":\"Handoff reminder: append an entry to docs/AGENT_HANDOFF.md (date, branch, key changes, how to verify) so the next teammate or agent has context.\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}

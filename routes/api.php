@@ -21,7 +21,7 @@ Route::post('/v1/login', function (Request $request) {
     $token = $request->user()->createToken('api-token')->plainTextToken;
 
     return response()->json(['token' => $token, 'status' => 200]);
-});
+})->middleware('throttle:login');
 
 Route::prefix('v1')
     ->middleware(['auth:sanctum', 'throttle:api'])

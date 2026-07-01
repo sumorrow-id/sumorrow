@@ -89,6 +89,7 @@
                                 $finalImage = !empty($imageUrl) ? $imageUrl : asset('images/dummymountain/rinjani.png');
                             @endphp
                             <img src="{{ $finalImage }}" alt="{{ $mountain->name }}"
+                                onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                 class="w-full h-56 object-cover rounded-2xl" />
 
                             <div class="pt-5 pb-2 px-2 flex flex-col grow">

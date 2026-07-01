@@ -3,15 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Community;
-use App\Notifications\ResetPasswordNotification;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -30,7 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'google_id',
         'password_hash',
-        'role',
+        // 'role' is intentionally omitted so it cannot be set via mass assignment (privilege escalation guard).
         'created_at',
         'avatar_url',
         'cover_url',
@@ -90,20 +90,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PostReply::class, 'author_id');
     }
 
-    public function communities() {
+    public function communities()
+    {
         return $this->belongsToMany(Community::class);
     }
+
     public function gears(): HasMany
     {
         return $this->hasMany(Gear::class);
     }
 
-    public function followings(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function followings(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id')->withTimestamps();
     }
 
-    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id')->withTimestamps();
     }

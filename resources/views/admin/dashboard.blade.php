@@ -45,7 +45,7 @@
                 <td class="px-8 py-6">
                     <div class="flex items-center gap-3">
                         @if($post->author->avatar_url)
-                            <img src="{{ $post->author->avatar_url }}" alt="avatar" class="w-8 h-8 rounded-full border border-morning-mist">
+                            <img src="{{ $post->author->avatar_url }}" alt="avatar" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-8 h-8 rounded-full border border-morning-mist">
                         @else
                             <div class="w-8 h-8 rounded-full bg-summit-blue flex items-center justify-center text-white text-xs font-bold">
                                 {{ strtoupper(substr($post->author->username, 0, 1)) }}

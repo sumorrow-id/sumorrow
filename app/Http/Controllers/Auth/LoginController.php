@@ -62,7 +62,9 @@ class LoginController extends Controller
 
             return redirect()->route('home');
         } catch (Exception $e) {
-            return redirect('/login')->with('error', 'Gagal login menggunakan Google: '.$e->getMessage());
+            report($e);
+
+            return redirect('/login')->with('error', 'Gagal login menggunakan Google. Silakan coba lagi.');
         }
     }
 

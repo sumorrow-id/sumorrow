@@ -64,8 +64,8 @@ class CommunityController extends Controller
         // 5. Who to Follow (required by sidebar.blade.php component)
         // ----------------------------------------------------------------
         $whoToFollow = User::when(Auth::check(), function ($query) {
-                $query->where('id', '!=', Auth::id());
-            })
+            $query->where('id', '!=', Auth::id());
+        })
             ->inRandomOrder()
             ->limit(5)
             ->get();
@@ -85,41 +85,38 @@ class CommunityController extends Controller
     {
         $user = Auth::user();
 
-        if (!$community->isMember($user)) {
+        if (! $community->isMember($user)) {
             $community->members()->attach($user->id, ['role' => 'member']);
-            
+
             return redirect()->route('community', ['tab' => 'community'])
-                            ->with('success', 'Welcome to ' . $community->name . '!');
+                ->with('success', 'Welcome to '.$community->name.'!');
         }
 
         return redirect()->route('community', ['tab' => 'community'])
-                            ->with('info', 'You are already a member of this community.');
+            ->with('info', 'You are already a member of this community.');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255|unique:communities,name',
             'description' => 'required|string',
             'privacy' => 'required|in:public,private',
         ]);
 
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to create a community.');
-        }
-
         $community = Community::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'privacy' => $request->privacy,
-            'image_url' => 'https://via.placeholder.com/150',
-            'created_by' => Auth::id(),    
+            'image_url' => null,
+            'created_by' => Auth::id(),
         ]);
 
         $community->members()->attach(Auth::id(), ['role' => 'admin']);
 
         return redirect()->route('community', ['tab' => 'community'])
-                            ->with('success', $community->name . ' created successfully!');
+            ->with('success', $community->name.' created successfully!');
     }
 
     public function leave(Community $community)
@@ -129,6 +126,6 @@ class CommunityController extends Controller
         $user->communities()->detach($community->id);
 
         return redirect()->route('community', ['tab' => 'community'])
-                            ->with('info', 'You are not a member of this community.');
+            ->with('info', 'You are not a member of this community.');
     }
 }
