@@ -21,138 +21,166 @@ use Illuminate\Support\Facades\Route;
 
 /*
 --------------------------------------------------------------------------
-Public Routes
+User-facing routes
 --------------------------------------------------------------------------
+Everything in this group is off-limits to admins: `redirect.admin` sends
+any authenticated admin to the admin dashboard instead.
 */
-Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
-Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
-Route::get('/community', [CommunityController::class, 'index'])->name('community');
-Route::middleware('throttle:weather')->group(function () {
-    Route::get('/weather/{mountain}', [WeatherController::class, 'show'])->name('weather.show');
-    Route::get('/weather/{mountain}/forecast', [WeatherController::class, 'forecast'])->name('weather.forecast');
+Route::middleware('redirect.admin')->group(function () {
+    /*
+    --------------------------------------------------------------------------
+    Public Routes
+    --------------------------------------------------------------------------
+    */
+    Route::get('/', [HomeController::class, 'redirectToHome'])->name('root');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+    Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
+    Route::get('/community', [CommunityController::class, 'index'])->name('community');
+    Route::middleware('throttle:weather')->group(function () {
+        Route::get('/weather/{mountain}', [WeatherController::class, 'show'])->name('weather.show');
+        Route::get('/weather/{mountain}/forecast', [WeatherController::class, 'forecast'])->name('weather.forecast');
+    });
+
+    /*
+    --------------------------------------------------------------------------
+    Community Forum Explore Tab Routes
+    --------------------------------------------------------------------------
+    */
+    // Main explore feed (supports ?tag= query filter)
+    Route::get('/community/explore', [PostController::class, 'index'])->name('community.explore');
+
+    // Post detail / thread view (public — guests can read)
+    Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
+
+    // Follow user toggle
+    Route::post('/users/{user}/follow', [UserController::class, 'toggleFollow'])
+        ->middleware('auth')
+        ->name('users.follow');
+
+    Route::get('/api/docs', function () {
+        if (! Auth::check()) {
+            return redirect('/home')->with('warning', 'You need to register or log in first to access the API documentation.');
+        }
+
+        return view('api.docs');
+    })->name('api.docs');
+
+    /*
+    --------------------------------------------------------------------------
+    Guest Routes (Unauthenticated Users Only)
+    --------------------------------------------------------------------------
+    */
+    Route::middleware('guest')->group(function () {
+        // Login
+        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLogin');
+        Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
+
+        // Register
+        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+
+        // Google OAuth
+        Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle'])->name('google.redirect');
+        Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
+
+        // Forgot / Reset Password
+        Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
+        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+        Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+        Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+    });
+
+    /*
+    --------------------------------------------------------------------------
+    Authenticated Routes (Logged In Users Only)
+    --------------------------------------------------------------------------
+    */
+    Route::middleware('auth')->group(function () {
+        // Profile
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+        // MyCommunity
+        Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
+        Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
+        Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
+
+        // Gear
+        Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
+        Route::put('/gears/{gear}', [GearController::class, 'update'])->name('gears.update');
+        Route::delete('/gears/{gear}', [GearController::class, 'destroy'])->name('gears.destroy');
+
+        // Explore / Mountain
+        Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
+
+        // Posts (Profile)
+        Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
+        Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
+        Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
+        Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
+
+        // Community Forum — Store a new quick post from the Explore feed composer
+        Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
+
+        // Community Forum — Store a comment on a specific post
+        Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->name('community.posts.comments.store');
+
+        // Community Forum — Toggle like on a post
+        Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
+
+        // Community Forum — Toggle save/bookmark on a post
+        Route::post('/community/posts/{post}/save', [PostController::class, 'toggleSave'])->name('community.posts.save');
+
+        // Email Verification Configuration
+        Route::prefix('email')->group(function () {
+            Route::get('/verify', function () {
+                return view('auth.verify-email');
+            })->name('verification.notice');
+
+            Route::get('/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+                $request->fulfill();
+
+                return redirect()->route('home')->with('verified', true);
+            })->middleware('signed')->name('verification.verify');
+
+            Route::post('/verification-notification', function (Request $request) {
+                $request->user()->sendEmailVerificationNotification();
+
+                return back()->with('message', 'Verification link sent!');
+            })->middleware('throttle:6,1')->name('verification.send');
+
+        });
+    });
 });
 
 /*
 --------------------------------------------------------------------------
-Community Forum Explore Tab Routes
+Routes shared by users and admins
 --------------------------------------------------------------------------
 */
-// Main explore feed (supports ?tag= query filter)
-Route::get('/community/explore', [PostController::class, 'index'])->name('community.explore');
-
-// Post detail / thread view (public — guests can read)
-Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
-
-// Follow user toggle
-Route::post('/users/{user}/follow', [UserController::class, 'toggleFollow'])
-    ->middleware('auth')
-    ->name('users.follow');
-
-Route::get('/api/docs', function () {
-    if (! Auth::check()) {
-        return redirect('/home')->with('warning', 'You need to register or log in first to access the API documentation.');
-    }
-
-    return view('api.docs');
-})->name('api.docs');
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 /*
 --------------------------------------------------------------------------
-Guest Routes (Unauthenticated Users Only)
+Admin Routes
 --------------------------------------------------------------------------
 */
-Route::middleware('guest')->group(function () {
-    // Login
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLogin');
-    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Register
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+    // User management
+    Route::get('/user-updates', [AdminController::class, 'userUpdates'])->name('admin.user-updates');
+    Route::get('/user-updates/export', [AdminController::class, 'exportUsers'])->name('admin.users.export');
+    Route::patch('/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('admin.users.role');
+    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
 
-    // Google OAuth
-    Route::get('/auth/google/redirect', [LoginController::class, 'redirectToGoogle'])->name('google.redirect');
-    Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback']);
-
-    // Forgot / Reset Password
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
-});
-
-/*
---------------------------------------------------------------------------
-Authenticated Routes (Logged In Users Only)
---------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    // Logout
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    // MyCommunity
-    Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
-    Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
-    Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
-
-    // Gear
-    Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
-    Route::put('/gears/{gear}', [GearController::class, 'update'])->name('gears.update');
-    Route::delete('/gears/{gear}', [GearController::class, 'destroy'])->name('gears.destroy');
-
-    // Explore / Mountain
-    Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
-
-    // Posts (Profile)
-    Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
-    Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
-    Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
-    Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
-
-    // Community Forum — Store a new quick post from the Explore feed composer
-    Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
-
-    // Community Forum — Store a comment on a specific post
-    Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->name('community.posts.comments.store');
-
-    // Community Forum — Toggle like on a post
-    Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
-
-    // Community Forum — Toggle save/bookmark on a post
-    Route::post('/community/posts/{post}/save', [PostController::class, 'toggleSave'])->name('community.posts.save');
-
-    // Email Verification Configuration
-    Route::prefix('email')->group(function () {
-        Route::get('/verify', function () {
-            return view('auth.verify-email');
-        })->name('verification.notice');
-
-        Route::get('/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-            $request->fulfill();
-
-            return redirect()->route('home')->with('verified', true);
-        })->middleware('signed')->name('verification.verify');
-
-        Route::post('/verification-notification', function (Request $request) {
-            $request->user()->sendEmailVerificationNotification();
-
-            return back()->with('message', 'Verification link sent!');
-        })->middleware('throttle:6,1')->name('verification.send');
-
-    });
-
-    // Admin route
-    Route::middleware('admin')->prefix('admin')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/forum-moderation', [AdminController::class, 'forumModeration'])->name('admin.forum-moderation');
-        Route::get('/user-updates', [AdminController::class, 'userUpdates'])->name('admin.user-updates');
-        Route::get('/mountain-data', [AdminController::class, 'mountainData'])->name('admin.mountain-data');
-    });
+    // Mountain management
+    Route::get('/mountain-data', [AdminController::class, 'mountainData'])->name('admin.mountain-data');
+    Route::get('/mountains/create', [AdminController::class, 'createMountain'])->name('admin.mountains.create');
+    Route::post('/mountains', [AdminController::class, 'storeMountain'])->name('admin.mountains.store');
+    Route::get('/mountains/{mountain}/edit', [AdminController::class, 'editMountain'])->name('admin.mountains.edit');
+    Route::put('/mountains/{mountain}', [AdminController::class, 'updateMountain'])->name('admin.mountains.update');
+    Route::delete('/mountains/{mountain}', [AdminController::class, 'destroyMountain'])->name('admin.mountains.destroy');
 });
