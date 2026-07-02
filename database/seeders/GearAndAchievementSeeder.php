@@ -12,11 +12,6 @@ class GearAndAchievementSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first();
-        if (! $user) {
-            return;
-        }
-
         // ==========================================
         // Pilar Jalur Ekspedisi
         // ==========================================
@@ -60,6 +55,11 @@ class GearAndAchievementSeeder extends Seeder
             ['title' => 'Prepared Hiker'],
             ['description' => 'Logged at least 10 essential items in your personal gear list.', 'icon_url' => '🎒']
         );
+
+        $user = User::first();
+        if (! $user) {
+            return;
+        }
 
         // ------------------------------------------
         // Attach ke User

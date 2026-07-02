@@ -101,7 +101,7 @@
                         <div class="flex items-center justify-between group cursor-pointer"
                             onclick="window.location.href='{{ route('explore.show', $mountain->id) }}'">
                             <div class="flex items-center gap-3">
-                                <img src="{{ $mountain->images->first()?->image_url ?? 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=100&fit=crop' }}"
+                                <img src="{{ $mountain->images->first()?->image_url ?? asset('images/default-mountain.jpg') }}"
                                     class="w-11 h-11 rounded-xl object-cover group-hover:ring-2 ring-[#094174] transition-all">
                                 <div>
                                     <h4 class="text-sm font-bold text-[#0F172A] group-hover:text-[#094174] transition">

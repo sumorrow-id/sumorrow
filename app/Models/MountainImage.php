@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class MountainImage extends Model
 {
@@ -38,17 +38,14 @@ class MountainImage extends Model
         return Attribute::make(
             get: function ($value) {
                 if (! $value) {
-                    return $this->source_url;
-                }
-                if (str_starts_with($value, 'http')) {
-                    return $value;
-                }
-                $filesystem = app(FilesystemFactory::class)->disk('public');
-                if ($filesystem->exists($value)) {
-                    return asset('storage/'.$value);
+                    return asset('images/default-mountain.jpg');
                 }
 
-                return $this->source_url;
+                if (Storage::disk('public')->exists($value)) {
+                    return asset('storage/' . $value);
+                }
+
+                return asset('images/default-mountain.jpg');
             },
         );
     }
