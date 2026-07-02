@@ -79,4 +79,20 @@ class WeatherControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure(['list']);
     }
+
+    public function test_weather_forecast_mock_spans_three_distinct_days(): void
+    {
+        config(['services.openweathermap.key' => null]);
+        $mountain = $this->makeMountain();
+
+        $url = URL::signedRoute('weather.forecast', ['mountain' => $mountain->id]);
+
+        $response = $this->getJson($url);
+
+        $days = collect($response->json('list'))
+            ->map(fn (array $item) => date('Y-m-d', $item['dt']))
+            ->unique();
+
+        $this->assertCount(3, $days, 'Forecast should span 3 distinct calendar days.');
+    }
 }
