@@ -41,6 +41,10 @@ class MountainImage extends Model
                     return asset('images/default-mountain.jpg');
                 }
 
+                if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/')) {
+                    return $value;
+                }
+
                 if (Storage::disk('public')->exists($value)) {
                     return asset('storage/' . $value);
                 }
