@@ -49,7 +49,7 @@
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                 Profile
                             </a>
-                            <form action="{{ route('logout') }}" method="POST" class="mt-1 border-t border-white/10 pt-1">
+                            <form action="{{ route('logout') }}" method="POST" class="mt-1 border-t border-white/10 pt-1 confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
                                 @csrf
                                 <button type="submit"
                                     class="flex items-center w-full text-left px-3 py-2.5 text-sm font-medium text-red-400 rounded-lg hover:bg-red-500/15 hover:text-red-300 transition-colors">
@@ -88,7 +88,7 @@
                 @auth
                     <p class="text-sm mb-2 text-gray-400">Logged in as {{ Auth::user()->username }}</p>
                     <a href="{{ route('profile') }}" class="block py-2 font-semibold text-white">Profile</a>
-                    <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                    <form action="{{ route('logout') }}" method="POST" class="mt-2 confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
                         @csrf
                         <button type="submit" class="text-red-400 font-bold">Log out</button>
                     </form>
@@ -101,29 +101,3 @@
         </div>
     </div>
 </nav>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('hamburger-btn');
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.getElementById('hamburger-icon');
-
-        btn.addEventListener('click', () => {
-            const isClosed = menu.classList.contains('max-h-0');
-
-            if (isClosed) {
-                // Open menu
-                icon.innerHTML =
-                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
-                menu.classList.remove('max-h-0', 'opacity-0');
-                menu.classList.add('max-h-[400px]', 'opacity-100');
-            } else {
-                // Close menu
-                icon.innerHTML =
-                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
-                menu.classList.remove('max-h-[400px]', 'opacity-100');
-                menu.classList.add('max-h-0', 'opacity-0');
-            }
-        });
-    });
-</script>

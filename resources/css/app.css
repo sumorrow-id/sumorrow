@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./weather-icons.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -37,6 +38,12 @@
     h6 {
         font-family: var(--font-heading);
     }
+
+    /* Hide password reveal/clear icons in Microsoft Edge */
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
 }
 
 @layer utilities {
@@ -49,4 +56,63 @@
       -ms-overflow-style: none;  /* IE and Edge */
       scrollbar-width: none;  /* Firefox */
     }
+
+    /* Custom Range Slider */
+    .range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #094174;
+        cursor: pointer;
+    }
+
+    .range-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #094174;
+        cursor: pointer;
+    }
   }
+
+/* Admin layout scoped styles (from layouts/admin.blade.php) */
+.admin-layout {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.admin-layout .topo-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%237CBCE8' stroke-opacity='0.06' stroke-width='1.2'%3E%3Cpath d='M80 82c12-9 28-14 50-14s40 5 52 14'/%3E%3Cpath d='M55 95c18-16 42-25 75-25s60 9 78 25'/%3E%3Cpath d='M30 110c25-28 55-42 100-42s80 14 105 42'/%3E%3Cpath d='M10 130c30-40 70-60 120-60s90 20 120 60'/%3E%3Cpath d='M-10 160c40-55 85-80 140-80s105 25 140 80'/%3E%3Cpath d='M-10 200c45-60 100-90 150-90s110 30 150 90'/%3E%3Cpath d='M-10 235c50-70 110-105 160-105s115 35 160 105'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+.admin-layout ::-webkit-scrollbar {
+    width: 6px;
+}
+
+.admin-layout ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb {
+    background: #6EA1B2;
+    border-radius: 4px;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb:hover {
+    background: #4D8EA2;
+}
+
+.admin-layout [x-cloak] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-layout *,
+    .admin-layout *::before,
+    .admin-layout *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}

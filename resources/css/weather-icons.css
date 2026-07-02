@@ -1,0 +1,103 @@
+/* Animasi untuk icon cuaca (SVG) agar terasa hidup */
+@keyframes weather-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes weather-bob {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-1.5px);
+    }
+}
+
+@keyframes weather-rain {
+    0% {
+        transform: translateY(-2px);
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(3px);
+        opacity: 0;
+    }
+}
+
+@keyframes weather-flash {
+
+    0%,
+    55%,
+    100% {
+        opacity: 1;
+    }
+
+    65%,
+    85% {
+        opacity: 0.25;
+    }
+}
+
+@keyframes weather-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(0.92);
+    }
+}
+
+.weather-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: weather-spin 9s linear infinite;
+}
+
+.weather-bob {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: weather-bob 3s ease-in-out infinite;
+}
+
+.weather-rain {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: weather-rain 1.2s ease-in infinite;
+}
+
+.weather-flash {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: weather-flash 2s ease-in-out infinite;
+}
+
+.weather-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: weather-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .weather-spin,
+    .weather-bob,
+    .weather-rain,
+    .weather-flash,
+    .weather-pulse {
+        animation: none;
+    }
+}

@@ -76,6 +76,31 @@
         </div>
 
         {{-- ================================================================
+         COMMENTS / REPLIES THREAD
+         ================================================================ --}}
+        @if ($comments->isEmpty())
+            <div class="text-center text-gray-400 py-10">
+                <p class="font-medium">No replies yet. Be the first to respond!</p>
+            </div>
+        @else
+            <div class="flex flex-col gap-4 mb-6">
+                @foreach ($comments as $comment)
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="{{ $comment->user->avatar_url ? asset($comment->user->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
+                                class="w-9 h-9 rounded-full object-cover" alt="Avatar">
+                            <div>
+                                <div class="font-bold text-[#1a2b4c] text-sm">{{ $comment->user->username }}</div>
+                                <div class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</div>
+                            </div>
+                        </div>
+                        <p class="text-[#1a2b4c] text-sm leading-relaxed">{{ $comment->body }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        {{-- ================================================================
          COMMENT SUBMISSION FORM
          ================================================================ --}}
         @auth
@@ -112,31 +137,6 @@
                 post.
             </div>
         @endauth
-
-        {{-- ================================================================
-         COMMENTS / REPLIES THREAD
-         ================================================================ --}}
-        @if ($comments->isEmpty())
-            <div class="text-center text-gray-400 py-10">
-                <p class="font-medium">No replies yet. Be the first to respond!</p>
-            </div>
-        @else
-            <div class="flex flex-col gap-4">
-                @foreach ($comments as $comment)
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <div class="flex items-center gap-3 mb-3">
-                            <img src="{{ $comment->user->avatar_url ? asset($comment->user->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
-                                class="w-9 h-9 rounded-full object-cover" alt="Avatar">
-                            <div>
-                                <div class="font-bold text-[#1a2b4c] text-sm">{{ $comment->user->username }}</div>
-                                <div class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</div>
-                            </div>
-                        </div>
-                        <p class="text-[#1a2b4c] text-sm leading-relaxed">{{ $comment->body }}</p>
-                    </div>
-                @endforeach
-            </div>
-        @endif
 
     </div>
 @endsection

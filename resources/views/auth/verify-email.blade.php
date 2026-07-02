@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-[#F8F9FA] px-4">
+<div class="min-h-screen flex items-center justify-center bg-[#F8F9FA] px-4" data-redirect-url="{{ route('home') }}">
     <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
         <h2 class="text-2xl font-bold text-[#094174] mb-4">Verify Your Email</h2>
         
@@ -25,7 +25,7 @@
             </form>
 
             <!-- Tombol Logout (Jika user mau pakai akun lain) -->
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('logout') }}" class="confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
                 @csrf
                 <button type="submit" class="text-sm text-gray-400 hover:text-[#094174] font-medium transition underline">
                     Log Out
@@ -35,17 +35,6 @@
     </div>
 </div>
 
-<script>
-    setInterval(function() {
-        fetch('/api/check-verification')
-            .then(response => response.json())
-            .then(data => {
-                if (data.verified) {
-                    window.location.href = "{{ route('home') }}";
-                }
-            });
-    }, 3000);
-</script>
 @endsection
 
 <!-- abis regis->verif email->home page -->

@@ -3,15 +3,7 @@
 @section('content')
     {{-- FontAwesome untuk icon --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        /* Ini buat hps icon mata bawaan Microsoft Edge */
-        input::-ms-reveal,
-        input::-ms-clear {
-            display: none;
-        }
-    </style>
-    
+
     <div class="pt-32 pb-20 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
         
         <div class="w-[95%] max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row min-h-150 border border-gray-100">
@@ -112,37 +104,4 @@
             </div>
         </div>
     </div>
-
-    {{-- Script untuk Validasi Email dan Pw --}}
-    <script>
-        const emailInput = document.querySelector('input[type="email"]');
-
-        emailInput.addEventListener('invalid', function(e){
-            // cek kosong atau salah email
-            if(emailInput.value === ''){
-                emailInput.setCustomValidity('Email tidak boleh kosong');
-            }
-            else{
-                emailInput.setCustomValidity('Format email salah');
-            }
-        });
-
-        emailInput.addEventListener('input', function(){
-            emailInput.setCustomValidity('');
-        });
-
-        const toggleBtn = document.querySelector('#toggleBtn');
-        const passwordInput = document.querySelector('#password');
-        const eyeIcon = document.querySelector('#eyeIcon');
-
-        toggleBtn.addEventListener('click', function () {
-            // Toggle tipe input
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            
-            // Toggle icon mata
-            eyeIcon.classList.toggle('fa-eye-slash', !isPassword);
-            eyeIcon.classList.toggle('fa-eye', isPassword);
-        });
-    </script>
 @endsection

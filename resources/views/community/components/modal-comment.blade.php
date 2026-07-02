@@ -1,7 +1,7 @@
 {{-- Comment Overlay Modal --}}
 <div id="comment-modal" class="fixed inset-0 z-100 hidden items-center justify-center">
     {{-- Backdrop --}}
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeCommentModal()"></div>
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity comment-modal-close"></div>
 
     {{-- Modal Content --}}
     <div class="relative bg-white rounded-3xl w-[95%] max-w-lg mx-auto shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="comment-modal-content">
@@ -9,7 +9,7 @@
         {{-- Header --}}
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <h3 class="font-bold text-lg text-[#1a2b4c]">Reply to Post</h3>
-            <button onclick="closeCommentModal()" class="text-gray-400 hover:text-gray-600 transition p-1 cursor-pointer">
+            <button class="comment-modal-close text-gray-400 hover:text-gray-600 transition p-1 cursor-pointer">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
@@ -45,7 +45,7 @@
                         <button type="button" class="hover:text-[#105DA3] transition font-bold text-xs" style="font-family: monospace;">GIF</button>
                         <button type="button" class="hover:text-[#105DA3] transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>
                     </div>
-                    <button type="button" onclick="closeCommentModal()" class="bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-1.5 px-5 rounded-full text-sm transition">
+                    <button type="button" class="comment-modal-close bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-1.5 px-5 rounded-full text-sm transition">
                         Reply
                     </button>
                 </div>
@@ -54,32 +54,3 @@
 
     </div>
 </div>
-
-<script>
-    function openCommentModal() {
-        const modal = document.getElementById('comment-modal');
-        const modalContent = document.getElementById('comment-modal-content');
-
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        // Trigger animations
-        setTimeout(() => {
-            modalContent.classList.remove('scale-95', 'opacity-0');
-            modalContent.classList.add('scale-100', 'opacity-100');
-        }, 10);
-    }
-
-    function closeCommentModal() {
-        const modal = document.getElementById('comment-modal');
-        const modalContent = document.getElementById('comment-modal-content');
-
-        modalContent.classList.remove('scale-100', 'opacity-100');
-        modalContent.classList.add('scale-95', 'opacity-0');
-
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300); // Wait for transition
-    }
-</script>

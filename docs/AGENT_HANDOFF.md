@@ -11,6 +11,43 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-02 (later) — branch: `main`
+
+By: Claude Code
+
+**What changed**
+
+- Found and reverted a broken uncommitted working-tree change that had mechanically
+  converted every `class="..."` attribute across all 45 `resources/views/**/*.blade.php`
+  files into `@class([...])`, including cases where the naive whitespace-split conversion
+  mangled Blade expressions into invalid PHP array literals. `git checkout --
+  resources/views/` restored the clean state; the only legitimate `@class()` usage
+  (3 conditional nav-link states in `layouts/admin.blade.php`) was preserved.
+- Extracted every inline `<script>`/`<style>` block out of Blade views into
+  `resources/js/features/*.js` and `resources/css/app.css` (+ new `weather-icons.css`
+  partial), following the existing `ExploreSearch.js`-style class pattern and the
+  existing `data-*` attribute convention (extended to JSON payloads via
+  `{{ json_encode($x) }}` + `JSON.parse(el.dataset.x)` — never `@json()` in an HTML
+  attribute, it breaks on embedded quotes). Only two `<script>` tags remain anywhere in
+  `resources/views`: the emoji-picker and Alpine.js third-party CDN loads.
+- Along the way: fixed a live double-submit bug on `explore.blade.php` (its inline
+  debounce script and `ExploreSearch.js` were both submitting the same search input),
+  and dropped several confirmed-dead functions (`toggleLike`, `toggleSave`,
+  `filterByTag`, `window.clearImagePreview`) instead of relocating them.
+- Note: the Giphy API key (`data-giphy-key` on the composer form) is exposed
+  client-side — this predates the refactor (it was already interpolated into inline JS
+  before), just relocated. Worth a follow-up if the Giphy integration is revisited.
+
+**How to verify**
+
+- `npm run build` — succeeds.
+- `php artisan test` — 228 passing, unchanged.
+- Manually exercise: auth pages (password toggle), navbar hamburger, explore page
+  search/filter drawer, community tabs/modals/follow/like/save/comment-modal, gear
+  add/edit/filter, profile tabs/avatar upload, home page weather widget + carousel,
+  mountain detail page weather forecast, and the post composer (image upload, emoji,
+  GIF search/select) in a browser — no automated JS test coverage exists for these.
+
 ## 2026-07-02 — branch: `main`
 
 By: Claude Code

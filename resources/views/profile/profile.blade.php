@@ -80,11 +80,11 @@
                 <div class="border-b-[1.5px] border-gray-300 mt-8 md:mt-10 -mx-4 sm:-mx-8 px-4 sm:px-8 overflow-x-auto whitespace-nowrap hide-scrollbar"
                     id="tab-navigation">
                     <div class="flex gap-6 md:gap-10 w-max">
-                        <button onclick="switchTab('posts')" id="btn-posts"
+                        <button data-tab="posts" id="btn-posts"
                             class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] hover:text-gray-700 translate-y-[1.5px]">Posts</button>
-                        <button onclick="switchTab('achievements')" id="btn-achievements"
+                        <button data-tab="achievements" id="btn-achievements"
                             class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">Achievements</button>
-                        <button onclick="switchTab('gear')" id="btn-gear"
+                        <button data-tab="gear" id="btn-gear"
                             class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">Gear
                             List</button>
                     </div>
@@ -106,29 +106,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function switchTab(tabName) {
-            // 1. Sembunyikan semua konten
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('block');
-                el.classList.add('hidden');
-            });
-
-            // 2. Tampilkan konten yang dipilih
-            document.getElementById('content-' + tabName).classList.remove('hidden');
-            document.getElementById('content-' + tabName).classList.add('block');
-
-            // 3. Reset style semua tombol tab (jadikan abu-abu)
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-[#094174]', 'text-[#094174]', 'font-bold');
-                btn.classList.add('border-transparent', 'text-gray-400', 'font-semibold');
-            });
-
-            // 4. Bikin tombol yang diklik jadi aktif (biru tebal)
-            let activeBtn = document.getElementById('btn-' + tabName);
-            activeBtn.classList.remove('border-transparent', 'text-gray-400', 'font-semibold');
-            activeBtn.classList.add('border-[#094174]', 'text-[#094174]', 'font-bold');
-        }
-    </script>
 @endsection
