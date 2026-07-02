@@ -33,13 +33,12 @@ class ProfileControllerTest extends TestCase
         $response->assertViewIs('profile.profile');
     }
 
-    public function test_admin_user_can_also_view_profile(): void
+    public function test_admin_is_redirected_to_admin_dashboard(): void
     {
         $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->get(route('profile'));
 
-        $response->assertStatus(200);
-        $response->assertViewIs('profile.profile');
+        $response->assertRedirect(route('admin.dashboard'));
     }
 }
