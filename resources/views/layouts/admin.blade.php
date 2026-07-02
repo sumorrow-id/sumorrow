@@ -9,30 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        [x-cloak] { display: none !important; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Bricolage Grotesque', sans-serif; }
-
-        /* Topographic contour texture for the basecamp sidebar */
-        .topo-bg {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%237CBCE8' stroke-opacity='0.06' stroke-width='1.2'%3E%3Cpath d='M80 82c12-9 28-14 50-14s40 5 52 14'/%3E%3Cpath d='M55 95c18-16 42-25 75-25s60 9 78 25'/%3E%3Cpath d='M30 110c25-28 55-42 100-42s80 14 105 42'/%3E%3Cpath d='M10 130c30-40 70-60 120-60s90 20 120 60'/%3E%3Cpath d='M-10 160c40-55 85-80 140-80s105 25 140 80'/%3E%3Cpath d='M-10 200c45-60 100-90 150-90s110 30 150 90'/%3E%3Cpath d='M-10 235c50-70 110-105 160-105s115 35 160 105'/%3E%3C/g%3E%3C/svg%3E");
-            background-repeat: repeat;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #6EA1B2; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4D8EA2; }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-        }
-    </style>
     <!-- Alpine.js to handle mobile interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-[#F3F7FA] antialiased text-deep-midnight" x-data="{ sidebarOpen: false }">
+<body class="admin-layout bg-[#F3F7FA] antialiased text-deep-midnight" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen overflow-hidden">
 
         <!-- Mobile Sidebar Overlay -->
@@ -149,7 +129,7 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                    <form method="POST" action="{{ route('logout') }}" class="inline confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
                         @csrf
                         <button type="submit" class="group flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-blue-bird hover:bg-morning-mist/30 hover:text-summit-blue transition-colors focus-visible:outline-2 focus-visible:outline-summit-blue">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,5 +176,7 @@
             </main>
         </div>
     </div>
+
+    <x-confirm-submit-modal />
 </body>
 </html>

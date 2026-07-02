@@ -146,45 +146,4 @@
             </div>
         </form>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const filterBtn = document.getElementById('mobile-filter-btn');
-            const closeFilterBtn = document.getElementById('close-filter-btn');
-            const filterDrawer = document.getElementById('filter-drawer');
-            const filterBackdrop = document.getElementById('filter-backdrop');
-            const searchInput = document.getElementById('search-input');
-            const form = document.getElementById('explore-form');
-
-            // Timeout for search typing so it acts dynamically
-            let typingTimer;
-            searchInput.addEventListener('input', () => {
-                clearTimeout(typingTimer);
-                typingTimer = setTimeout(() => {
-                    form.submit();
-                }, 800);
-            });
-
-            function openDrawer() {
-                filterBackdrop.classList.remove('hidden');
-                setTimeout(() => {
-                    filterDrawer.classList.remove('translate-x-full');
-                }, 10); // Small delay to allow display to toggle before transform
-            }
-
-            function closeDrawer() {
-                filterDrawer.classList.add('translate-x-full');
-                setTimeout(() => {
-                    filterBackdrop.classList.add('hidden');
-                    if (window.innerWidth < 1024) {
-                        form.submit();
-                    }
-                }, 300);
-            }
-
-            if(filterBtn) filterBtn.addEventListener('click', openDrawer);
-            if(closeFilterBtn) closeFilterBtn.addEventListener('click', closeDrawer);
-            if(filterBackdrop) filterBackdrop.addEventListener('click', closeDrawer);
-        });
-    </script>
 @endsection

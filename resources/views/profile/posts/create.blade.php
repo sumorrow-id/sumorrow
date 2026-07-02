@@ -93,47 +93,4 @@
         </form>
     </div>
 </div>
-
-<script>
-    document.getElementById('images').addEventListener('change', function(e) {
-        const files = e.target.files;
-        const errorEl = document.getElementById('image-error');
-        const submitBtn = document.getElementById('submit-btn');
-        let errorMsg = '';
-        let totalSize = 0;
-
-        if (files.length > 12) {
-            errorMsg = 'You can only upload a maximum of 12 images.';
-        } else {
-            for (let i = 0; i < files.length; i++) {
-                totalSize += files[i].size;
-                if (files[i].size > 2 * 1024 * 1024) { // 2MB
-                    errorMsg = 'Each image must be smaller than 2MB.';
-                    break;
-                }
-            }
-            if (!errorMsg && totalSize > 24 * 1024 * 1024) { 
-                errorMsg = 'Total size of all images cannot exceed 24MB.';
-            }
-        }
-
-        if (errorMsg) {
-            errorEl.textContent = errorMsg;
-            errorEl.classList.remove('hidden');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-            errorEl.classList.add('hidden');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-    });
-
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const submitBtn = document.getElementById('submit-btn');
-        if (submitBtn.disabled) {
-            e.preventDefault();
-        }
-    });
-</script>
 @endsection

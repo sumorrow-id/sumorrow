@@ -3,14 +3,7 @@
 @section('content')
     {{-- FontAwesome untuk icon --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        input::-ms-reveal,
-        input::-ms-clear {
-            display: none;
-        }
-    </style>
-    
+
     <div class="pt-32 pb-20 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
         
         <div class="w-[95%] max-w-6xl bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row min-h-150 border border-gray-100">
@@ -102,38 +95,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Logic untuk toggle password di page register
-        const regToggleBtn = document.querySelector('#regToggleBtn');
-        const regPasswordInput = document.querySelector('#regPassword');
-        const regEyeIcon = document.querySelector('#regEyeIcon');
-
-        regToggleBtn.addEventListener('click', function () {
-            const isPassword = regPasswordInput.getAttribute('type') === 'password';
-            regPasswordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            regEyeIcon.classList.toggle('fa-eye-slash', !isPassword);
-            regEyeIcon.classList.toggle('fa-eye', isPassword);
-        });
-
-        // Validasi Email Sederhana
-        const emailInput = document.querySelector('#regEmail');
-        emailInput.addEventListener('invalid', function(e){
-            if(emailInput.value === '') emailInput.setCustomValidity('Email tidak boleh kosong');
-            else emailInput.setCustomValidity('Format email salah');
-        });
-        emailInput.addEventListener('input', function(){ emailInput.setCustomValidity(''); });
-    
-        // Validasi Confirm Password
-        const confirmToggleBtn = document.querySelector('#confirmToggleBtn');
-        const confirmPasswordInput = document.querySelector('#confirmPassword');
-        const confirmEyeIcon = document.querySelector('#confirmEyeIcon');
-
-        confirmToggleBtn.addEventListener('click', function () {
-            const isPassword = confirmPasswordInput.getAttribute('type') === 'password';
-            confirmPasswordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            confirmEyeIcon.classList.toggle('fa-eye-slash', !isPassword);
-            confirmEyeIcon.classList.toggle('fa-eye', isPassword);
-        });
-    </script>
 @endsection

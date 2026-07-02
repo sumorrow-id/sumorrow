@@ -26,16 +26,16 @@
 
     <div class="flex flex-col gap-6">
 
-        <div class="flex items-center border-b border-gray-200 px-2 overflow-x-auto justify-between" id="forum-tabs" style="scrollbar-width: none;">
+        <div class="flex items-center border-b border-gray-200 px-2 overflow-x-auto justify-between hide-scrollbar" id="forum-tabs">
             <div class="flex items-center gap-4 sm:gap-6">
                 <button
-                    onclick="switchTab('explore')"
+                    data-forum-tab="explore"
                     id="tab-explore"
                     class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap">
                     Explore
                 </button>
                 <button
-                    onclick="switchTab('community')"
+                    data-forum-tab="community"
                     id="tab-community"
                     class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
                     My Community
@@ -43,8 +43,7 @@
             </div>
 
             <button
-                onclick="toggleMobileSidebar()"
-                class="pb-3 text-sm sm:text-base cursor-pointer text-gray-500 hover:text-[#094174] transition whitespace-nowrap flex items-center gap-1.5 lg:hidden">
+                class="mobile-sidebar-toggle pb-3 text-sm sm:text-base cursor-pointer text-gray-500 hover:text-[#094174] transition whitespace-nowrap flex items-center gap-1.5 lg:hidden">
                 <span class="font-bold">Discover</span>
             </button>
         </div>
@@ -70,7 +69,7 @@
                     </div>
                     
                     @auth
-                        <button onclick="openModal()" class="bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer">
+                        <button class="open-create-community-modal bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
@@ -131,7 +130,7 @@
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-[#001E3A]">Create Community</h3>
-            <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 cursor-pointer">
+            <button type="button" class="close-create-community-modal text-gray-400 hover:text-gray-600 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -159,7 +158,7 @@
             </div>
 
             <div class="flex items-center gap-3 pt-2">
-                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border border-gray-200 text-gray-500 font-bold rounded-full hover:bg-gray-50 transition cursor-pointer">
+                <button type="button" class="close-create-community-modal flex-1 px-4 py-2 border border-gray-200 text-gray-500 font-bold rounded-full hover:bg-gray-50 transition cursor-pointer">
                     Cancel
                 </button>
                 <button type="submit" class="flex-1 px-4 py-2 bg-[#094174] text-white font-bold rounded-full hover:bg-[#105DA3] transition shadow-md cursor-pointer">
@@ -171,11 +170,11 @@
 </div>
 
 
-<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-100 hidden backdrop-blur-sm transition-opacity opacity-0" onclick="toggleMobileSidebar()"></div>
+<div id="mobile-sidebar-overlay" class="mobile-sidebar-toggle fixed inset-0 bg-black/50 z-100 hidden backdrop-blur-sm transition-opacity opacity-0"></div>
     <div id="mobile-sidebar-drawer" class="fixed top-0 right-0 h-full w-[85%] sm:w-[60%] max-w-sm bg-gray-50 z-110 transform translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
         <div class="p-5 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0 z-10">
             <h2 class="font-bold text-lg text-[#1a2b4c]">Discover</h2>
-            <button onclick="toggleMobileSidebar()" class="text-gray-400 hover:text-gray-600 transition p-1 bg-gray-100 rounded-full">
+            <button class="mobile-sidebar-toggle text-gray-400 hover:text-gray-600 transition p-1 bg-gray-100 rounded-full">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
@@ -186,152 +185,4 @@
     @include('community.components.modal-comment')
 </div>
 
-<style>
-    #forum-tabs::-webkit-scrollbar {
-        display: none;
-    }
-</style>
-
-
-
-<script>
-    function switchTab(tab) {
-        const tabs = ['explore', 'community'];
-
-        tabs.forEach(t => {
-            const btn = document.getElementById('tab-' + t);
-            const content = document.getElementById('content-' + t);
-            if (!btn || !content) return;
-
-            if (t === tab) {
-                btn.className = `pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap`;
-                content.classList.remove('hidden');
-                content.classList.add('grid');
-            } else {
-                btn.className = `pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap`;
-                content.classList.add('hidden');
-                content.classList.remove('grid');
-            }
-        });
-    }
-
-    function openModal() {
-        document.getElementById('modal-create-community').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.getElementById('modal-create-community').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-
-    let isMobileSidebarOpen = false;
-    function toggleMobileSidebar() {
-        const overlay = document.getElementById('mobile-sidebar-overlay');
-        const drawer = document.getElementById('mobile-sidebar-drawer');
-    
-        isMobileSidebarOpen = !isMobileSidebarOpen;
-
-        if (isMobileSidebarOpen) {
-            overlay.classList.remove('hidden');
-            // small delay to allow display block to process before adding opacity
-            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-
-            drawer.classList.remove('translate-x-full');
-            document.body.style.overflow = 'hidden'; // prevent background scrolling
-        } else {
-            overlay.classList.add('opacity-0');
-            drawer.classList.add('translate-x-full');
-            document.body.style.overflow = '';
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-        }
-    }
-
-    function toggleLike(btn) {
-        const isLiked = btn.classList.contains('text-red-500');
-        const svg = btn.querySelector('svg');
-        const span = btn.querySelector('span');
-
-        if (isLiked) {
-            btn.classList.remove('text-red-500');
-            svg.classList.remove('fill-current');
-            if (span && span.classList.contains('text-red-500')) span.classList.remove('text-red-500');
-        } else {
-            btn.classList.add('text-red-500');
-            svg.classList.add('fill-current');
-            if (span) span.classList.add('text-red-500');
-        }
-    }
-
-    function toggleSave(btn) {
-        const svg = btn.querySelector('svg');
-        const isSaved = svg.classList.contains('fill-[#094174]');
-
-        if (isSaved) {
-            svg.classList.remove('fill-[#094174]');
-            btn.classList.remove('text-[#094174]');
-            btn.classList.add('text-gray-500');
-        } else {
-            svg.classList.add('fill-[#094174]');
-            btn.classList.remove('text-gray-500');
-            btn.classList.add('text-[#094174]');
-        }
-    }
-
-
-
-    let currentActiveTag = null;
-
-    function filterByTag(btn, tagName) {
-        // Find all post elements in the feed
-        const posts = document.querySelectorAll('.feed-post');
-
-        if (currentActiveTag === tagName) {
-            // Reset filter
-            currentActiveTag = null;
-            document.querySelectorAll('.tag-filter-btn').forEach(b => {
-                b.classList.remove('bg-gray-200', 'ring-2', 'ring-[#094174]', 'ring-offset-2');
-            });
-            posts.forEach(post => {
-                post.classList.remove('hidden');
-                post.classList.add('block');
-            });
-        } else {
-            // Apply filter
-            currentActiveTag = tagName;
-            document.querySelectorAll('.tag-filter-btn').forEach(b => {
-                b.classList.remove('bg-gray-200', 'ring-2', 'ring-[#094174]', 'ring-offset-2');
-            });
-            if (btn) {
-                btn.classList.add('bg-gray-200');
-            }
-
-            posts.forEach(post => {
-                const postTag = post.getAttribute('data-tag');
-                if (postTag === tagName) {
-                    post.classList.remove('hidden');
-                    post.classList.add('block');
-                } else {
-                    post.classList.add('hidden');
-                    post.classList.remove('block');
-                }
-            });
-        }
-
-        if (typeof isMobileSidebarOpen !== 'undefined' && isMobileSidebarOpen) {
-            toggleMobileSidebar();
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = urlParams.get('tab');
-
-        if (activeTab === 'community') {
-            switchTab('community');
-        } else {
-            switchTab('explore');
-        }
-    });
-</script>
 @endsection

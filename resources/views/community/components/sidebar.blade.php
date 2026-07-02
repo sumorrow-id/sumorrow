@@ -43,7 +43,7 @@
 
     {{-- 2. My Community --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6">
-        <h2 onclick="switchTab('community')" class="font-bold text-lg text-[#1a2b4c] mb-5 flex items-center justify-between cursor-pointer group hover:text-[#094174] transition">
+        <h2 data-forum-tab="community" class="font-bold text-lg text-[#1a2b4c] mb-5 flex items-center justify-between cursor-pointer group hover:text-[#094174] transition">
             <span>My Community</span>
             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </h2>
@@ -166,7 +166,6 @@
                     @php $isFollowing = auth()->user()->isFollowing($user); @endphp
                     <button
                         type="button"
-                        onclick="toggleFollow(this)"
                         data-url="{{ route('users.follow', $user->id) }}"
                         data-following="{{ $isFollowing ? 'true' : 'false' }}"
                         class="follow-btn border border-[#094174] text-xs md:text-sm font-bold px-4 py-1.5 md:px-5 md:py-2 rounded-full transition-all duration-300 transform active:scale-95 {{ $isFollowing ? 'bg-white text-[#094174] hover:bg-gray-50' : 'bg-[#094174] text-white hover:bg-[#105DA3]' }}">
@@ -186,70 +185,3 @@
     </div>
 
 </div>
-
-<script>
-async function toggleFollow(btn) {
-    const url = btn.dataset.url;
-    const isFollowing = btn.dataset.following === 'true';
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || document.querySelector('input[name="_token"]')?.value || '';
-
-    // Optimistic UI Update
-    const newFollowing = !isFollowing;
-    btn.dataset.following = newFollowing ? 'true' : 'false';
-
-    if (newFollowing) {
-        btn.textContent = 'Following';
-        btn.classList.remove('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-        btn.classList.add('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-    } else {
-        btn.textContent = 'Follow';
-        btn.classList.remove('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-        btn.classList.add('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-    }
-
-    try {
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!res.ok) {
-            const errorText = await res.text();
-            console.error('Laravel Error:', errorText);
-            throw new Error('Network response was not ok');
-        }
-
-        const data = await res.json();
-        
-        // Sync with server
-        btn.dataset.following = data.is_following ? 'true' : 'false';
-        if (data.is_following) {
-            btn.textContent = 'Following';
-            btn.classList.remove('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-            btn.classList.add('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-        } else {
-            btn.textContent = 'Follow';
-            btn.classList.remove('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-            btn.classList.add('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-        }
-    } catch (error) {
-        console.error('Follow Toggle Failed:', error.message);
-        
-        // Rollback
-        btn.dataset.following = isFollowing ? 'true' : 'false';
-        if (isFollowing) {
-            btn.textContent = 'Following';
-            btn.classList.remove('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-            btn.classList.add('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-        } else {
-            btn.textContent = 'Follow';
-            btn.classList.remove('bg-white', 'text-[#094174]', 'hover:bg-gray-50');
-            btn.classList.add('bg-[#094174]', 'text-white', 'hover:bg-[#105DA3]');
-        }
-    }
-}
-</script>

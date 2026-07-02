@@ -51,14 +51,34 @@
                 </svg>
             </button>
         </div>
-        <script>
-            setTimeout(() => {
-                const el = document.getElementById('flash-warning');
-                if (!el) return;
-                el.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => el.remove(), 300);
-            }, 6000);
-        </script>
+    @endif
+
+    @if (session('success'))
+        <div
+            id="flash-success"
+            role="alert"
+            class="fixed top-24 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-green-200 rounded-2xl shadow-lg shadow-green-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
+        >
+            <div class="shrink-0 w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#001E3A] mb-0.5">Success</p>
+                <p class="text-sm text-gray-500 leading-relaxed">{{ session('success') }}</p>
+            </div>
+            <button
+                type="button"
+                onclick="document.getElementById('flash-success').remove()"
+                aria-label="Dismiss"
+                class="shrink-0 text-gray-400 hover:text-[#1a2b4c] transition"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
     @endif
 
     <main class="grow">
@@ -66,5 +86,7 @@
     </main>
 
     <x-footer />
+
+    <x-confirm-submit-modal />
 </body>
 </html>

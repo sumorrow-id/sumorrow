@@ -3,14 +3,7 @@
 @section('content')
     {{-- FontAwesome untuk icon --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <style>
-        input::-ms-reveal,
-        input::-ms-clear {
-            display: none;
-        }
-    </style>
-    
+
     <div class="pt-32 pb-20 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
         
         <div class="w-[95%] max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
@@ -92,37 +85,4 @@
         </div>
 
     </div>
-
-    <script>
-        // Toggle password visibility
-        document.getElementById('toggleBtn').addEventListener('click', function() {
-            const input = document.getElementById('password');
-            const icon = document.getElementById('eyeIcon');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
-        });
-
-        document.getElementById('toggleBtnConfirm').addEventListener('click', function() {
-            const input = document.getElementById('password_confirmation');
-            const icon = document.getElementById('eyeIconConfirm');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
-        });
-    </script>
 @endsection
