@@ -8,32 +8,31 @@
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12 mb-8">
                 <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-[#094174] mb-4">
                     <span class="inline-block w-2 h-2 rounded-full bg-[#094174]"></span>
-                    Developers
+                    {{ __('api.developers_label') }}
                 </div>
                 <h1 class="font-bold text-3xl lg:text-5xl text-[#001E3A] mb-4 leading-tight">
                     Sumorrow Public API
                     <span class="text-[#094174]">v1</span>
                 </h1>
                 <p class="text-gray-500 text-base lg:text-lg leading-relaxed max-w-3xl">
-                    Read-only HTTP API for the Sumorrow mountain catalog &mdash; provinces, mountains, mountain images,
-                    basecamps, and mountain ratings.
+                    {{ __('api.hero_description') }}
                 </p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
                     <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
-                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">Base URL</p>
+                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">{{ __('api.base_url_label') }}</p>
                         <p class="text-sm font-mono font-semibold text-[#094174] break-all">/api/v1</p>
                     </div>
                     <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
-                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">Format</p>
-                        <p class="text-sm font-semibold text-[#1a2b4c]">JSON only</p>
+                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">{{ __('api.format_label') }}</p>
+                        <p class="text-sm font-semibold text-[#1a2b4c]">{{ __('api.format_value') }}</p>
                     </div>
                     <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
-                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">Auth</p>
+                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">{{ __('api.auth_label') }}</p>
                         <p class="text-sm font-semibold text-[#1a2b4c]">Laravel Sanctum</p>
                     </div>
                     <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
-                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">Rate Limit</p>
+                        <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">{{ __('api.rate_limit_label') }}</p>
                         <p class="text-sm font-semibold text-[#1a2b4c]">30 / min / user</p>
                     </div>
                 </div>
@@ -44,28 +43,24 @@
                 {{-- Sidebar nav --}}
                 <aside class="hidden lg:block">
                     <nav class="sticky top-32 bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-xs font-bold text-gray-400 mb-4 tracking-wider uppercase">On this page</h3>
+                        <h3 class="text-xs font-bold text-gray-400 mb-4 tracking-wider uppercase">{{ __('api.on_this_page') }}</h3>
                         <ul class="flex flex-col gap-2 text-sm">
                             <li><a href="#authentication"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Authentication</a>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_authentication') }}</a>
                             </li>
                             <li><a href="#rate-limiting"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Rate
-                                    Limiting</a></li>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_rate_limiting') }}</a></li>
                             <li><a href="#envelopes"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Response
-                                    Envelopes</a></li>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_envelopes') }}</a></li>
                             <li><a href="#query-params"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Query
-                                    Parameters</a></li>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_query_params') }}</a></li>
                             <li><a href="#endpoints"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Endpoints</a>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_endpoints') }}</a>
                             </li>
                             <li><a href="#errors"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Error
-                                    Codes</a></li>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_errors') }}</a></li>
                             <li><a href="#roadmap"
-                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">Roadmap</a>
+                                    class="block px-3 py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition font-medium">{{ __('api.nav_roadmap') }}</a>
                             </li>
                         </ul>
                     </nav>
@@ -77,10 +72,9 @@
                     {{-- Authentication --}}
                     <section id="authentication"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">Authentication</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">{{ __('api.nav_authentication') }}</h2>
                         <p class="text-gray-500 leading-relaxed mb-5">
-                            All requests must carry one of: a Sanctum session cookie (same-origin SPA, after web login), or
-                            a personal access token sent as a Bearer header.
+                            {{ __('api.authentication_desc') }}
                         </p>
 
                         <div
@@ -91,7 +85,7 @@
 <span class="text-[#a7f3d0]">Authorization:</span> Bearer 1|abc123...</pre>
                         </div>
 
-                        <p class="text-gray-500 leading-relaxed mb-3">A 401 is returned for missing or invalid credentials:
+                        <p class="text-gray-500 leading-relaxed mb-3">{{ __('api.authentication_401_note') }}
                         </p>
                         <div
                             class="rounded-2xl bg-[#0b1a2e] text-[#cfd8e3] font-mono text-xs lg:text-sm overflow-x-auto p-5">
@@ -102,29 +96,27 @@
                     {{-- Rate Limiting --}}
                     <section id="rate-limiting"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">Rate Limiting</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">{{ __('api.nav_rate_limiting') }}</h2>
                         <p class="text-gray-500 leading-relaxed mb-5">
-                            Limits are enforced per identity and bucketed by minute. Every response carries the standard
-                            headers below.
+                            {{ __('api.rate_limiting_desc') }}
                         </p>
 
                         <div class="overflow-x-auto rounded-2xl border border-gray-100">
                             <table class="w-full text-sm">
                                 <thead class="bg-[#F8F9FA]">
                                     <tr>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Audience</th>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Limit</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.audience_label') }}</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.limit_label') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     <tr>
-                                        <td class="px-5 py-3 text-[#1a2b4c] font-medium">Authenticated user</td>
-                                        <td class="px-5 py-3 text-gray-500">30 requests / minute (per user ID)</td>
+                                        <td class="px-5 py-3 text-[#1a2b4c] font-medium">{{ __('api.authenticated_user') }}</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.authenticated_user_limit') }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="px-5 py-3 text-[#1a2b4c] font-medium">Unauthenticated</td>
-                                        <td class="px-5 py-3 text-gray-500">10 requests / minute (per IP) &mdash; still
-                                            returns 401</td>
+                                        <td class="px-5 py-3 text-[#1a2b4c] font-medium">{{ __('api.unauthenticated') }}</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.unauthenticated_limit') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -133,24 +125,24 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
                             <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
                                 <p class="text-xs font-mono font-bold text-[#094174] mb-1">X-RateLimit-Limit</p>
-                                <p class="text-xs text-gray-500">Bucket size</p>
+                                <p class="text-xs text-gray-500">{{ __('api.header_bucket_size') }}</p>
                             </div>
                             <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
                                 <p class="text-xs font-mono font-bold text-[#094174] mb-1">X-RateLimit-Remaining</p>
-                                <p class="text-xs text-gray-500">Requests left in window</p>
+                                <p class="text-xs text-gray-500">{{ __('api.header_requests_remaining') }}</p>
                             </div>
                             <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
                                 <p class="text-xs font-mono font-bold text-[#094174] mb-1">Retry-After</p>
-                                <p class="text-xs text-gray-500">Seconds to wait (on 429)</p>
+                                <p class="text-xs text-gray-500">{{ __('api.header_retry_seconds') }}</p>
                             </div>
                         </div>
                     </section>
 
                     {{-- Response Envelopes --}}
                     <section id="envelopes" class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">Response Envelopes</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">{{ __('api.nav_envelopes') }}</h2>
 
-                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">List (paginated)</h3>
+                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">{{ __('api.envelope_list') }}</h3>
                         <div
                             class="rounded-2xl bg-[#0b1a2e] text-[#cfd8e3] font-mono text-xs lg:text-sm overflow-x-auto p-5 mb-5">
                             <pre class="whitespace-pre">{
@@ -160,19 +152,19 @@
 }</pre>
                         </div>
 
-                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">Single resource</h3>
+                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">{{ __('api.envelope_single') }}</h3>
                         <div
                             class="rounded-2xl bg-[#0b1a2e] text-[#cfd8e3] font-mono text-xs lg:text-sm overflow-x-auto p-5 mb-5">
                             <pre class="whitespace-pre">{ <span class="text-[#a7f3d0]">"data"</span>: { <span class="text-[#a7f3d0]">"id"</span>: <span class="text-[#fca5a5]">1</span>, <span class="text-[#a7f3d0]">"name"</span>: <span class="text-[#fde68a]">"Rinjani"</span> } }</pre>
                         </div>
 
-                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">Error envelope</h3>
+                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">{{ __('api.envelope_error') }}</h3>
                         <div
                             class="rounded-2xl bg-[#0b1a2e] text-[#cfd8e3] font-mono text-xs lg:text-sm overflow-x-auto p-5 mb-5">
                             <pre class="whitespace-pre">{ <span class="text-[#a7f3d0]">"message"</span>: <span class="text-[#fde68a]">"Resource not found."</span>, <span class="text-[#a7f3d0]">"status"</span>: <span class="text-[#fca5a5]">404</span> }</pre>
                         </div>
 
-                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">Validation (422)</h3>
+                        <h3 class="font-bold text-base text-[#1a2b4c] mb-2">{{ __('api.envelope_validation') }}</h3>
                         <div
                             class="rounded-2xl bg-[#0b1a2e] text-[#cfd8e3] font-mono text-xs lg:text-sm overflow-x-auto p-5">
                             <pre class="whitespace-pre">{
@@ -186,22 +178,21 @@
                     {{-- Query Parameters --}}
                     <section id="query-params"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">Query Parameters</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">{{ __('api.nav_query_params') }}</h2>
                         <p class="text-gray-500 leading-relaxed mb-5">
-                            <span class="font-mono text-[#094174] font-semibold">GET /mountains</span> supports the
-                            following query parameters.
-                            <span class="font-mono text-[#094174] font-semibold">GET /provinces</span> accepts <span
+                            <span class="font-mono text-[#094174] font-semibold">GET /mountains</span> {{ __('api.query_params_intro_1') }}
+                            <span class="font-mono text-[#094174] font-semibold">GET /provinces</span> {{ __('api.query_params_intro_2') }} <span
                                 class="font-mono">search</span>, <span class="font-mono">page</span>, <span
-                                class="font-mono">limit</span> (default 50, max 50).
+                                class="font-mono">limit</span> {{ __('api.query_params_default_note') }}
                         </p>
 
                         <div class="overflow-x-auto rounded-2xl border border-gray-100">
                             <table class="w-full text-sm">
                                 <thead class="bg-[#F8F9FA]">
                                     <tr>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Param</th>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Type</th>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Notes</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.param_label') }}</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.type_label') }}</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.notes_label') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 text-[#1a2b4c]">
@@ -256,7 +247,7 @@
                     {{-- Endpoints --}}
                     <section id="endpoints"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">Endpoints</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">{{ __('api.nav_endpoints') }}</h2>
 
                         @php
                             $groups = [
@@ -347,31 +338,31 @@
                     {{-- Error Codes --}}
                     <section id="errors"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">Error Codes</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-5">{{ __('api.nav_errors') }}</h2>
                         <div class="overflow-x-auto rounded-2xl border border-gray-100">
                             <table class="w-full text-sm">
                                 <thead class="bg-[#F8F9FA]">
                                     <tr>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">Code</th>
-                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">When</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.code_label') }}</th>
+                                        <th class="text-left font-bold text-[#001E3A] px-5 py-3">{{ __('api.when_label') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     <tr>
                                         <td class="px-5 py-3 font-mono font-bold text-[#094174]">401</td>
-                                        <td class="px-5 py-3 text-gray-500">Missing / invalid Sanctum credentials</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.error_401_desc') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono font-bold text-[#094174]">404</td>
-                                        <td class="px-5 py-3 text-gray-500">Resource not found, or unmatched API path</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.error_404_desc') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono font-bold text-[#094174]">422</td>
-                                        <td class="px-5 py-3 text-gray-500">Validation failure on query params</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.error_422_desc') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono font-bold text-[#094174]">429</td>
-                                        <td class="px-5 py-3 text-gray-500">Rate limit exceeded &mdash; see <span
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.error_429_desc') }} <span
                                                 class="font-mono">Retry-After</span></td>
                                     </tr>
                                 </tbody>
@@ -382,10 +373,9 @@
                     {{-- Roadmap --}}
                     <section id="roadmap"
                         class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 scroll-mt-32">
-                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">Roadmap</h2>
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-3">{{ __('api.nav_roadmap') }}</h2>
                         <p class="text-gray-500 leading-relaxed mb-5">
-                            Write endpoints (POST / PATCH / DELETE) are not exposed yet. The items below are planned, scoped
-                            to admin-only writes in a future revision.
+                            {{ __('api.roadmap_desc') }}
                         </p>
                         <ul class="flex flex-col gap-2 text-sm text-[#1a2b4c]">
                             <li class="flex items-start gap-3"><span

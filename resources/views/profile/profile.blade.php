@@ -9,7 +9,7 @@
                     $cover = Auth::user()->cover_url;
                     $coverSrc = $cover ? (str_contains($cover, 'http') ? $cover : asset('storage/' . $cover)) : asset('images/profile/banner.jpeg');
                 @endphp
-                <img src="{{ $coverSrc }}" alt="Cover" class="w-full h-full object-cover">
+                <img src="{{ $coverSrc }}" alt="{{ __('profile.cover_alt') }}" class="w-full h-full object-cover">
 
                 <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/70 to-transparent"></div>
 
@@ -22,7 +22,7 @@
                                 {{ Auth::user()->username }}</h1>
 
                             @if(Auth::user()->email_verified_at)
-                                <img src="{{ asset('images/profile/verified.png') }}" alt="Verified"
+                                <img src="{{ asset('images/profile/verified.png') }}" alt="{{ __('profile.verified_alt') }}"
                                     class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 drop-shadow-sm shrink-0">
                             @endif
                         </div>
@@ -31,7 +31,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 fill-current">
                                 <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-45.3 90.5L32 394.7V480H117.3L402.3 195 272.3 65 224.2 113.1z"/>
                             </svg>
-                            Edit Profile
+                            {{ __('profile.edit_profile') }}
                         </a>
                     </div>
                 </div>
@@ -54,26 +54,25 @@
                 <div class="ml-0 md:ml-50 mt-16 md:mt-2">
                     <div class="flex gap-8 text-sm mt-2">
                         <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/profile/post.png') }}" alt="Post Icon"
+                            <img src="{{ asset('images/profile/post.png') }}" alt="{{ __('profile.post_icon_alt') }}"
                                 class="w-6 h-6 object-contain">
                             <div class="flex flex-col">
                                 <span class="font-extrabold text-[#094174] text-base leading-none">{{ Auth::user()->posts()->count() }}</span>
-                                <span class="text-[10px] font-bold text-[#6D8A9F] tracking-wide uppercase mt-0.5">Climber
-                                    Posts</span>
+                                <span class="text-[10px] font-bold text-[#6D8A9F] tracking-wide uppercase mt-0.5">{{ __('profile.climber_posts') }}</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <img src="{{ asset('images/profile/join.png') }}" alt="Join Icon"
+                            <img src="{{ asset('images/profile/join.png') }}" alt="{{ __('profile.join_icon_alt') }}"
                                 class="w-6 h-6 object-contain">
                             <div class="flex flex-col">
-                                <span class="font-extrabold text-[#094174] text-base leading-none">{{ Auth::user()->created_at ? Auth::user()->created_at->format('M Y') : 'N/A' }}</span>
-                                <span class="text-[10px] font-bold text-[#6D8A9F] tracking-wide uppercase mt-0.5">Joined Date</span>
+                                <span class="font-extrabold text-[#094174] text-base leading-none">{{ Auth::user()->created_at ? Auth::user()->created_at->format('M Y') : __('profile.not_available') }}</span>
+                                <span class="text-[10px] font-bold text-[#6D8A9F] tracking-wide uppercase mt-0.5">{{ __('profile.joined_date') }}</span>
                             </div>
                         </div>
                     </div>
 
                     <p class="mt-5 text-[#334155] text-[13px] max-w-2xl leading-relaxed">
-                        {{ Auth::user()->bio ?? 'Hello, I am using Sumorrow to explore and share my hiking journey!' }}
+                        {{ Auth::user()->bio ?? __('profile.default_bio') }}
                     </p>
                 </div>
 
@@ -81,12 +80,11 @@
                     id="tab-navigation">
                     <div class="flex gap-6 md:gap-10 w-max">
                         <button data-tab="posts" id="btn-posts"
-                            class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] hover:text-gray-700 translate-y-[1.5px]">Posts</button>
+                            class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_posts') }}</button>
                         <button data-tab="achievements" id="btn-achievements"
-                            class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">Achievements</button>
+                            class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_achievements') }}</button>
                         <button data-tab="gear" id="btn-gear"
-                            class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">Gear
-                            List</button>
+                            class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_gear') }}</button>
                     </div>
                 </div>
             </div>

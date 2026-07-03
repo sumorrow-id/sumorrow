@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'developers_label' => 'Developers',
+    'hero_description' => 'Read-only HTTP API for the Sumorrow mountain catalog — provinces, mountains, mountain images, basecamps, and mountain ratings.',
+
+    'base_url_label' => 'Base URL',
+    'format_label' => 'Format',
+    'format_value' => 'JSON only',
+    'auth_label' => 'Auth',
+    'rate_limit_label' => 'Rate Limit',
+
+    'on_this_page' => 'On this page',
+    'nav_authentication' => 'Authentication',
+    'nav_rate_limiting' => 'Rate Limiting',
+    'nav_envelopes' => 'Response Envelopes',
+    'nav_query_params' => 'Query Parameters',
+    'nav_endpoints' => 'Endpoints',
+    'nav_errors' => 'Error Codes',
+    'nav_roadmap' => 'Roadmap',
+
+    'authentication_desc' => 'All requests must carry one of: a Sanctum session cookie (same-origin SPA, after web login), or a personal access token sent as a Bearer header.',
+    'authentication_401_note' => 'A 401 is returned for missing or invalid credentials:',
+
+    'rate_limiting_desc' => 'Limits are enforced per identity and bucketed by minute. Every response carries the standard headers below.',
+    'audience_label' => 'Audience',
+    'limit_label' => 'Limit',
+    'authenticated_user' => 'Authenticated user',
+    'authenticated_user_limit' => '30 requests / minute (per user ID)',
+    'unauthenticated' => 'Unauthenticated',
+    'unauthenticated_limit' => '10 requests / minute (per IP) — still returns 401',
+    'header_bucket_size' => 'Bucket size',
+    'header_requests_remaining' => 'Requests left in window',
+    'header_retry_seconds' => 'Seconds to wait (on 429)',
+
+    'envelope_list' => 'List (paginated)',
+    'envelope_single' => 'Single resource',
+    'envelope_error' => 'Error envelope',
+    'envelope_validation' => 'Validation (422)',
+
+    'query_params_intro_1' => 'supports the following query parameters.',
+    'query_params_intro_2' => 'accepts',
+    'query_params_default_note' => '(default 50, max 50).',
+    'param_label' => 'Param',
+    'type_label' => 'Type',
+    'notes_label' => 'Notes',
+
+    'code_label' => 'Code',
+    'when_label' => 'When',
+    'error_401_desc' => 'Missing / invalid Sanctum credentials',
+    'error_404_desc' => 'Resource not found, or unmatched API path',
+    'error_422_desc' => 'Validation failure on query params',
+    'error_429_desc' => 'Rate limit exceeded — see',
+
+    'roadmap_desc' => 'Write endpoints (POST / PATCH / DELETE) are not exposed yet. The items below are planned, scoped to admin-only writes in a future revision.',
+];

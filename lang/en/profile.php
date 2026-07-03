@@ -1,0 +1,92 @@
+<?php
+
+return [
+    // profile/profile.blade.php
+    'verified_alt' => 'Verified',
+    'cover_alt' => 'Cover',
+    'edit_profile' => 'Edit Profile',
+    'post_icon_alt' => 'Post Icon',
+    'join_icon_alt' => 'Join Icon',
+    'climber_posts' => 'Climber Posts',
+    'joined_date' => 'Joined Date',
+    'not_available' => 'N/A',
+    'default_bio' => 'Hello, I am using Sumorrow to explore and share my hiking journey!',
+    'tab_posts' => 'Posts',
+    'tab_achievements' => 'Achievements',
+    'tab_gear' => 'Gear List',
+
+    // profile/edit.blade.php
+    'cover_image' => 'Cover Image',
+    'cover_preview_alt' => 'Cover preview',
+    'change_cover' => 'Change Cover',
+    'profile_photo' => 'Profile Photo',
+    'avatar_preview_alt' => 'Avatar preview',
+    'username' => 'Username',
+    'email_address' => 'Email Address',
+    'verified' => 'Verified',
+    'email_unverified' => 'Your email is unverified.',
+    'send_verification_link' => 'Send verification link',
+    'bio' => 'Bio',
+    'bio_placeholder' => 'Tell us about your hiking journey...',
+    'bio_counter' => ':count / :max characters',
+    'confirm_save_title' => 'Save changes?',
+    'confirm_save_message' => 'Your profile will be updated with these changes.',
+
+    // profile/partials/achievements.blade.php
+    'achievement_badges' => 'Achievement Badges (:unlocked / :total)',
+    'achievement_goal' => 'Achievement Goal',
+    'locked' => 'Locked',
+    'earned_on' => 'Earned on :date.',
+    'complete_requirements' => 'Complete the requirements to unlock this badge.',
+    'no_achievements' => 'No achievements available yet.',
+
+    // profile/partials/posts.blade.php
+    'hiking_history' => 'Hiking History',
+    'view_all_activities' => 'View All Activities',
+    'new_activity' => '+ New Activity',
+    'expedition_days_badge' => ':daysD Expedition',
+    'duration_days_badge' => ':daysD',
+    'route_label' => 'Route:',
+    'route_icon_alt' => 'Route',
+    'standard_trail' => 'Standard Trail',
+    'image_alt_suffix' => 'image',
+    'view_full_log' => 'View Full Log',
+    'no_hiking_history' => 'No hiking history yet.',
+    'top_mountains' => 'Top Mountains',
+    'popular' => 'Popular',
+    'no_popular_mountains' => 'No popular mountains available.',
+
+    // profile/posts/index.blade.php
+    'my_activities' => 'My Activities',
+    'my_activities_subtitle' => 'All your hiking stories and upcoming expeditions',
+    'back_to_profile' => 'Back to Profile',
+    'no_activities_yet' => 'No activities yet',
+    'no_activities_text' => 'Start sharing your hiking adventures and experiences.',
+    'create_first_activity' => 'Create First Activity',
+    'post_image_alt' => 'Post Image',
+    'location_varies' => 'Location varies',
+
+    // profile/posts/create.blade.php
+    'new_activity_heading' => 'New Activity',
+    'new_activity_subtitle' => 'Log your hiking trip or share your expedition plan.',
+    'back_to_activities' => 'Back to Activities',
+    'activity_title' => 'Activity Title',
+    'activity_title_placeholder' => 'e.g., Summit Attack to Mt. Rinjani',
+    'mountain_optional' => 'Mountain (Optional)',
+    'select_mountain' => '-- Select Mountain --',
+    'climbing_date_optional' => 'Climbing Date (Optional)',
+    'duration_days_optional' => 'Duration (Days) (Optional)',
+    'duration_days_placeholder' => 'e.g., 3',
+    'expedition_details' => 'Expedition Details',
+    'expedition_details_placeholder' => 'Share your story, route details, and tips for this journey. Markdown is supported.',
+    'markdown_help' => 'You can use Markdown for formatting.',
+    'photos' => 'Photos',
+    'photos_help' => 'Select up to 12 images. Maximum 2MB per image to ensure successful upload.',
+    'post_activity' => 'Post Activity',
+
+    // profile/posts/show.blade.php
+    'back' => 'Back',
+    'author' => 'Author',
+    'photos_count' => 'Photos (:count)',
+    'post_photo_alt' => 'Post photo',
+];

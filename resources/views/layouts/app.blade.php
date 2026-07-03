@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,17 +33,17 @@
                 </svg>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-[#001E3A] mb-0.5">Login required</p>
+                <p class="text-sm font-bold text-[#001E3A] mb-0.5">{{ __('common.login_required') }}</p>
                 <p class="text-sm text-gray-500 leading-relaxed">{{ session('warning') }}</p>
                 <div class="flex items-center gap-3 mt-3">
-                    <a href="{{ route('showLogin') }}" class="text-xs font-bold bg-[#094174] hover:bg-[#105DA3] text-white px-4 py-1.5 rounded-full transition shadow-sm">Log in</a>
-                    <a href="{{ route('register') }}" class="text-xs font-bold text-[#094174] hover:text-[#105DA3] transition">Register</a>
+                    <a href="{{ route('showLogin') }}" class="text-xs font-bold bg-[#094174] hover:bg-[#105DA3] text-white px-4 py-1.5 rounded-full transition shadow-sm">{{ __('common.log_in') }}</a>
+                    <a href="{{ route('register') }}" class="text-xs font-bold text-[#094174] hover:text-[#105DA3] transition">{{ __('common.register') }}</a>
                 </div>
             </div>
             <button
                 type="button"
                 onclick="document.getElementById('flash-warning').remove()"
-                aria-label="Dismiss"
+                aria-label="{{ __('common.dismiss') }}"
                 class="shrink-0 text-gray-400 hover:text-[#1a2b4c] transition"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -65,13 +65,13 @@
                 </svg>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-[#001E3A] mb-0.5">Success</p>
+                <p class="text-sm font-bold text-[#001E3A] mb-0.5">{{ __('common.success') }}</p>
                 <p class="text-sm text-gray-500 leading-relaxed">{{ session('success') }}</p>
             </div>
             <button
                 type="button"
                 onclick="document.getElementById('flash-success').remove()"
-                aria-label="Dismiss"
+                aria-label="{{ __('common.dismiss') }}"
                 class="shrink-0 text-gray-400 hover:text-[#1a2b4c] transition"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

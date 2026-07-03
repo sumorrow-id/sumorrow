@@ -11,10 +11,10 @@
             <div class="p-8 sm:p-14">
 
                 <h1 class="text-4xl sm:text-5xl font-bold text-[#094174] mb-2 text-center tracking-tight">
-                    Lupa Password?
+                    {{ __('auth.forgot_password_heading') }}
                 </h1>
                 <p class="text-gray-400 text-sm mb-10 text-center font-medium">
-                    Masukkan email Anda untuk menerima link reset password
+                    {{ __('auth.forgot_password_subheading') }}
                 </p>
 
                 <!-- Forgot Password Form -->
@@ -37,7 +37,7 @@
                         </div>
                         <input type="email" name="email" value="{{ old('email') }}" required autofocus
                             class="w-full bg-[#F8F9FA] border @error('email') border-red-500 @else border-gray-100 @enderror rounded-2xl py-4 pl-14 pr-4 focus:outline-none @error('email') focus:border-red-500 focus:ring-1 focus:ring-red-500 @else focus:border-[#094174] focus:ring-1 focus:ring-[#094174] @enderror transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
-                            placeholder="Masukkan email Anda">
+                            placeholder="{{ __('auth.forgot_password_email_placeholder') }}">
                     </div>
 
                     @if ($errors->has('email'))
@@ -49,18 +49,18 @@
                         </div>
                     @endif
 
-                    <button type="submit" 
+                    <button type="submit"
                         class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide mt-8">
-                        Kirim Link Reset Password
+                        {{ __('auth.forgot_password_submit') }}
                     </button>
                 </form>
 
                 <!-- Back to Login -->
                 <div class="text-center mt-8">
                     <p class="text-gray-400 text-sm">
-                        Ingat password Anda?
+                        {{ __('auth.forgot_password_remember') }}
                         <a href="{{ route('showLogin') }}" class="text-[#094174] font-bold hover:underline">
-                            Kembali ke Login
+                            {{ __('auth.forgot_password_back_to_login') }}
                         </a>
                     </p>
                 </div>

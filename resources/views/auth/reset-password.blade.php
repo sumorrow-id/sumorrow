@@ -11,10 +11,10 @@
             <div class="p-8 sm:p-14">
 
                 <h1 class="text-4xl sm:text-5xl font-bold text-[#094174] mb-2 text-center tracking-tight">
-                    Reset Password
+                    {{ __('auth.reset_password_heading') }}
                 </h1>
                 <p class="text-gray-400 text-sm mb-10 text-center font-medium">
-                    Masukkan password baru Anda
+                    {{ __('auth.reset_password_subheading') }}
                 </p>
 
                 <!-- Reset Password Form -->
@@ -40,7 +40,7 @@
                         
                         <input type="password" id="password" name="password" required autofocus
                             class="w-full bg-[#F8F9FA] border @error('password') border-red-500 @else border-gray-100 @enderror rounded-2xl py-4 pl-14 pr-14 focus:outline-none @error('password') focus:border-red-500 focus:ring-1 focus:ring-red-500 @else focus:border-[#094174] focus:ring-1 focus:ring-[#094174] @enderror transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
-                            placeholder="Password baru (min 8 karakter)">
+                            placeholder="{{ __('auth.reset_password_password_placeholder') }}">
 
                         <button type="button" id="toggleBtn" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#094174] transition-colors focus:outline-none">
                             <i class="fa-solid fa-eye-slash text-lg" id="eyeIcon"></i>
@@ -61,7 +61,7 @@
                         
                         <input type="password" id="password_confirmation" name="password_confirmation" required
                             class="w-full bg-[#F8F9FA] border @error('password_confirmation') border-red-500 @else border-gray-100 @enderror rounded-2xl py-4 pl-14 pr-14 focus:outline-none @error('password_confirmation') focus:border-red-500 focus:ring-1 focus:ring-red-500 @else focus:border-[#094174] focus:ring-1 focus:ring-[#094174] @enderror transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
-                            placeholder="Konfirmasi password">
+                            placeholder="{{ __('auth.reset_password_confirm_placeholder') }}">
 
                         <button type="button" id="toggleBtnConfirm" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#094174] transition-colors focus:outline-none">
                             <i class="fa-solid fa-eye-slash text-lg" id="eyeIconConfirm"></i>
@@ -74,9 +74,9 @@
                         </div>
                     @endif
 
-                    <button type="submit" 
+                    <button type="submit"
                         class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide mt-8">
-                        Reset Password
+                        {{ __('auth.reset_password_submit') }}
                     </button>
                 </form>
 

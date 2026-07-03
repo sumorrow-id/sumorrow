@@ -13,7 +13,7 @@
                 type="text"
                 name="search"
                 value="{{ request('search') }}"
-                placeholder="Search posts…"
+                placeholder="{{ __('community.search_posts_placeholder') }}"
                 class="block w-full pl-11 pr-4 py-3 bg-[#F8F9FA] rounded-xl text-sm md:text-base border-none focus:ring-0 focus:outline-none placeholder-gray-400">
         </div>
     </form>
@@ -21,20 +21,20 @@
     {{-- 1. Forum Leaders --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6">
         <h2 class="font-bold text-lg text-[#1a2b4c] mb-2 flex items-center justify-between cursor-pointer group">
-            <span>Forum Leaders</span>
+            <span>{{ __('community.forum_leaders_heading') }}</span>
             <svg class="w-4 h-4 text-[#1a2b4c] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </h2>
-        <p class="text-xs md:text-sm text-gray-500 mb-5 leading-relaxed">Post, reply, and support others to climb the Forum Leaders board.</p>
+        <p class="text-xs md:text-sm text-gray-500 mb-5 leading-relaxed">{{ __('community.forum_leaders_description') }}</p>
 
         <div class="flex flex-col gap-5">
             @foreach ($forumLeaders as $leader)
             <div class="flex items-center gap-4">
                 <div class="relative shrink-0">
-                    <img src="{{ $leader->avatar_url ? asset($leader->avatar_url) : asset('images/dummymountain/rinjani.png') }}" alt="User" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover">
+                    <img src="{{ $leader->avatar_url ? asset($leader->avatar_url) : asset('images/dummymountain/rinjani.png') }}" alt="{{ __('community.avatar_alt') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover">
                 </div>
                 <div>
                     <div class="font-bold text-[#1a2b4c] text-sm md:text-base">{{ $leader->username }}</div>
-                    <div class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">{{ number_format($leader->posts_count) }} CONTRIBUTIONS</div>
+                    <div class="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">{{ __('community.contributions_count', ['count' => number_format($leader->posts_count)]) }}</div>
                 </div>
             </div>
             @endforeach
@@ -44,22 +44,22 @@
     {{-- 2. My Community --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6">
         <h2 data-forum-tab="community" class="font-bold text-lg text-[#1a2b4c] mb-5 flex items-center justify-between cursor-pointer group hover:text-[#094174] transition">
-            <span>My Community</span>
+            <span>{{ __('community.my_community') }}</span>
             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </h2>
 
         <div class="flex flex-col gap-5">
             @forelse ($myCommunities->take(3) as $community)
             <div class="flex items-center gap-4 cursor-pointer group pb-1">
-                <img src="{{ $community->image_url ?? asset('images/dummymountain/bromo.jpg') }}" alt="Community" class="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover shrink-0">
+                <img src="{{ $community->image_url ?? asset('images/dummymountain/bromo.jpg') }}" alt="{{ __('community.community_image_alt') }}" class="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover shrink-0">
                 <div class="flex flex-col justify-center">
                     <span class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ strtoupper($community->privacy) }}</span>
                     <span class="font-bold text-[#1a2b4c] text-sm md:text-base group-hover:text-[#094174] transition">{{ $community->name }}</span>
-                    <span class="text-xs text-gray-400 mt-0.5">{{ number_format($community->members_count) }} Members</span>
+                    <span class="text-xs text-gray-400 mt-0.5">{{ __('community.members_count', ['count' => number_format($community->members_count)]) }}</span>
                 </div>
             </div>
             @empty
-            <p class="text-sm text-gray-400">You haven't joined any community yet.</p>
+            <p class="text-sm text-gray-400">{{ __('community.no_communities_joined') }}</p>
             @endforelse
         </div>
     </div>
@@ -67,7 +67,7 @@
     {{-- 3. Popular Tags --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6">
         <h2 class="font-bold text-lg text-[#1a2b4c] mb-5">
-            Popular Tags
+            {{ __('community.popular_tags_heading') }}
         </h2>
 
         <div class="flex flex-col gap-2">
@@ -131,7 +131,7 @@
                                  {{ $isActive ? $tagConfig['text'] : '' }}">
                         {{ $tag->keyword }}
                     </span>
-                    <span class="text-xs text-gray-400">{{ number_format($tag->post_count) }} posted by this tag</span>
+                    <span class="text-xs text-gray-400">{{ __('community.posted_by_this_tag', ['count' => number_format($tag->post_count)]) }}</span>
                 </div>
 
                 {{-- Active indicator dot --}}
@@ -146,7 +146,7 @@
     {{-- 4. Who to Follow --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6 mb-8">
         <h2 class="font-bold text-lg text-[#1a2b4c] mb-5 flex items-center justify-between cursor-pointer group hover:text-[#094174] transition">
-            <span>Who to Follow</span>
+            <span>{{ __('community.who_to_follow_heading') }}</span>
             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </h2>
 
@@ -169,14 +169,14 @@
                         data-url="{{ route('users.follow', $user->id) }}"
                         data-following="{{ $isFollowing ? 'true' : 'false' }}"
                         class="follow-btn border border-[#094174] text-xs md:text-sm font-bold px-4 py-1.5 md:px-5 md:py-2 rounded-full transition-all duration-300 transform active:scale-95 {{ $isFollowing ? 'bg-white text-[#094174] hover:bg-gray-50' : 'bg-[#094174] text-white hover:bg-[#105DA3]' }}">
-                        {{ $isFollowing ? 'Following' : 'Follow' }}
+                        {{ $isFollowing ? __('community.following_button') : __('community.follow_button') }}
                     </button>
                 @else
                     <button
                         type="button"
                         onclick="window.location='{{ route('showLogin') }}'"
                         class="border border-[#094174] bg-[#094174] text-white text-xs md:text-sm font-bold px-4 py-1.5 md:px-5 md:py-2 rounded-full transition-all duration-300 hover:bg-[#105DA3] active:scale-95">
-                        Follow
+                        {{ __('community.follow_button') }}
                     </button>
                 @endauth
             </div>

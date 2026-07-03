@@ -3,17 +3,17 @@
     <div class="flex flex-row justify-between items-center w-full relative">
         <div class="hidden md:flex flex-1 text-l font-bold gap-2">
             <a href="/"
-                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Home</a>
+                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">{{ __('common.nav_home') }}</a>
             <a href="/explore"
-                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Explore</a>
+                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">{{ __('common.nav_explore') }}</a>
             <a href="/community"
-                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">Community</a>
+                class="px-4 py-2 rounded-lg transition hover:bg-[#094174]/20 hover:text-white text-white">{{ __('common.nav_community') }}</a>
         </div>
 
         <div
             class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center z-10 w-fit pointer-events-none">
             <a href="/" class="pointer-events-auto">
-                <img src="{{ asset('images/logo/SUMORROW-LOGO.png') }}" alt="Sumorrow Logo"
+                <img src="{{ asset('images/logo/SUMORROW-LOGO.png') }}" alt="{{ __('common.sumorrow_logo_alt') }}"
                     class="h-10 md:h-12 w-auto transition-transform hover:scale-105" />
             </a>
         </div>
@@ -47,14 +47,14 @@
                             <a href="{{ route('profile') }}"
                                 class="flex items-center px-3 py-2.5 text-sm font-medium text-gray-200 rounded-lg hover:bg-[#094174]/40 hover:text-white transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                Profile
+                                {{ __('common.profile') }}
                             </a>
-                            <form action="{{ route('logout') }}" method="POST" class="mt-1 border-t border-white/10 pt-1 confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
+                            <form action="{{ route('logout') }}" method="POST" class="mt-1 border-t border-white/10 pt-1 confirm-submit-form" data-confirm-title="{{ __('common.confirm_logout_title') }}" data-confirm-message="{{ __('common.confirm_logout_message') }}" data-confirm-label="{{ __('common.confirm_logout_label') }}" data-confirm-variant="danger">
                                 @csrf
                                 <button type="submit"
                                     class="flex items-center w-full text-left px-3 py-2.5 text-sm font-medium text-red-400 rounded-lg hover:bg-red-500/15 hover:text-red-300 transition-colors">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                                    Log out
+                                    {{ __('common.log_out') }}
                                 </button>
                             </form>
                         </div>
@@ -63,7 +63,7 @@
             @else
                 <a href="{{ route('showLogin') }}"
                     class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full transition hover:bg-[#105DA3]">
-                    Log in
+                    {{ __('common.log_in') }}
                 </a>
             @endauth
         </div>
@@ -80,22 +80,21 @@
     <div id="mobile-menu"
         class="w-full md:hidden transition-all duration-500 ease-in-out max-h-0 opacity-0 overflow-hidden">
         <div class="flex flex-col gap-4 mt-6 pt-4 border-t border-white/20 text-center pb-2">
-            <a href="/" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Home</a>
-            <a href="/explore" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Explore</a>
-            <a href="#" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Community</a>
+            <a href="/" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_home') }}</a>
+            <a href="/explore" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_explore') }}</a>
+            <a href="#" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_community') }}</a>
 
             <div class="pt-4 border-t border-white/10">
                 @auth
-                    <p class="text-sm mb-2 text-gray-400">Logged in as {{ Auth::user()->username }}</p>
-                    <a href="{{ route('profile') }}" class="block py-2 font-semibold text-white">Profile</a>
-                    <form action="{{ route('logout') }}" method="POST" class="mt-2 confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
+                    <p class="text-sm mb-2 text-gray-400">{{ __('common.logged_in_as', ['username' => Auth::user()->username]) }}</p>
+                    <a href="{{ route('profile') }}" class="block py-2 font-semibold text-white">{{ __('common.profile') }}</a>
+                    <form action="{{ route('logout') }}" method="POST" class="mt-2 confirm-submit-form" data-confirm-title="{{ __('common.confirm_logout_title') }}" data-confirm-message="{{ __('common.confirm_logout_message') }}" data-confirm-label="{{ __('common.confirm_logout_label') }}" data-confirm-variant="danger">
                         @csrf
-                        <button type="submit" class="text-red-400 font-bold">Log out</button>
+                        <button type="submit" class="text-red-400 font-bold">{{ __('common.log_out') }}</button>
                     </form>
                 @else
                     <a href="{{ route('showLogin') }}"
-                        class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full transition hover:bg-[#105DA3] mx-auto w-fit">Log
-                        in</a>
+                        class="px-8 py-3 bg-[#094174] text-white font-bold rounded-full transition hover:bg-[#105DA3] mx-auto w-fit">{{ __('common.log_in') }}</a>
                 @endauth
             </div>
         </div>

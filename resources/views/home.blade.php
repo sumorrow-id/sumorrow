@@ -15,7 +15,7 @@
             <div
                 class="relative w-full h-[600px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
                 <!-- Two stacked layers crossfade between curated hero images -->
-                <img id="hero-image" src="{{ $heroImage }}" alt="Mountain Background"
+                <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
                     onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                     class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
                 <img id="hero-image-next" src="" alt="" aria-hidden="true"
@@ -59,7 +59,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
-                            <input type="text" name="search" placeholder="Search For Your Next Summit...."
+                            <input type="text" name="search" placeholder="{{ __('home.search_placeholder') }}"
                                 class="w-full bg-transparent py-3 pl-12 pr-4 text-sm font-bold text-[#001E3A] placeholder-[#001E3A]/60 focus:outline-none rounded-[1.5rem]">
                         </div>
 
@@ -69,10 +69,9 @@
                         <!-- Filter Slider -->
                         <div class="w-full sm:w-1/3 flex flex-col pt-1 sm:pt-0 relative">
                             <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs font-bold text-[#001E3A]">Elevation Filter</label>
+                                <label class="text-xs font-bold text-[#001E3A]">{{ __('home.elevation_filter_label') }}</label>
                                 <span id="elevation-value"
-                                    class="text-[10px] font-bold text-white bg-gray-500 px-1.5 py-0.5 rounded uppercase shadow-sm">All
-                                    Elevations</span>
+                                    class="text-[10px] font-bold text-white bg-gray-500 px-1.5 py-0.5 rounded uppercase shadow-sm">{{ __('home.all_elevations') }}</span>
                             </div>
                             <input type="range" name="elevation" id="elevation-slider" min="0" max="5000"
                                 step="100" value="0"
@@ -82,7 +81,7 @@
                         <!-- Explore Now Button -->
                         <button type="submit"
                             class="w-full sm:w-auto mt-2 sm:mt-0 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-[1.5rem] hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap bg-transparent mr-2 text-sm">
-                            Explore Now
+                            {{ __('home.explore_now') }}
                         </button>
                     </form>
                 </div>
@@ -93,7 +92,7 @@
                 <div class="col-span-1 sm:col-span-2 lg:col-span-4 mb-8 text-right">
                     <h2
                         class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#001E3A] max-w-2xl ml-auto leading-tight">
-                        Find Your Perfect Peak<br>The Ultimate Guide to Your<br>Dream Summit
+                        {{ __('home.about_heading_line1') }}<br>{{ __('home.about_heading_line2') }}<br>{{ __('home.about_heading_line3') }}
                     </h2>
                 </div>
 
@@ -103,28 +102,26 @@
                         [
                             'icon' =>
                                 '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>',
-                            'title' => 'Real Time Conditions',
-                            'desc' =>
-                                'Get up-to-the-minute updates on weather, trail accessibility, and safety alerts.',
+                            'title' => __('home.feature_realtime_title'),
+                            'desc' => __('home.feature_realtime_desc'),
                         ],
                         [
                             'icon' =>
                                 '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
-                            'title' => 'Active Community',
-                            'desc' => 'Connect with fellow hikers, share experiences, and find climbing partners.',
+                            'title' => __('home.feature_community_title'),
+                            'desc' => __('home.feature_community_desc'),
                         ],
                         [
                             'icon' =>
                                 '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM10 5.47l4 1.4v11.66l-4-1.4V5.47zm-5 1.56l3-1.01v11.69l-3 1.01V7.03zm14 9.94l-3 1.01V6.29l3-1.01v11.69z"/></svg>',
-                            'title' => 'Verified Routes',
-                            'desc' =>
-                                'Browse thousands of detailed maps with elevation profiles and points of interest.',
+                            'title' => __('home.feature_routes_title'),
+                            'desc' => __('home.feature_routes_desc'),
                         ],
                         [
                             'icon' =>
                                 '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12-.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zm-7.43 2.52c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>',
-                            'title' => 'Gear Bag Analyzer',
-                            'desc' => 'Ensure you carry only what is essential for survival and success.',
+                            'title' => __('home.feature_gear_title'),
+                            'desc' => __('home.feature_gear_desc'),
                         ],
                     ];
                 @endphp
@@ -148,8 +145,8 @@
             <div class="flex justify-end pt-5 pb-5 mb-16 pr-4 lg:pr-12 w-full">
                 <h2
                     class="text-4xl sm:text-5xl md:text-6xl font-['Newsreader'] font-semibold italic bg-gradient-to-r from-[#001E3A] to-[#4286f4] text-transparent bg-clip-text tracking-tight text-left">
-                    <span class="block">Summit Tommorow,</span>
-                    <span class="block ml-[3.5em] lg:ml-[5.5em]">Start Today.</span>
+                    <span class="block">{{ __('home.tagline_line1') }}</span>
+                    <span class="block ml-[3.5em] lg:ml-[5.5em]">{{ __('home.tagline_line2') }}</span>
                 </h2>
             </div>
 
@@ -164,11 +161,11 @@
                 <!-- Left Text -->
                 <div class="lg:col-span-4 z-10">
                     <h2 class="text-4xl sm:text-5xl font-extrabold text-[#001E3A] mb-8 leading-tight">
-                        Check Out<br>Popular<br>Mountains
+                        {{ __('home.popular_mountains_heading_line1') }}<br>{{ __('home.popular_mountains_heading_line2') }}<br>{{ __('home.popular_mountains_heading_line3') }}
                     </h2>
                     <a href="{{ url('/explore') }}"
                         class="inline-flex items-center gap-3 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300">
-                        Explore More
+                        {{ __('home.explore_more') }}
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -238,13 +235,13 @@
                 </div>
 
                 <div class="lg:w-1/3 z-10">
-                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#001E3A] mb-6">Community</h2>
+                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#001E3A] mb-6">{{ __('home.community_heading') }}</h2>
                     <p class="text-[#001E3A]/70 font-semibold mb-8 text-lg">
-                        Enhance your summit through community. Share your journey and find your next climbing partner.
+                        {{ __('home.community_desc') }}
                     </p>
                     <a href="{{ url('/community') }}"
                         class="inline-flex items-center gap-3 px-8 py-3 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 bg-transparent">
-                        Join Now
+                        {{ __('home.join_now') }}
                         <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -273,7 +270,7 @@
                                 </div>
                                 <p class="text-xs sm:text-sm font-semibold text-[#001E3A] leading-relaxed mb-4">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sagittis.... <span
-                                        class="text-gray-400">more</span>
+                                        class="text-gray-400">{{ __('home.more') }}</span>
                                 </p>
                                 <div
                                     class="w-full h-40 sm:h-48 bg-gray-200 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
@@ -329,15 +326,14 @@
             <div>
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
                     <div>
-                        <h2 class="text-4xl sm:text-5xl font-extrabold text-[#001E3A] mb-3">Choose Your Peak</h2>
+                        <h2 class="text-4xl sm:text-5xl font-extrabold text-[#001E3A] mb-3">{{ __('home.choose_your_peak_heading') }}</h2>
                         <p class="text-[#001E3A]/60 font-semibold text-sm sm:text-base max-w-md">
-                            Carefully curated routes for every level of experience, from weekend treks to professional
-                            expeditions.
+                            {{ __('home.choose_your_peak_desc') }}
                         </p>
                     </div>
                     <a href="{{ url('/explore') }}"
                         class="inline-flex items-center gap-2 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap">
-                        Explore More
+                        {{ __('home.explore_more') }}
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>

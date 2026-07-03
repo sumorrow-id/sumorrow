@@ -4,12 +4,12 @@
         <div class="flex items-center gap-2 pb-2 mb-2 border-b border-gray-100">
             <a href="{{ route('community.explore') }}"
                 class="p-1.5 hover:bg-gray-100 rounded-full transition text-gray-500 hover:text-[#1a2b4c]"
-                aria-label="Clear filter">
+                aria-label="{{ __('community.clear_filter_aria') }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                 </svg>
             </a>
-            <h2 class="font-semibold text-[#1a2b4c] text-base md:text-lg">Showing Top Results for '<span
+            <h2 class="font-semibold text-[#1a2b4c] text-base md:text-lg">{{ __('community.showing_results_for') }} '<span
                     class="text-[#094174]">{{ request('tag') }}</span>'</h2>
         </div>
     @endif
@@ -28,11 +28,11 @@
             {{-- ── Row 1: Avatar + text input + toolbar ── --}}
             <div class="flex items-center gap-3 mb-3">
                 <img src="{{ Auth::check() && Auth::user()->avatar_url ? asset(Auth::user()->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
-                    class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="Avatar">
+                    class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="{{ __('community.avatar_alt') }}">
 
                 <div class="grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
                     <input id="post-body-input" type="text" name="body" value="{{ old('body') }}"
-                        placeholder="What is New, {{ Auth::check() ? Auth::user()->username : 'Hiker' }}?"
+                        placeholder="{{ __('community.whats_new_placeholder', ['username' => Auth::check() ? Auth::user()->username : __('community.hiker_fallback')]) }}"
                         class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-sm md:text-base text-gray-800 placeholder-gray-400 w-full font-medium">
 
                     {{-- Hidden multi-file input --}}
@@ -47,7 +47,7 @@
 
                         {{-- 📷 Image picker --}}
                         <button type="button" id="btn-image-picker" class="hover:text-[#094174] transition"
-                            aria-label="Attach images">
+                            aria-label="{{ __('community.attach_images_aria') }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -57,11 +57,11 @@
                         {{-- GIF picker trigger --}}
                         <button type="button" id="btn-gif-toggle"
                             class="hover:text-[#094174] transition font-bold text-[10px] md:text-xs border-2 border-current rounded-sm px-1 py-0.5"
-                            style="line-height:1;" aria-label="Insert GIF">GIF</button>
+                            style="line-height:1;" aria-label="{{ __('community.insert_gif_aria') }}">GIF</button>
 
                         {{-- 😊 Emoji picker trigger --}}
                         <button type="button" id="btn-emoji-toggle" class="hover:text-[#094174] transition"
-                            aria-label="Insert emoji">
+                            aria-label="{{ __('community.insert_emoji_aria') }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -77,12 +77,11 @@
                         {{-- ── GIF picker popover ───────────────────────────── --}}
                         <div id="gif-popover"
                             class="hidden absolute right-0 top-full mt-2 z-[100] w-72 bg-white border border-gray-200 rounded-2xl shadow-2xl p-3">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">GIF
-                                Search</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">{{ __('community.gif_search_label') }}</p>
 
                             {{-- Search box --}}
                             <div class="relative mb-3">
-                                <input id="gif-search-input" type="text" placeholder="Search GIFs…"
+                                <input id="gif-search-input" type="text" placeholder="{{ __('community.search_gifs_placeholder') }}"
                                     class="w-full bg-[#F8F9FA] rounded-xl pl-9 pr-3 py-2 text-sm text-gray-700 border-none focus:outline-none focus:ring-2 focus:ring-[#094174]/30 placeholder-gray-400">
                                 <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +96,7 @@
                             </div>
 
                             <p class="text-center text-[10px] text-gray-400 mt-2">
-                                Powered by <a href="https://giphy.com" target="_blank" rel="noopener"
+                                {{ __('community.powered_by') }} <a href="https://giphy.com" target="_blank" rel="noopener"
                                     class="underline hover:text-[#094174]">Giphy</a>
                             </p>
                         </div>
@@ -112,11 +111,11 @@
             {{-- ── GIF preview (single selected GIF) ───────────────────── --}}
             <div id="gif-preview-wrap"
                 class="hidden mt-2 mb-3 relative w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm group">
-                <img id="gif-preview-img" src="" alt="Selected GIF"
+                <img id="gif-preview-img" src="" alt="{{ __('community.selected_gif_alt') }}"
                     class="w-full h-auto object-cover block rounded-xl">
                 <button type="button" id="btn-clear-gif"
                     class="absolute top-2 right-2 w-7 h-7 bg-gray-900/75 hover:bg-black text-white text-lg leading-none font-bold rounded-full flex items-center justify-center backdrop-blur-sm shadow-md transition-all duration-150 cursor-pointer opacity-0 group-hover:opacity-100"
-                    aria-label="Remove GIF">&times;</button>
+                    aria-label="{{ __('community.remove_gif_aria') }}">&times;</button>
             </div>
 
             {{-- ── Validation Errors ─────────────────────────────────── --}}
@@ -160,7 +159,7 @@
 
                 <button id="post-submit-btn" type="submit" disabled
                     class="shrink-0 bg-[#094174] hover:bg-[#105DA3] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
-                    Post
+                    {{ __('community.post_button') }}
                 </button>
             </div>
         </form>
@@ -178,7 +177,7 @@
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
                     <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
-                        class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" alt="Avatar">
+                        class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
                     <div>
                         <div class="flex items-center gap-1">
                             <span
@@ -227,7 +226,7 @@
             @if ($post->images->isNotEmpty())
                 <div class="mb-3 flex flex-col gap-3">
                     @foreach ($post->images as $image)
-                        <img src="{{ asset($image->image_url) }}" alt="Post image"
+                        <img src="{{ asset($image->image_url) }}" alt="{{ __('community.post_image_alt') }}"
                             class="w-full max-h-96 object-cover rounded-xl border border-gray-100">
                     @endforeach
                 </div>
@@ -236,7 +235,7 @@
             {{-- Post GIF --}}
             @if ($post->gif_url)
                 <div class="mb-3">
-                    <img src="{{ $post->gif_url }}" alt="GIF"
+                    <img src="{{ $post->gif_url }}" alt="{{ __('community.gif_alt') }}"
                         class="w-full max-h-96 object-cover rounded-xl border border-gray-100">
                 </div>
             @endif
@@ -343,7 +342,7 @@
     @empty
         <div
             class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-10 text-center text-gray-400">
-            <p class="font-medium">No posts yet. Be the first to share something!</p>
+            <p class="font-medium">{{ __('community.no_posts_yet') }}</p>
         </div>
     @endforelse
 
