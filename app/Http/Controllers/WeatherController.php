@@ -96,17 +96,21 @@ class WeatherController extends Controller
 
     private function mockForecastData(): array
     {
-        $now = time();
-        $list = [];
+        // ponytail: anchored to calendar-day boundaries (not "now") so the
+        // frontend's per-day grouping always yields 3 distinct days.
+        $today = now()->startOfDay();
         $icons = ['01d', '03d', '10d'];
         $descs = ['Clear', 'Clouds', 'Rain'];
+        $list = [];
 
-        for ($i = 0; $i < 9; $i++) {
-            $list[] = [
-                'dt' => $now + ($i * 10800),
-                'main' => ['temp' => 22 + ($i % 3)],
-                'weather' => [['icon' => $icons[$i % 3], 'main' => $descs[$i % 3]]],
-            ];
+        for ($day = 0; $day < 3; $day++) {
+            foreach ([9, 15, 21] as $hour) {
+                $list[] = [
+                    'dt' => $today->copy()->addDays($day)->setHour($hour)->timestamp,
+                    'main' => ['temp' => 22 + $day],
+                    'weather' => [['icon' => $icons[$day], 'main' => $descs[$day]]],
+                ];
+            }
         }
 
         return ['list' => $list];
