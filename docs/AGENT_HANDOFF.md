@@ -17,6 +17,19 @@ By: Codex
 
 **What changed**
 
+- Added an `EN | ID` locale switcher to the live user navbar (desktop and mobile) and admin header. Links preserve the current URL/query parameters, and the active locale stays highlighted while the alternate locale highlights on hover.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/LocaleMiddlewareTest.php tests/Unit/LocalizationTest.php` — 12 passing, 654 assertions.
+- `php artisan view:cache && php artisan view:clear` and `npm run build` — pass.
+
+## 2026-07-03 — branch: `main`
+
+By: Codex
+
+**What changed**
+
 - Audited the English/Indonesian localization pass and fixed request-locale leakage under persistent workers by resetting both Laravel and Carbon to the stable English fallback on every request without a valid stored locale.
 - Completed the remaining Blade/backend localization gaps: flash messages, password-reset mail, validation messages, dates, pagination, units, gear/privacy labels, API documentation prose, and the broken `:weightkg` placeholder.
 - Added database-free localization tests covering worker reset behavior, `id` selection, queued notification locales, validation output, and exact file/key/placeholder/HTML-tag parity across all 11 PHP language-file pairs plus JSON mail translations.

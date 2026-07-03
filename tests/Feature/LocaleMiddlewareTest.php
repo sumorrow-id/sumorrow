@@ -25,6 +25,9 @@ class LocaleMiddlewareTest extends TestCase
         $this->assertSame('id', app()->getLocale());
         $this->assertSame('id', session('locale'));
         $response->assertSee('Beranda');
+        $response->assertSee('data-locale-switcher', false);
+        $response->assertSee('href="http://localhost/home?lang=en"', false);
+        $response->assertSee('aria-label="Ganti ke bahasa Inggris"', false);
     }
 
     public function test_locale_persists_across_a_later_request_without_the_query_param(): void
@@ -58,9 +61,11 @@ class LocaleMiddlewareTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->get('/admin/dashboard?lang=id');
+        $response = $this->actingAs($admin)->get('/admin/dashboard?lang=id');
 
         $this->assertSame('id', app()->getLocale());
+        $response->assertSee('data-locale-switcher', false);
+        $response->assertSee('href="http://localhost/admin/dashboard?lang=en"', false);
     }
 
     public function test_indonesian_validation_messages_are_available(): void

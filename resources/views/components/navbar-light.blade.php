@@ -17,7 +17,26 @@
             </a>
         </div>
 
-        <div class="hidden md:flex flex-1 justify-end">
+        <div class="hidden md:flex flex-1 items-center justify-end gap-4">
+            <nav data-locale-switcher aria-label="{{ __('common.language_switcher') }}" class="inline-flex items-center gap-1 text-xs font-bold">
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
+                    aria-label="{{ __('common.switch_to_english') }}"
+                    @if (app()->isLocale('en')) aria-current="page" @endif
+                    @class([
+                        'rounded-md px-2 py-1 transition-colors',
+                        'bg-[#094174]/10 text-[#094174]' => app()->isLocale('en'),
+                        'text-gray-400 hover:bg-[#094174]/10 hover:text-[#094174]' => ! app()->isLocale('en'),
+                    ])>EN</a>
+                <span class="text-gray-300" aria-hidden="true">|</span>
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}"
+                    aria-label="{{ __('common.switch_to_indonesian') }}"
+                    @if (app()->isLocale('id')) aria-current="page" @endif
+                    @class([
+                        'rounded-md px-2 py-1 transition-colors',
+                        'bg-[#094174]/10 text-[#094174]' => app()->isLocale('id'),
+                        'text-gray-400 hover:bg-[#094174]/10 hover:text-[#094174]' => ! app()->isLocale('id'),
+                    ])>ID</a>
+            </nav>
             @auth
                 <div class="relative group">
                     <button class="flex items-center focus:outline-none transition-transform hover:scale-105">
@@ -68,6 +87,25 @@
             <a href="/" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_home') }}</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_explore') }}</a>
             <a href="#" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_community') }}</a>
+            <nav data-locale-switcher aria-label="{{ __('common.language_switcher') }}" class="inline-flex items-center justify-center gap-1 text-sm font-bold">
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
+                    aria-label="{{ __('common.switch_to_english') }}"
+                    @if (app()->isLocale('en')) aria-current="page" @endif
+                    @class([
+                        'rounded-md px-2 py-1 transition-colors',
+                        'bg-[#094174]/10 text-[#094174]' => app()->isLocale('en'),
+                        'text-gray-400 hover:bg-[#094174]/10 hover:text-[#094174]' => ! app()->isLocale('en'),
+                    ])>EN</a>
+                <span class="text-gray-300" aria-hidden="true">|</span>
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}"
+                    aria-label="{{ __('common.switch_to_indonesian') }}"
+                    @if (app()->isLocale('id')) aria-current="page" @endif
+                    @class([
+                        'rounded-md px-2 py-1 transition-colors',
+                        'bg-[#094174]/10 text-[#094174]' => app()->isLocale('id'),
+                        'text-gray-400 hover:bg-[#094174]/10 hover:text-[#094174]' => ! app()->isLocale('id'),
+                    ])>ID</a>
+            </nav>
             <div class="pt-4 border-t border-gray-200/60 flex flex-col gap-2">
                 @auth
                     <p class="text-sm text-gray-500 mb-2">{{ __('common.logged_in_as', ['username' => Auth::user()->username]) }}</p>

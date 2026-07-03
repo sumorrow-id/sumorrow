@@ -129,6 +129,25 @@
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <nav data-locale-switcher aria-label="{{ __('common.language_switcher') }}" class="inline-flex items-center gap-1 text-xs font-bold">
+                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
+                            aria-label="{{ __('common.switch_to_english') }}"
+                            @if (app()->isLocale('en')) aria-current="page" @endif
+                            @class([
+                                'rounded-md px-2 py-1 transition-colors',
+                                'bg-summit-blue/10 text-summit-blue' => app()->isLocale('en'),
+                                'text-blue-bird hover:bg-summit-blue/10 hover:text-summit-blue' => ! app()->isLocale('en'),
+                            ])>EN</a>
+                        <span class="text-morning-mist" aria-hidden="true">|</span>
+                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}"
+                            aria-label="{{ __('common.switch_to_indonesian') }}"
+                            @if (app()->isLocale('id')) aria-current="page" @endif
+                            @class([
+                                'rounded-md px-2 py-1 transition-colors',
+                                'bg-summit-blue/10 text-summit-blue' => app()->isLocale('id'),
+                                'text-blue-bird hover:bg-summit-blue/10 hover:text-summit-blue' => ! app()->isLocale('id'),
+                            ])>ID</a>
+                    </nav>
                     <form method="POST" action="{{ route('logout') }}" class="inline confirm-submit-form" data-confirm-title="{{ __('common.confirm_logout_title') }}" data-confirm-message="{{ __('common.confirm_logout_message') }}" data-confirm-label="{{ __('common.confirm_logout_label') }}" data-confirm-variant="danger">
                         @csrf
                         <button type="submit" class="group flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-blue-bird hover:bg-morning-mist/30 hover:text-summit-blue transition-colors focus-visible:outline-2 focus-visible:outline-summit-blue">
