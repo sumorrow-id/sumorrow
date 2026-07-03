@@ -11,6 +11,45 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-03 (later) — branch: `main`
+
+By: Claude Code
+
+**What changed** (forum + profile pass)
+
+- **Fixed the stuck-disabled Post button** (`FeedComposer.js`): `checkPostable()`
+  now (1) runs once on load — after a failed-validation redirect the browser
+  restores body/categories from old input without firing events, which left
+  the button disabled forever; (2) listens to category-pill changes and
+  requires ≥1 category, so the "no category" server error can't happen from
+  the UI anymore; (3) counts a selected GIF as content (GIF-only posts were
+  valid server-side but the button never enabled).
+- Flash banners (`layouts/app.blade.php`) moved from `top-24` to `top-32` so
+  the success toast clears the floating navbar; post-detail page top padding
+  `pt-24 md:pt-32` → `pt-32` so "Back to Feed" no longer sits under the navbar
+  on phones.
+- Renamed the community tab label "Explore" → **"Forum"** (display text only —
+  route name `community.explore`, tab ids, and JS hooks unchanged).
+- **Removed the save/bookmark feature end-to-end**: feed view buttons,
+  `FeedLikeSave.js` save handler (file renamed to `FeedLike.js`, class
+  `FeedLike`), `PostController::toggleSave` + the `is_saved` feed pinning,
+  `community.posts.save` route, `Post::saves()` relation, and the `saves`
+  eager loads in Post/Community controllers. The `post_saves` table and its
+  migration remain (shared migrations are never edited) — drop it in a future
+  migration if desired. No tests referenced the feature; a new test asserts
+  the feed shows "Forum" and contains no save buttons.
+- Profile responsiveness: the "Hiking History" header row (title + two
+  actions) overflowed narrow screens; it now stacks under `sm`.
+
+**How to verify**
+
+- `php artisan test` — 232 passing. `npm run build` — succeeds.
+- In the forum: type text but no category → button disabled; pick a category →
+  enabled. Submit with the server error path (disable JS) → after reload the
+  button reflects restored input. Post success toast appears below the navbar.
+- Open a post detail on a phone width — "Back to Feed" is fully visible.
+- Feed posts show comment/like/share only (no bookmark icon).
+
 ## 2026-07-03 — branch: `main`
 
 By: Claude Code

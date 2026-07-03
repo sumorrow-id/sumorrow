@@ -25,6 +25,7 @@ export class FeedComposer {
         this.gifPreviewWrap = document.getElementById('gif-preview-wrap');
         this.gifPreviewImg = document.getElementById('gif-preview-img');
         this.clearGifBtn = document.getElementById('btn-clear-gif');
+        this.categoryInputs = form.querySelectorAll('input[name="category_tags[]"]');
 
         /*
          * selectedFiles — our private accumulator.
@@ -45,6 +46,11 @@ export class FeedComposer {
 
     init() {
         this.bodyInput.addEventListener('input', () => this.checkPostable());
+
+        /* Category pills gate the submit button too */
+        this.categoryInputs.forEach((input) => {
+            input.addEventListener('change', () => this.checkPostable());
+        });
 
         /* ── Image picker button ───────────────────────────────────── */
         if (this.imagePickerBtn) {
@@ -135,13 +141,22 @@ export class FeedComposer {
                 this.gifPopover.classList.add('hidden');
             }
         });
+
+        /*
+         * Evaluate once on load: after a failed-validation redirect the
+         * browser repopulates body/categories from old input without firing
+         * any events, which used to leave the button stuck on disabled.
+         */
+        this.checkPostable();
     }
 
     /* ── Submit guard ──────────────────────────────────────────────── */
     checkPostable() {
         const hasText = this.bodyInput.value.trim().length > 0;
         const hasImage = this.selectedFiles.length > 0;
-        this.submitBtn.disabled = !(hasText || hasImage);
+        const hasGif = this.gifHidden.value.trim().length > 0;
+        const hasCategory = Array.from(this.categoryInputs).some((input) => input.checked);
+        this.submitBtn.disabled = !((hasText || hasImage || hasGif) && hasCategory);
     }
 
     /* ── Sync selectedFiles → fileInput.files ────────────────────────── */

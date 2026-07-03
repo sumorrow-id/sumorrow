@@ -66,11 +66,6 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'post_likes')->withTimestamps();
     }
 
-    public function saves(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'post_saves')->withTimestamps();
-    }
-
     /**
      * Scope to filter posts by a tag keyword.
      *
