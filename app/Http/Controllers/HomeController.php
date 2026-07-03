@@ -12,9 +12,9 @@ class HomeController extends Controller
     {
         $cached = Cache::remember('mountains.home', now()->addDay(), function () {
             $mountains = Mountain::with(['province', 'images'])->get();
-            $fallbackImage = 'https://images.unsplash.com/photo-1627916538356-9a2ebfb1d200?auto=format&fit=crop&q=80&w=500';
+            $fallbackImage = asset('images/default-mountain.jpg');
 
-            $weatherData = $mountains->map(function ($mountain) {
+            $weatherData = $mountains->map(function ($mountain) use ($fallbackImage) {
                 $provinceName = str_replace('Provinsi ', '', $mountain->province?->name ?? 'Indonesia');
                 $coverImage = $mountain->images->firstWhere('is_cover', true) ?? $mountain->images->first();
 
@@ -22,7 +22,7 @@ class HomeController extends Controller
                     'id' => $mountain->id,
                     'loc' => $mountain->name.', '.$provinceName,
                     'url' => '/explore/'.$mountain->id,
-                    'image' => $coverImage?->image_url,
+                    'image' => $coverImage?->image_url ?? $fallbackImage,
                     'temp' => '--&deg;',
                 ];
             })->values()->all();

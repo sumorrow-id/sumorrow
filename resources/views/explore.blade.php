@@ -86,10 +86,10 @@
                         <div class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full p-4">
                             @php
                                 $imageUrl = $mountain->images->first()?->image_url;
-                                $finalImage = !empty($imageUrl) ? $imageUrl : asset('images/dummymountain/rinjani.png');
+                                $finalImage = !empty($imageUrl) ? $imageUrl : asset('images/default-mountain.jpg');
                             @endphp
                             <img src="{{ $finalImage }}" alt="{{ $mountain->name }}"
-                                onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
+                                onerror="this.onerror=null;this.src='{{ asset('images/default-mountain.jpg') }}'"
                                 class="w-full h-56 object-cover rounded-2xl" />
 
                             <div class="pt-5 pb-2 px-2 flex flex-col grow">

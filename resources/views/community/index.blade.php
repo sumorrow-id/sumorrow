@@ -182,7 +182,6 @@
             @include('community.components.sidebar')
         </div>
     </div>
-    @include('community.components.modal-comment')
 </div>
 
 @endsection

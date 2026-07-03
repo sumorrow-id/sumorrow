@@ -68,10 +68,6 @@ class MountainSeeder extends Seeder
             // Create or Update Mountain Images
             if (! empty($mountain['images'])) {
                 foreach ($mountain['images'] as $imgData) {
-                    $sourceUrl = str_starts_with($imgData['image_url'], 'http')
-                        ? $imgData['image_url']
-                        : null;
-
                     MountainImage::updateOrCreate(
                         [
                             'mountain_id' => $mountainModel->id,
@@ -79,7 +75,7 @@ class MountainSeeder extends Seeder
                         ],
                         [
                             'image_url' => $imgData['image_url'],
-                            'source_url' => $sourceUrl,
+                            'source_url' => null,
                             'is_cover' => $imgData['is_cover'] ?? false,
                         ]
                     );
