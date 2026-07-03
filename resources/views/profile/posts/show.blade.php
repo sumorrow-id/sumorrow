@@ -35,7 +35,7 @@
                     </div>
                 @endif
                 <div class="flex items-center gap-1.5 border-l pl-4 border-gray-200">
-                    <span>{{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}</span>
+                    <span>{{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}</span>
                 </div>
             </div>
             

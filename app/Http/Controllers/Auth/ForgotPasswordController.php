@@ -23,7 +23,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan.'])->onlyInput('email');
+            return back()->withErrors(['email' => __('auth.email_not_found')])->onlyInput('email');
         }
 
         $status = Password::sendResetLink(
@@ -31,9 +31,9 @@ class ForgotPasswordController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('message', 'Link reset password telah dikirim ke email Anda. Silakan cek email dalam 1 jam.');
+            return back()->with('message', __('auth.reset_link_sent'));
         }
 
-        return back()->withErrors(['email' => 'Gagal mengirim link reset. Coba lagi.']);
+        return back()->withErrors(['email' => __('auth.reset_link_failed')]);
     }
 }

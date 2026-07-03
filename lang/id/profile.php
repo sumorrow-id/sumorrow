@@ -31,14 +31,15 @@ return [
     'bio_counter' => ':count / :max karakter',
     'confirm_save_title' => 'Simpan perubahan?',
     'confirm_save_message' => 'Profil Anda akan diperbarui dengan perubahan ini.',
+    'updated_successfully' => 'Profil berhasil diperbarui.',
 
     // profile/partials/achievements.blade.php
     'achievement_badges' => 'Lencana Pencapaian (:unlocked / :total)',
     'achievement_goal' => 'Target Pencapaian',
     'locked' => 'Terkunci',
     'earned_on' => 'Diraih pada :date.',
-    'complete_requirements' => 'Selesaikan syarat untuk mendapatkan badge ini.',
-    'no_achievements' => 'Belum ada achievement yang tersedia.',
+    'complete_requirements' => 'Selesaikan persyaratan untuk membuka lencana ini.',
+    'no_achievements' => 'Belum ada pencapaian yang tersedia.',
 
     // profile/partials/posts.blade.php
     'hiking_history' => 'Riwayat Pendakian',
@@ -83,6 +84,7 @@ return [
     'photos' => 'Foto',
     'photos_help' => 'Pilih hingga 12 gambar. Maksimal 2MB per gambar agar unggahan berhasil.',
     'post_activity' => 'Posting Aktivitas',
+    'activity_posted' => 'Aktivitas berhasil diposting!',
 
     // profile/posts/show.blade.php
     'back' => 'Kembali',

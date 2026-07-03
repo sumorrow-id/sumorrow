@@ -2,10 +2,12 @@
 
 return [
     'hero_image_alt' => 'Latar Belakang Gunung',
-    'search_placeholder' => 'Cari Puncak Impianmu Berikutnya....',
+    'search_placeholder' => 'Cari puncak impian Anda berikutnya...',
     'elevation_filter_label' => 'Filter Ketinggian',
     'all_elevations' => 'Semua Ketinggian',
     'explore_now' => 'Jelajahi Sekarang',
+    'mountain_fallback' => 'Gunung',
+    'sample_post' => 'Setiap puncak dimulai dari satu langkah. Bagikan perjalanan Anda bersama komunitas Sumorrow.',
 
     'feature_realtime_title' => 'Kondisi Waktu Nyata',
     'feature_realtime_desc' => 'Dapatkan pembaruan terkini tentang cuaca, aksesibilitas jalur, dan peringatan keselamatan.',
@@ -16,7 +18,7 @@ return [
     'feature_gear_title' => 'Penganalisis Tas Perlengkapan',
     'feature_gear_desc' => 'Pastikan Anda hanya membawa yang benar-benar penting untuk bertahan hidup dan berhasil.',
 
-    'about_heading_line1' => 'Temukan Puncak Sempurnamu',
+    'about_heading_line1' => 'Temukan Puncak Pilihan Anda',
     'about_heading_line2' => 'Panduan Terbaik Menuju',
     'about_heading_line3' => 'Puncak Impian',
 
@@ -29,10 +31,10 @@ return [
     'explore_more' => 'Jelajahi Lebih Lanjut',
 
     'community_heading' => 'Komunitas',
-    'community_desc' => 'Tingkatkan pendakianmu melalui komunitas. Bagikan perjalananmu dan temukan teman mendaki berikutnya.',
+    'community_desc' => 'Dapatkan pengalaman pendakian yang lebih baik melalui komunitas. Bagikan perjalanan Anda dan temukan teman mendaki berikutnya.',
     'join_now' => 'Gabung Sekarang',
     'more' => 'selengkapnya',
 
-    'choose_your_peak_heading' => 'Pilih Puncakmu',
+    'choose_your_peak_heading' => 'Pilih Puncak Anda',
     'choose_your_peak_desc' => 'Rute pilihan untuk setiap tingkat pengalaman, dari pendakian akhir pekan hingga ekspedisi profesional.',
 ];

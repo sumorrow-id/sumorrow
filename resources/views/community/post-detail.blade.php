@@ -64,7 +64,7 @@
             {{-- Timestamp --}}
             <div class="text-xs text-gray-400 mb-4 font-medium tracking-wide">
                 {{ $post->created_at->diffForHumans() }}
-                · {{ $post->created_at->format('g:i A · M j, Y') }}
+                · {{ $post->created_at->translatedFormat('g:i A · M j, Y') }}
             </div>
 
             <hr class="border-gray-100 mb-4">

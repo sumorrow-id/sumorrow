@@ -44,6 +44,11 @@ return [
     'param_label' => 'Param',
     'type_label' => 'Type',
     'notes_label' => 'Notes',
+    'default_label' => 'default',
+    'search_notes' => 'LIKE match on name and description',
+    'province_notes' => 'Must exist in',
+    'page_notes' => 'Pagination page',
+    'limit_notes' => 'Page size (default 15)',
 
     'code_label' => 'Code',
     'when_label' => 'When',
@@ -53,4 +58,11 @@ return [
     'error_429_desc' => 'Rate limit exceeded — see',
 
     'roadmap_desc' => 'Write endpoints (POST / PATCH / DELETE) are not exposed yet. The items below are planned, scoped to admin-only writes in a future revision.',
+    'roadmap_submit_rating' => 'submit a rating',
+    'roadmap_comment_lifecycle' => 'comment lifecycle',
+    'roadmap_forum_endpoints' => 'Forum endpoints',
+    'roadmap_replies' => 'replies',
+    'roadmap_user_endpoints' => 'User endpoints',
+    'roadmap_regions' => 'Administrative region drilldown — regencies, districts, villages',
+    'roadmap_tokens' => 'Personal access token issuance',
 ];

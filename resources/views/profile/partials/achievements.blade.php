@@ -27,7 +27,7 @@
                     </p>
                     <p class="text-xs md:text-[13px] font-medium text-gray-500 leading-relaxed">
                         @if($isUnlocked && $unlockedData->pivot->unlocked_at)
-                            <span class="text-green-600 font-semibold">{{ __('profile.earned_on', ['date' => \Carbon\Carbon::parse($unlockedData->pivot->unlocked_at)->format('d M Y')]) }}</span> <br class="block sm:hidden">
+                            <span class="text-green-600 font-semibold">{{ __('profile.earned_on', ['date' => \Carbon\Carbon::parse($unlockedData->pivot->unlocked_at)->translatedFormat('d M Y')]) }}</span> <br class="block sm:hidden">
                             <span class="hidden sm:inline">-</span>
                         @endif
                         {{ $achievement->description }}

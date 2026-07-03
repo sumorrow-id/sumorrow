@@ -86,7 +86,7 @@
                                     <span class="w-1.5 h-1.5 rounded-full bg-glacial-teal"></span> {{ __('admin.status_open') }}
                                 </span>
                             @else
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold bg-morning-mist/40 text-blue-bird rounded-full uppercase tracking-wider" @if($mountain->closed_since) title="{{ __('admin.closed_since', ['date' => $mountain->closed_since->format('j F Y')]) }}" @endif>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold bg-morning-mist/40 text-blue-bird rounded-full uppercase tracking-wider" @if($mountain->closed_since) title="{{ __('admin.closed_since', ['date' => $mountain->closed_since->translatedFormat('j F Y')]) }}" @endif>
                                     <span class="w-1.5 h-1.5 rounded-full bg-blue-bird"></span> {{ __('admin.status_closed') }}
                                 </span>
                             @endif

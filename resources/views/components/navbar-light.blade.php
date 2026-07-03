@@ -26,7 +26,7 @@
                             $src = $avatar ? (str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) : null;
                             $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
                         @endphp
-                        <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="Profile"
+                        <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="{{ __('common.avatar_alt') }}"
                             class="h-11 w-11 rounded-full object-cover border-2 border-gray-200 group-hover:border-[#094174]/40 transition-colors shadow-sm">
                     </button>
                     <!-- Improved dropdown for light navbar -->

@@ -78,7 +78,7 @@
                                 <span class="text-sm text-gray-500 mb-1">{{ __('explore.height') }}</span>
                                 <span
                                     class="text-xl font-bold text-[#2A9D8F]">{{ number_format($mountain->elevation_masl) }}
-                                    <span class="text-sm font-normal">masl</span></span>
+                                    <span class="text-sm font-normal">{{ __('explore.unit_masl') }}</span></span>
                             </div>
                             <div
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
@@ -103,7 +103,7 @@
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
                                 <span class="text-sm text-gray-500 mb-1">{{ __('explore.est_time') }}</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $estHours > 0 ? $estHours : '-' }} <span
-                                        class="text-sm font-normal">hrs</span></span>
+                                        class="text-sm font-normal">{{ __('explore.unit_hours') }}</span></span>
                             </div>
                         </div>
                     </section>
@@ -364,7 +364,7 @@
                                                 class="font-semibold text-gray-900 group-hover:text-[#2A9D8F] transition-colors">
                                                 {{ $nearby->name }}</h4>
                                             <p class="text-xs text-gray-500 mt-1">
-                                                {{ number_format($nearby->elevation_masl) }} masl</p>
+                                                {{ number_format($nearby->elevation_masl) }} {{ __('explore.unit_masl') }}</p>
                                             <div class="flex items-center text-yellow-400 text-xs mt-1">
                                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                     <path

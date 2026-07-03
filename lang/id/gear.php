@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'inventory_core' => 'Inti Inventaris Sumorrow',
+    'inventory_core' => 'Ringkasan Inventaris Sumorrow',
     'total_pack_weight' => 'Total Berat Tas:',
     'kg' => 'kg',
 
@@ -13,7 +13,7 @@ return [
     'desc_ultralight' => 'Dioptimalkan untuk kecepatan dan kelincahan',
     'desc_medium' => 'Dioptimalkan untuk ekspedisi 3-5 hari',
     'desc_heavy' => 'Ekspedisi berat',
-    'limit' => 'Batas (:weightkg)',
+    'limit' => 'Batas (:weight kg)',
 
     'all_gear' => 'Semua Perlengkapan',
     'add' => 'Tambah',
@@ -41,10 +41,20 @@ return [
     'brand_optional' => 'Merek (Opsional)',
     'weight_grams' => 'Berat (gram)',
     'category' => 'Kategori',
-    'gear_name_placeholder' => 'contoh. Osprey Atmos AG 65',
-    'brand_placeholder' => 'contoh. Osprey',
-    'weight_placeholder' => 'contoh. 2100',
+    'gear_name_placeholder' => 'mis. Osprey Atmos AG 65',
+    'brand_placeholder' => 'mis. Osprey',
+    'weight_placeholder' => 'mis. 2100',
     'save_gear' => 'Simpan Perlengkapan',
+    'category_backpack' => 'Ransel',
+    'category_tent' => 'Tenda',
+    'category_apparel' => 'Pakaian',
+    'category_footwear' => 'Alas Kaki',
+    'category_cooking' => 'Peralatan Masak',
+    'category_accessories' => 'Aksesori',
+    'category_other' => 'Lainnya',
+    'added_successfully' => 'Perlengkapan berhasil ditambahkan.',
+    'updated_successfully' => 'Perlengkapan berhasil diperbarui.',
+    'deleted_successfully' => 'Perlengkapan berhasil dihapus.',
 
     'efficiency_tip' => 'Tips Efisiensi',
     'efficiency_tip_text' => 'Tas Anda cukup berat. Pertimbangkan untuk mengganti barang terberat Anda atau meninggalkan barang yang tidak penting untuk mencegah kelelahan.',

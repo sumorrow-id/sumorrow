@@ -37,11 +37,12 @@ class SetLocale
         }
 
         $locale = $request->session()->get('locale');
+        $locale = is_string($locale) && in_array($locale, $availableLocales, true)
+            ? $locale
+            : config('app.fallback_locale', 'en');
 
-        if (is_string($locale) && in_array($locale, $availableLocales, true)) {
-            App::setLocale($locale);
-            Carbon::setLocale($locale);
-        }
+        App::setLocale($locale);
+        Carbon::setLocale($locale);
 
         return $next($request);
     }

@@ -89,7 +89,7 @@
                 @foreach($categories as $index => $cat)
                     <button data-gear-filter="{{ Str::slug($cat) }}" id="gear-btn-{{ Str::slug($cat) }}"
                         class="gear-cat-btn px-6 py-2 font-medium text-[#6B7280] hover:text-[#0F172A] rounded-lg text-[13px] transition shrink-0">
-                        {{ $cat }}
+                        {{ \Illuminate\Support\Facades\Lang::has('gear.category_'.Str::snake($cat)) ? __('gear.category_'.Str::snake($cat)) : $cat }}
                     </button>
                 @endforeach
             </div>
@@ -170,7 +170,7 @@
                         <li class="flex justify-between items-center text-[13px]">
                             <div class="flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 rounded-full" style="background-color: {{ $categoryColors[$cat] ?? $categoryColors['default'] }};"></span>
-                                <span class="font-medium text-[#334155]">{{ $cat }}</span>
+                                <span class="font-medium text-[#334155]">{{ \Illuminate\Support\Facades\Lang::has('gear.category_'.Str::snake($cat)) ? __('gear.category_'.Str::snake($cat)) : $cat }}</span>
                             </div>
                             <span class="font-bold text-[#0F172A]">{{ number_format($catGears->sum('weight_grams') / 1000, 2) }} {{ __('gear.kg') }}</span>
                         </li>
@@ -255,13 +255,13 @@
                         <label class="block text-[13px] font-bold text-[#334155] mb-1">{{ __('gear.category') }}</label>
                         <select name="category" id="gear-category" required
                             class="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-3 text-sm text-[#0F172A] focus:ring-2 focus:ring-[#094174]/20 transition appearance-none">
-                            <option value="Backpack">Backpack</option>
-                            <option value="Tent">Tent</option>
-                            <option value="Apparel">Apparel</option>
-                            <option value="Footwear">Footwear</option>
-                            <option value="Cooking">Cooking</option>
-                            <option value="Accessories">Accessories</option>
-                            <option value="Other">Other</option>
+                            <option value="Backpack">{{ __('gear.category_backpack') }}</option>
+                            <option value="Tent">{{ __('gear.category_tent') }}</option>
+                            <option value="Apparel">{{ __('gear.category_apparel') }}</option>
+                            <option value="Footwear">{{ __('gear.category_footwear') }}</option>
+                            <option value="Cooking">{{ __('gear.category_cooking') }}</option>
+                            <option value="Accessories">{{ __('gear.category_accessories') }}</option>
+                            <option value="Other">{{ __('gear.category_other') }}</option>
                         </select>
                     </div>
                 </div>

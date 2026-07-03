@@ -99,7 +99,7 @@
             <div class="p-4 border-t border-white/10">
                 <div class="flex items-center gap-3 p-2">
                     @if (Auth::user()?->avatar_url)
-                        <img src="{{ Auth::user()->avatar_url }}" alt="avatar" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-10 h-10 rounded-full border border-white/20">
+                        <img src="{{ Auth::user()->avatar_url }}" alt="{{ __('common.avatar_alt') }}" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-10 h-10 rounded-full border border-white/20">
                     @else
                         <div class="w-10 h-10 rounded-full bg-summit-blue flex items-center justify-center text-white text-sm font-bold shadow-sm">
                             {{ strtoupper(substr(Auth::user()->username ?? 'A', 0, 1)) }}

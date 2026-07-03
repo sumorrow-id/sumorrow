@@ -21,7 +21,7 @@ class GearController extends Controller
 
         Gear::create($validated);
 
-        return back()->with('success', 'Gear added successfully.');
+        return back()->with('success', __('gear.added_successfully'));
     }
 
     public function update(Request $request, Gear $gear)
@@ -39,7 +39,7 @@ class GearController extends Controller
 
         $gear->update($validated);
 
-        return back()->with('success', 'Gear updated successfully.');
+        return back()->with('success', __('gear.updated_successfully'));
     }
 
     public function destroy(Gear $gear)
@@ -50,6 +50,6 @@ class GearController extends Controller
 
         $gear->delete();
 
-        return back()->with('success', 'Gear deleted successfully.');
+        return back()->with('success', __('gear.deleted_successfully'));
     }
 }

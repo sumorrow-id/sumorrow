@@ -31,6 +31,7 @@ return [
     'bio_counter' => ':count / :max characters',
     'confirm_save_title' => 'Save changes?',
     'confirm_save_message' => 'Your profile will be updated with these changes.',
+    'updated_successfully' => 'Profile updated successfully.',
 
     // profile/partials/achievements.blade.php
     'achievement_badges' => 'Achievement Badges (:unlocked / :total)',
@@ -83,6 +84,7 @@ return [
     'photos' => 'Photos',
     'photos_help' => 'Select up to 12 images. Maximum 2MB per image to ensure successful upload.',
     'post_activity' => 'Post Activity',
+    'activity_posted' => 'Activity posted!',
 
     // profile/posts/show.blade.php
     'back' => 'Back',

@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $cached = Cache::remember('mountains.home', now()->addDay(), function () {
+        $cached = Cache::remember('mountains.home.localized', now()->addDay(), function () {
             $mountains = Mountain::with(['province', 'images'])->get();
             $fallbackImage = asset('images/default-mountain.jpg');
 
@@ -35,8 +35,8 @@ class HomeController extends Controller
                     'id' => $mountain->id,
                     'name' => $mountain->name,
                     'location' => $provinceName,
-                    'elevation' => $mountain->elevation_masl ? $mountain->elevation_masl.' mdpl' : 'Unknown',
-                    'difficulty' => $mountain->difficulty ? ucfirst($mountain->difficulty) : 'Moderate',
+                    'elevation' => $mountain->elevation_masl,
+                    'difficulty' => $mountain->difficulty ?? 'moderate',
                     'image' => $firstImage?->image_url ?? $fallbackImage,
                 ];
             })->values()->all();

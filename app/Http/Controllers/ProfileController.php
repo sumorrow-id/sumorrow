@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
 use App\Models\Mountain;
 use App\Models\User;
 use App\Services\AchievementService;
@@ -29,8 +30,8 @@ class ProfileController extends Controller
             ->get();
 
         $gears = $user->gears()->orderBy('category')->get();
-        
-        $allAchievements = \App\Models\Achievement::all();
+
+        $allAchievements = Achievement::all();
         $userAchievements = $user->achievements()->get()->keyBy('id');
 
         // 2. Ambil data gunung terpopuler untuk sidebar
@@ -83,6 +84,6 @@ class ProfileController extends Controller
         $user->bio = $request->bio;
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile')->with('success', __('profile.updated_successfully'));
     }
 }

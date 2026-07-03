@@ -11,6 +11,14 @@ return [
     'nav_user_updates' => 'User Updates',
     'nav_mountain_data' => 'Mountain Data',
     'administrator_fallback' => 'Administrator',
+    'unauthorized_access' => 'Unauthorized access.',
+    'cannot_change_own_role' => 'You cannot change your own role.',
+    'role_updated' => 'Role for :username updated to :role.',
+    'cannot_delete_own_account' => 'You cannot delete your own account.',
+    'user_deleted' => 'User :username has been deleted.',
+    'mountain_created' => 'Mountain :name has been created.',
+    'mountain_updated' => 'Mountain :name has been updated.',
+    'mountain_deleted' => 'Mountain :name has been deleted.',
 
     // admin/dashboard.blade.php
     'dashboard_title' => 'Dashboard',
@@ -92,6 +100,7 @@ return [
     'section_identity' => 'Identity',
     'section_identity_hint' => 'How the mountain appears on Explore and in the API.',
     'field_mountain_name' => 'Mountain Name',
+    'field_mountain_name_placeholder' => 'e.g. Mount Merbabu',
     'field_province' => 'Province',
     'select_province' => 'Select a province',
     'field_coordinates' => 'Coordinates',

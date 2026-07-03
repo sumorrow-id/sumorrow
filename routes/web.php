@@ -60,7 +60,7 @@ Route::middleware('redirect.admin')->group(function () {
 
     Route::get('/api/docs', function () {
         if (! Auth::check()) {
-            return redirect('/home')->with('warning', 'You need to register or log in first to access the API documentation.');
+            return redirect('/home')->with('warning', __('common.api_docs_login_required'));
         }
 
         return view('api.docs');
@@ -148,7 +148,7 @@ Route::middleware('redirect.admin')->group(function () {
             Route::post('/verification-notification', function (Request $request) {
                 $request->user()->sendEmailVerificationNotification();
 
-                return back()->with('message', 'Verification link sent!');
+                return back()->with('message', __('auth.verify_email_resent_message'));
             })->middleware('throttle:6,1')->name('verification.send');
 
         });

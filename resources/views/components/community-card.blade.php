@@ -21,7 +21,7 @@
         <div class="absolute top-3 left-3">
             <span
                 class="inline-block px-3 py-1 text-xs font-bold text-white rounded-full {{ $community->privacy === 'public' ? 'bg-green-500/80' : 'bg-purple-500/80' }}">
-                {{ strtoupper($community->privacy) }}
+                {{ __('community.privacy_'.$community->privacy) }}
             </span>
         </div>
     </div>

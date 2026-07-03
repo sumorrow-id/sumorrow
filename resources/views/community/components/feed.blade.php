@@ -241,7 +241,7 @@
             @endif
 
             <div class="text-xs text-gray-400 mb-4 font-medium tracking-wide">
-                {{ $post->created_at->format('g:i A · F j Y') }}
+                {{ $post->created_at->translatedFormat('g:i A · F j Y') }}
             </div>
 
             <hr class="border-gray-100 mb-4">
@@ -322,11 +322,11 @@
                     <button type="button" class="hover:text-[#094174] transition"
                         onclick="(function(url, text) {
                         if (navigator.share) {
-                            navigator.share({ title: 'Sumorrow · Forum Post', text: text, url: url }).catch(function(){});
+                            navigator.share({ title: {{ Illuminate\Support\Js::from(__('community.share_title')) }}, text: text, url: url }).catch(function(){});
                         } else {
                             navigator.clipboard.writeText(url).then(function() {
-                                alert('Link copied to clipboard!');
-                            }).catch(function() { prompt('Copy this link:', url); });
+                                alert({{ Illuminate\Support\Js::from(__('community.link_copied')) }});
+                            }).catch(function() { prompt({{ Illuminate\Support\Js::from(__('community.copy_link_prompt')) }}, url); });
                         }
                     })('{{ route('community.posts.show', $post->id) }}', '{{ addslashes(Str::limit($post->body, 100)) }}')">
                         <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -352,4 +352,3 @@
     </div>
 
 </div>
-

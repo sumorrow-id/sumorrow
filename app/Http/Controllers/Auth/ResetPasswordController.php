@@ -9,7 +9,6 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
@@ -40,9 +39,9 @@ class ResetPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru Anda.');
+            return redirect('/login')->with('success', __('auth.password_reset_success'));
         }
 
-        return back()->withErrors(['email' => 'Token reset password tidak valid atau sudah expired.']);
+        return back()->withErrors(['email' => __('auth.password_reset_invalid')]);
     }
 }

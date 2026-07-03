@@ -33,7 +33,7 @@
                     </div>
                     <div class="bg-[#F8F9FA] rounded-2xl p-4 border border-gray-100">
                         <p class="text-xs font-bold text-gray-400 mb-1 tracking-wider uppercase">{{ __('api.rate_limit_label') }}</p>
-                        <p class="text-sm font-semibold text-[#1a2b4c]">30 / min / user</p>
+                        <p class="text-sm font-semibold text-[#1a2b4c]">{{ __('api.authenticated_user_limit') }}</p>
                     </div>
                 </div>
             </div>
@@ -199,12 +199,12 @@
                                     <tr>
                                         <td class="px-5 py-3 font-mono">search</td>
                                         <td class="px-5 py-3 text-gray-500">string &le;120</td>
-                                        <td class="px-5 py-3 text-gray-500">LIKE match on name &amp; description</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.search_notes') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono">province_id</td>
                                         <td class="px-5 py-3 text-gray-500">int</td>
-                                        <td class="px-5 py-3 text-gray-500">Must exist in <span
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.province_notes') }} <span
                                                 class="font-mono">provinces</span></td>
                                     </tr>
                                     <tr>
@@ -221,23 +221,23 @@
                                     <tr>
                                         <td class="px-5 py-3 font-mono">sort</td>
                                         <td class="px-5 py-3 text-gray-500">enum</td>
-                                        <td class="px-5 py-3 text-gray-500">name (default) &middot; avg_rating &middot;
+                                        <td class="px-5 py-3 text-gray-500">name ({{ __('api.default_label') }}) &middot; avg_rating &middot;
                                             elevation_masl</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono">order</td>
                                         <td class="px-5 py-3 text-gray-500">enum</td>
-                                        <td class="px-5 py-3 text-gray-500">asc (default) &middot; desc</td>
+                                        <td class="px-5 py-3 text-gray-500">asc ({{ __('api.default_label') }}) &middot; desc</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono">page</td>
                                         <td class="px-5 py-3 text-gray-500">int &ge;1</td>
-                                        <td class="px-5 py-3 text-gray-500">Pagination page</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.page_notes') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-5 py-3 font-mono">limit</td>
                                         <td class="px-5 py-3 text-gray-500">int 1..50</td>
-                                        <td class="px-5 py-3 text-gray-500">Page size (default 15)</td>
+                                        <td class="px-5 py-3 text-gray-500">{{ __('api.limit_notes') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -380,26 +380,21 @@
                         <ul class="flex flex-col gap-2 text-sm text-[#1a2b4c]">
                             <li class="flex items-start gap-3"><span
                                     class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span><span
-                                        class="font-mono font-semibold">POST /mountains/{id}/ratings</span> &mdash; submit
-                                    a rating</span></li>
+                                        class="font-mono font-semibold">POST /mountains/{id}/ratings</span> &mdash; {{ __('api.roadmap_submit_rating') }}</span></li>
                             <li class="flex items-start gap-3"><span
                                     class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span><span
                                         class="font-mono font-semibold">POST / PATCH / DELETE
-                                        /mountains/{id}/comments</span> &mdash; comment lifecycle</span></li>
+                                        /mountains/{id}/comments</span> &mdash; {{ __('api.roadmap_comment_lifecycle') }}</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Forum
-                                    endpoints &mdash; <span class="font-mono">/posts</span>, replies</span></li>
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>{{ __('api.roadmap_forum_endpoints') }} &mdash; <span class="font-mono">/posts</span>, {{ __('api.roadmap_replies') }}</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>User
-                                    endpoints &mdash; <span class="font-mono">/auth/register</span>, <span
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>{{ __('api.roadmap_user_endpoints') }} &mdash; <span class="font-mono">/auth/register</span>, <span
                                         class="font-mono">/auth/login</span>, <span
                                         class="font-mono">/users/me</span></span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Administrative
-                                    region drilldown &mdash; regencies, districts, villages</span></li>
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>{{ __('api.roadmap_regions') }}</span></li>
                             <li class="flex items-start gap-3"><span
-                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>Personal
-                                    access token issuance &mdash; <span class="font-mono">POST
+                                    class="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[#094174] shrink-0"></span><span>{{ __('api.roadmap_tokens') }} &mdash; <span class="font-mono">POST
                                         /api/v1/auth/tokens</span></span></li>
                         </ul>
                     </section>

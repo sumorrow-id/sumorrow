@@ -2,6 +2,7 @@
 
 return [
     'nav_home' => 'Home',
+    'app_title' => 'Sumorrow - Summit Tomorrow',
     'nav_explore' => 'Explore',
     'nav_community' => 'Community',
     'profile' => 'Profile',
@@ -20,8 +21,10 @@ return [
     'edit' => 'Edit',
     'dismiss' => 'Dismiss',
     'login_required' => 'Login required',
+    'api_docs_login_required' => 'You need to register or log in first to access the API documentation.',
     'register' => 'Register',
     'success' => 'Success',
+    'avatar_alt' => 'Avatar',
     'sumorrow_logo_alt' => 'Sumorrow Logo',
     'footer_tagline' => "Connecting the spirit of adventure with Indonesia's highest peaks and archipelago's majestic peaks",
     'footer_navigation' => 'NAVIGATION',

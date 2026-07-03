@@ -12,7 +12,7 @@
         <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="md:col-span-2">
                 <label for="name" class="block text-xs font-bold text-lithic-blue uppercase tracking-widest mb-2">{{ __('admin.field_mountain_name') }}</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $mountain?->name) }}" required placeholder="e.g. Gunung Merbabu"
+                <input type="text" id="name" name="name" value="{{ old('name', $mountain?->name) }}" required placeholder="{{ __('admin.field_mountain_name_placeholder') }}"
                        class="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-summit-blue {{ $errors->has('name') ? 'border-red-400' : 'border-morning-mist' }}">
                 @error('name')<p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>@enderror
             </div>

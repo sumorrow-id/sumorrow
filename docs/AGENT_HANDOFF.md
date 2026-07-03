@@ -13,6 +13,22 @@ Running log of work done by developers and AI agents, newest first.
 
 ## 2026-07-03 — branch: `main`
 
+By: Codex
+
+**What changed**
+
+- Audited the English/Indonesian localization pass and fixed request-locale leakage under persistent workers by resetting both Laravel and Carbon to the stable English fallback on every request without a valid stored locale.
+- Completed the remaining Blade/backend localization gaps: flash messages, password-reset mail, validation messages, dates, pagination, units, gear/privacy labels, API documentation prose, and the broken `:weightkg` placeholder.
+- Added database-free localization tests covering worker reset behavior, `id` selection, queued notification locales, validation output, and exact file/key/placeholder/HTML-tag parity across all 11 PHP language-file pairs plus JSON mail translations.
+
+**How to verify**
+
+- `php artisan test --compact tests/Unit/LocalizationTest.php` — 5 passing, 633 assertions.
+- `php artisan view:cache && php artisan view:clear` — succeeds; `vendor/bin/pint --dirty --format agent` — clean.
+- `php artisan test --compact` — 242 passing, 1,281 assertions against the XAMPP MySQL test database.
+
+## 2026-07-03 — branch: `main`
+
 By: Claude Code
 
 **What changed**

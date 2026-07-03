@@ -49,7 +49,7 @@
                     
                     <p class="text-[12px] text-gray-500 mb-3">
                         {{ $post->mountain?->province?->name ?? __('profile.location_varies') }} •
-                        {{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                        {{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}
                     </p>
 
                     <div class="text-sm text-gray-600 line-clamp-3">

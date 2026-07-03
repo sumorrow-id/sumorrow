@@ -15,8 +15,10 @@ return [
 
     'search_icon_alt' => 'Search Icon',
     'find_mountains_placeholder' => 'Find mountains',
+    'search' => 'Search',
     'elevation_alt' => 'Elevation',
     'unknown_region' => 'Unknown Region',
+    'unknown_elevation' => 'Unknown',
     'explore_now' => 'Explore Now',
 
     'mountain_name_alt' => 'Mountain name',
@@ -30,6 +32,8 @@ return [
     'length' => 'Length',
     'elevation_gain' => 'Elevation Gain',
     'est_time' => 'Est. Time',
+    'unit_masl' => 'masl',
+    'unit_hours' => 'hrs',
     'weather_forecast' => 'Weather Forecast',
     'loading_weather_forecast' => 'Loading weather forecast...',
     'location' => 'Location',
@@ -39,6 +43,7 @@ return [
     'your_experience' => 'Your Experience',
     'tell_us_about_your_hike' => 'Tell us about your hike...',
     'submit_review' => 'Submit Review',
+    'review_submitted' => 'Your review has been submitted successfully.',
     'login_to_review' => 'Login to share your experience on this mountain.',
     'login' => 'Login',
     'unknown_hiker' => 'Unknown Hiker',

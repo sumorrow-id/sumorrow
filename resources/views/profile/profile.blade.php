@@ -65,7 +65,7 @@
                             <img src="{{ asset('images/profile/join.png') }}" alt="{{ __('profile.join_icon_alt') }}"
                                 class="w-6 h-6 object-contain">
                             <div class="flex flex-col">
-                                <span class="font-extrabold text-[#094174] text-base leading-none">{{ Auth::user()->created_at ? Auth::user()->created_at->format('M Y') : __('profile.not_available') }}</span>
+                                <span class="font-extrabold text-[#094174] text-base leading-none">{{ Auth::user()->created_at ? Auth::user()->created_at->translatedFormat('M Y') : __('profile.not_available') }}</span>
                                 <span class="text-[10px] font-bold text-[#6D8A9F] tracking-wide uppercase mt-0.5">{{ __('profile.joined_date') }}</span>
                             </div>
                         </div>

@@ -72,7 +72,7 @@
                             class="w-4 h-4 object-contain opacity-70" />
                         <input id="search-input" type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('explore.find_mountains_placeholder') }}"
                             class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 w-full text-sm text-[#1a2b4c] placeholder-gray-500 font-medium" />
-                        <button type="submit" class="hidden">Search</button>
+                        <button type="submit" class="hidden">{{ __('explore.search') }}</button>
                     </div>
                     <button type="button" id="mobile-filter-btn" class="lg:hidden flex items-center justify-center bg-gray-200/60 text-gray-500 rounded-full w-11 h-11 shrink-0 hover:bg-gray-300/60 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

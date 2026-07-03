@@ -56,6 +56,22 @@ class ForgotPasswordControllerTest extends TestCase
         ]);
     }
 
+    public function test_reset_notification_keeps_the_selected_locale(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        $this->post('/forgot-password?lang=id', [
+            'email' => $user->email,
+        ]);
+
+        Notification::assertSentTo(
+            $user,
+            fn (ResetPasswordNotification $notification): bool => $notification->locale === 'id'
+        );
+    }
+
     // -------------------------------------------------------------------------
     // POST /forgot-password — failures
     // -------------------------------------------------------------------------

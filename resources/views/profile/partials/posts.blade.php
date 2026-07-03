@@ -30,7 +30,7 @@
 
                         <p class="text-[13px] text-gray-500 mt-1">
                             {{ $post->mountain?->province?->name ?? 'Indonesia' }} •
-                            {{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                            {{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}
                         </p>
 
                         @if ($post->route_name || isset($post->mountain->route))

@@ -2,6 +2,7 @@
 
 return [
     'nav_home' => 'Beranda',
+    'app_title' => 'Sumorrow - Puncak Esok Hari',
     'nav_explore' => 'Jelajahi',
     'nav_community' => 'Komunitas',
     'profile' => 'Profil',
@@ -19,11 +20,13 @@ return [
     'delete' => 'Hapus',
     'edit' => 'Ubah',
     'dismiss' => 'Tutup',
-    'login_required' => 'Diperlukan masuk',
+    'login_required' => 'Harus masuk',
+    'api_docs_login_required' => 'Daftar atau masuk terlebih dahulu untuk mengakses dokumentasi API.',
     'register' => 'Daftar',
     'success' => 'Berhasil',
+    'avatar_alt' => 'Avatar',
     'sumorrow_logo_alt' => 'Logo Sumorrow',
-    'footer_tagline' => 'Menghubungkan semangat petualangan dengan puncak-puncak tertinggi Indonesia dan gunung-gunung megah di seluruh nusantara',
+    'footer_tagline' => 'Menghubungkan semangat petualangan dengan puncak-puncak megah di seluruh Indonesia',
     'footer_navigation' => 'NAVIGASI',
     'footer_legal' => 'LEGAL',
     'footer_contact' => 'HUBUNGI KAMI',

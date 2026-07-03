@@ -35,7 +35,7 @@
                     <div id="weather-content"
                         class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
                         <span id="weather-location"
-                            class="text-sm sm:text-base font-bold text-[#001E3A] line-clamp-1 leading-tight">{!! $weatherData[0]['loc'] ?? 'Mountain' !!}</span>
+                            class="text-sm sm:text-base font-bold text-[#001E3A] line-clamp-1 leading-tight">{!! $weatherData[0]['loc'] ?? __('home.mountain_fallback') !!}</span>
                         <div class="flex items-center justify-center gap-1 sm:gap-2 mt-1">
                             <svg class="w-6 h-6 sm:w-8 sm:h-8 text-[#001E3A]" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -269,7 +269,7 @@
                                     </svg>
                                 </div>
                                 <p class="text-xs sm:text-sm font-semibold text-[#001E3A] leading-relaxed mb-4">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sagittis.... <span
+                                    {{ __('home.sample_post') }} <span
                                         class="text-gray-400">{{ __('home.more') }}</span>
                                 </p>
                                 <div
@@ -378,7 +378,7 @@
                                         <path
                                             d="M14 6l-3.38 4H16v2h-6.73L5 18H2.5l5.5-6.5-.47-.56-2.5 3-1.52-1.8L9 6h5zM15 16l6-7 1.5 1.5-6 7L15 16z" />
                                     </svg>
-                                    {{ $peak['elevation'] }}
+                                    {{ $peak['elevation'] ? number_format($peak['elevation']).' '.__('explore.unit_masl') : __('explore.unknown_elevation') }}
                                 </div>
                                 <div
                                     class="flex items-center gap-1.5 bg-white/50 px-3 py-1.5 rounded-full backdrop-blur-md border border-white">
@@ -386,7 +386,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                     </svg>
-                                    {{ $peak['difficulty'] }}
+                                    {{ __('explore.difficulty_'.$peak['difficulty']) }}
                                 </div>
                             </div>
                         </a>
