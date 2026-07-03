@@ -39,13 +39,7 @@ class PostController extends Controller
 
         // ----------------------------------------------------------------
         // 1. Main Feed Query
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes', 'saves']);
-
-        if (Auth::check()) {
-            $postsQuery->withExists(['saves as is_saved' => function ($query) {
-                $query->where('user_id', Auth::id());
-            }])->orderByDesc('is_saved');
-        }
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes']);
 
         $postsQuery->latest();
 
@@ -254,25 +248,6 @@ class PostController extends Controller
         return response()->json([
             'liked' => $post->likes()->where('user_id', auth()->id())->exists(),
             'count' => $post->likes()->count(),
-        ]);
-    }
-
-    // ====================================================================
-    // TOGGLE SAVE / BOOKMARK
-    // ====================================================================
-
-    /**
-     * Toggle a bookmark on a post.
-     *
-     * Route: POST /community/posts/{post}/save
-     * Name:  community.posts.save
-     */
-    public function toggleSave(Request $request, Post $post)
-    {
-        $post->saves()->toggle(auth()->id());
-
-        return response()->json([
-            'saved' => $post->saves()->where('user_id', auth()->id())->exists(),
         ]);
     }
 }

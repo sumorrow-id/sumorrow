@@ -82,11 +82,29 @@ export class MountainWeatherForecast {
         };
 
         const renderForecast = (list) => {
+            // The forecast section shows the NEXT 3 days — today's weather
+            // already lives in the hero card, so entries dated today (or
+            // earlier) are excluded before grouping.
+            const startOfTomorrow = new Date();
+            startOfTomorrow.setHours(24, 0, 0, 0);
+
             const dailyData = {};
             list.forEach(item => {
-                const date = new Date(item.dt * 1000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                if (!dailyData[date]) { dailyData[date] = { temp: [], icon: item.weather[0].icon, desc: item.weather[0].main }; }
+                const itemDate = new Date(item.dt * 1000);
+                if (itemDate < startOfTomorrow) { return; }
+
+                const date = itemDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                if (!dailyData[date]) { dailyData[date] = { temp: [], icon: item.weather[0].icon, desc: item.weather[0].main, iconHourGap: 24 }; }
                 dailyData[date].temp.push(item.main.temp);
+
+                // Represent the day with the entry closest to midday, not the
+                // 00:00 slot (which always carries a night icon).
+                const hourGap = Math.abs(itemDate.getHours() - 12);
+                if (hourGap < dailyData[date].iconHourGap) {
+                    dailyData[date].iconHourGap = hourGap;
+                    dailyData[date].icon = item.weather[0].icon;
+                    dailyData[date].desc = item.weather[0].main;
+                }
             });
             const days = Object.keys(dailyData).slice(0, 3);
             weatherContainer.innerHTML = days.map(day => {
@@ -108,14 +126,14 @@ export class MountainWeatherForecast {
             .then(data => showHeroCard(data.icon ?? '01d', data.temp, data.description ?? ''))
             .catch(() => showHeroCard('01d', '22&deg;', 'Clear'));
 
-        // 3-day forecast → forecast section
+        // 3-day forecast (the 3 days AFTER today) → forecast section
         fetch(forecastUrl)
             .then(res => { if (!res.ok) { throw new Error('Forecast error'); } return res.json(); })
             .then(data => renderForecast(data.list ?? []))
             .catch(() => renderForecast([
-                { dt: Date.now() / 1000, main: { temp: 22 }, weather: [{ icon: '01d', main: 'Clear' }] },
-                { dt: Date.now() / 1000 + 86400, main: { temp: 23 }, weather: [{ icon: '03d', main: 'Clouds' }] },
-                { dt: Date.now() / 1000 + 172800, main: { temp: 20 }, weather: [{ icon: '10d', main: 'Rain' }] },
+                { dt: Date.now() / 1000 + 86400, main: { temp: 22 }, weather: [{ icon: '01d', main: 'Clear' }] },
+                { dt: Date.now() / 1000 + 172800, main: { temp: 23 }, weather: [{ icon: '03d', main: 'Clouds' }] },
+                { dt: Date.now() / 1000 + 259200, main: { temp: 20 }, weather: [{ icon: '10d', main: 'Rain' }] },
             ]));
     }
 }

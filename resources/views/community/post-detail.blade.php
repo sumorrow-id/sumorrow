@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="w-[95%] sm:w-[90%] max-w-2xl mx-auto pt-24 md:pt-32 pb-16">
+    <div class="w-[95%] sm:w-[90%] max-w-2xl mx-auto pt-32 pb-16">
 
         {{-- Back to Feed Link --}}
         <a href="{{ route('community.explore') }}"

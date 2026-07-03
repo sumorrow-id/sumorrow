@@ -32,7 +32,7 @@ class CommunityController extends Controller
         // 2. Main Feed (required by feed.blade.php component)
         // ----------------------------------------------------------------
         $activeTag = $request->query('tag');
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes', 'saves'])->latest();
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])->latest();
 
         if ($activeTag) {
             $postsQuery->whereHas('tags', function ($query) use ($activeTag) {

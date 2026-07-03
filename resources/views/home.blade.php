@@ -6,14 +6,14 @@
 @section('content')
     <!-- Page wrapper for gradient background -->
     <div
-        class="w-full overflow-hidden min-h-screen bg-gradient-to-b from-[#e8f0f6] to-[#f5f8fa] font-['Plus_Jakarta_Sans'] font-medium pb-24 text-[#001E3A]">
+        class="w-full overflow-hidden min-h-screen bg-gradient-to-b from-[#e8f0f6] to-[#f5f8fa] font-['Plus_Jakarta_Sans'] font-medium pb-16 sm:pb-24 text-[#001E3A]">
 
         <!-- Hero Section Container -->
-        <div class="w-[95%] max-w-350 mx-auto pt-36">
+        <div class="w-[95%] max-w-350 mx-auto pt-28 sm:pt-36">
 
             <!-- Hero Box -->
             <div
-                class="relative w-full h-[600px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
+                class="relative w-full h-[500px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
                 <!-- Two stacked layers crossfade between curated hero images -->
                 <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
                     onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
@@ -24,14 +24,14 @@
 
                 <!-- SUMORROW text -->
                 <h1
-                    class="relative z-10 text-[10vw] sm:text-[140px] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
+                    class="relative z-10 text-[min(10vw,140px)] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
                     SUMORROW
                 </h1>
 
                 <!-- Temperature Widget (Top Right Puzzle Cutout) -->
                 <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
                     data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
-                    class="absolute top-0 right-0 bg-[#c2dbec]/95 border-b-[16px] border-l-[16px] border-[#e8f0f6] rounded-bl-[3rem] rounded-tr-3xl w-48 h-36 sm:w-56 sm:h-40 flex flex-col items-center justify-center p-4 shadow-md transition-transform duration-500 hover:scale-[1.03] origin-top-right">
+                    class="absolute top-0 right-0 bg-[#c2dbec]/95 border-b-[12px] sm:border-b-[16px] border-l-[12px] sm:border-l-[16px] border-[#e8f0f6] rounded-bl-[3rem] rounded-tr-[2rem] w-40 h-32 sm:w-56 sm:h-40 flex flex-col items-center justify-center p-3 sm:p-4 shadow-md transition-transform duration-500 hover:scale-[1.03] origin-top-right">
                     <div id="weather-content"
                         class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
                         <span id="weather-location"
@@ -51,9 +51,9 @@
                 <!-- Bottom Search Bar (Puzzle Cutout) -->
                 <div class="absolute -bottom-10 w-[95%] max-w-4xl left-1/2 -translate-x-1/2 z-20">
                     <form action="{{ url('/explore') }}" method="GET"
-                        class="w-full bg-[#c2dbec] border-[16px] border-[#e8f0f6] rounded-[3rem] p-2 sm:p-3 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 shadow-sm">
+                        class="w-full bg-[#c2dbec] border-[12px] sm:border-[16px] border-[#e8f0f6] rounded-[2.5rem] sm:rounded-[3rem] p-3 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-sm">
                         <!-- Search Input -->
-                        <div class="w-full sm:flex-1 relative bg-white/70 rounded-[1.5rem] ml-2">
+                        <div class="w-full sm:flex-1 relative bg-white/70 rounded-[1.5rem] sm:ml-2">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -88,8 +88,10 @@
             </div>
 
             <!-- About Us Section -->
-            <div class="mt-28 sm:mt-32 mb-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-                <div class="col-span-1 sm:col-span-2 lg:col-span-4 mb-8 text-right">
+            <div class="mt-24 sm:mt-32 mb-20 sm:mb-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                <div class="col-span-1 sm:col-span-2 lg:col-span-4 mb-4 sm:mb-8 text-right">
+                    {{-- Forced line breaks only from `sm` up — on phones the fixed
+                         breaks fought the natural wrap and produced ragged lines. --}}
                     <h2
                         class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#001E3A] max-w-2xl ml-auto leading-tight">
                         {{ __('home.about_heading_line1') }}<br>{{ __('home.about_heading_line2') }}<br>{{ __('home.about_heading_line3') }}
@@ -142,7 +144,7 @@
             </div>
 
             <!-- Quotes Section -->
-            <div class="flex justify-end pt-5 pb-5 mb-16 pr-4 lg:pr-12 w-full">
+            <div class="flex justify-end pt-5 pb-5 mb-10 sm:mb-16 pr-4 lg:pr-12 w-full">
                 <h2
                     class="text-4xl sm:text-5xl md:text-6xl font-['Newsreader'] font-semibold italic bg-gradient-to-r from-[#001E3A] to-[#4286f4] text-transparent bg-clip-text tracking-tight text-left">
                     <span class="block">{{ __('home.tagline_line1') }}</span>
@@ -151,7 +153,7 @@
             </div>
 
             <!-- Popular Mountains Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-32 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center mb-20 sm:mb-32 relative">
 
                 <!-- Background Decoration -->
                 <div
@@ -174,8 +176,8 @@
                 </div>
 
                 <!-- Carousel Gallery Right -->
-                <div class="lg:col-span-8 relative z-10 h-[450px]">
-                    <div id="mountain-carousel-container" class="relative w-full h-[400px]">
+                <div class="lg:col-span-8 relative z-10 h-[380px] sm:h-[450px]">
+                    <div id="mountain-carousel-container" class="relative w-full h-[330px] sm:h-[400px]">
                         @foreach ($popularMountains as $idx => $popMt)
                             <a href="{{ url('/explore/' . $popMt['id']) }}"
                                 class="mtn-card overflow-hidden group shadow-lg cursor-pointer block transition-all duration-700 ease-in-out absolute right-0 top-1/2 w-[160px] sm:w-[200px] h-[220px] sm:h-[260px] rounded-[2rem]"
@@ -227,7 +229,7 @@
 
             <!-- Community Section -->
             <div
-                class="w-full bg-[#c2dbec] rounded-[2rem] sm:rounded-[4rem] border border-[#094174]/20 p-8 sm:p-12 lg:p-16 flex flex-col lg:flex-row gap-12 mb-32 items-center relative overflow-hidden shadow-sm">
+                class="w-full bg-[#c2dbec] rounded-[2rem] sm:rounded-[4rem] border border-[#094174]/20 p-6 sm:p-12 lg:p-16 flex flex-col lg:flex-row gap-8 lg:gap-12 mb-20 sm:mb-32 items-center relative overflow-hidden shadow-sm">
 
                 <!-- Bg pattern -->
                 <div class="absolute inset-0 opacity-10 pointer-events-none"
@@ -274,7 +276,7 @@
                                 </p>
                                 <div
                                     class="w-full h-40 sm:h-48 bg-gray-200 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=400"
+                                    <img src="{{ $communityImages->get($i % max($communityImages->count(), 1), asset('images/placeholder.svg')) }}"
                                         onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                         class="w-full h-full object-cover">
                                 </div>

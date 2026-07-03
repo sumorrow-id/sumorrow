@@ -248,7 +248,6 @@
 
             @php
                 $isLiked = Auth::check() && $post->likes->contains('id', Auth::id());
-                $isSaved = Auth::check() && $post->saves->contains('id', Auth::id());
                 $likeCount = $post->likes->count();
             @endphp
 
@@ -296,27 +295,6 @@
 
                 </div>
                 <div class="flex items-center gap-3 sm:gap-4">
-
-                    @auth
-                        <button type="button" data-post-id="{{ $post->id }}"
-                            data-save-url="{{ route('community.posts.save', $post->id) }}"
-                            data-saved="{{ $isSaved ? 'true' : 'false' }}"
-                            class="save-btn hover:text-[#094174] transition {{ $isSaved ? 'text-[#094174]' : '' }}">
-                            <svg class="save-icon w-4 h-4 sm:w-5 sm:h-5" fill="{{ $isSaved ? '#094174' : 'none' }}"
-                                stroke="{{ $isSaved ? '#094174' : 'currentColor' }}" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                            </svg>
-                        </button>
-                    @else
-                        <button type="button" class="hover:text-[#094174] transition"
-                            onclick="window.location='{{ route('showLogin') }}'">
-                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                            </svg>
-                        </button>
-                    @endauth
 
                     {{-- Share button — Web Share API with clipboard fallback --}}
                     <button type="button" class="hover:text-[#094174] transition"

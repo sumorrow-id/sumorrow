@@ -68,7 +68,7 @@
             @endauth
         </div>
 
-        <button id="hamburger-btn"
+        <button id="hamburger-btn" aria-label="Toggle menu" aria-controls="mobile-menu"
             class="md:hidden ml-auto text-white focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-white/10 transition">
             <svg class="h-7 w-7 transition-transform duration-300" id="hamburger-icon" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor">

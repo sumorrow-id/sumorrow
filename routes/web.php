@@ -130,9 +130,6 @@ Route::middleware('redirect.admin')->group(function () {
         // Community Forum — Toggle like on a post
         Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
 
-        // Community Forum — Toggle save/bookmark on a post
-        Route::post('/community/posts/{post}/save', [PostController::class, 'toggleSave'])->name('community.posts.save');
-
         // Email Verification Configuration
         Route::prefix('email')->group(function () {
             Route::get('/verify', function () {

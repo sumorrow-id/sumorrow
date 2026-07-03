@@ -25,7 +25,7 @@
         <div
             id="flash-warning"
             role="alert"
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-amber-200 rounded-2xl shadow-lg shadow-amber-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
+            class="fixed top-32 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-amber-200 rounded-2xl shadow-lg shadow-amber-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
         >
             <div class="shrink-0 w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -57,7 +57,7 @@
         <div
             id="flash-success"
             role="alert"
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-green-200 rounded-2xl shadow-lg shadow-green-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
+            class="fixed top-32 left-1/2 -translate-x-1/2 z-60 w-[92%] max-w-md bg-white border border-green-200 rounded-2xl shadow-lg shadow-green-100/60 px-5 py-4 flex items-start gap-3 transition-all duration-300"
         >
             <div class="shrink-0 w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
