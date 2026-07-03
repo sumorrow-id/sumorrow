@@ -11,6 +11,49 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-03 — branch: `main`
+
+By: Claude Code
+
+**What changed**
+
+- Added backend localization (English default + Indonesian), no UI switcher yet.
+  `config('app.available_locales')` = `['en', 'id']`; new `App\Http\Middleware\SetLocale`
+  (registered via `$middleware->web(append: ...)` in `bootstrap/app.php`) resolves the
+  active locale from a `?lang=` query param, persists it to `session('locale')`, and
+  falls back to the configured default otherwise — so a future language toggle just
+  needs to link to `?lang=id` / `?lang=en`, no new route required.
+- Extracted every hardcoded UI string in `resources/views/**/*.blade.php` into `__()`
+  calls against 10 feature-grouped `lang/en/*.php` + `lang/id/*.php` pairs (`common`,
+  `auth`, `admin`, `community`, `profile`, `gear`, `home`, `explore`, `api`,
+  `pagination`). The four views that were previously hardcoded Indonesian
+  (`auth/forgot-password.blade.php`, `auth/reset-password.blade.php`,
+  `profile/partials/achievements.blade.php`, `profile/partials/gear.blade.php`) now
+  default to English in the Blade source, with the original Indonesian preserved
+  verbatim as the `id` translation.
+- Fixed 3 inline `onsubmit="return confirm('...')"` delete-confirmation dialogs
+  (`admin/user-updates.blade.php`, `admin/mountain-data.blade.php`,
+  `profile/partials/gear.blade.php`) that would have broken on an apostrophe in a
+  translated string or an interpolated username/mountain name — now use
+  `Illuminate\Support\Js::from(__(...))` instead of raw string interpolation.
+- Deliberately left untranslated: gear category `<select>` values (round-trip to the
+  `gears.category` DB column, matched by JS filters), Indonesian province/region names,
+  unit abbreviations (masl/km/m/hrs/mdpl), and API-contract literals in `api/docs.blade.php`
+  (HTTP header names, query param names, enum values documenting the actual API).
+- Out of scope this pass (flagged as a follow-up, not implemented): controller/middleware
+  flash messages (e.g. `AdminMiddleware`'s `'Unauthorized access.'`) and FormRequest
+  validation messages — still hardcoded English.
+
+**How to verify**
+
+- `php artisan test` — 234 passing (up from 228; added `LocaleMiddlewareTest`).
+- `vendor/bin/pint --dirty` — clean.
+- Hit any web route with `?lang=id` (e.g. `/home?lang=id`) — UI text flips to Indonesian
+  and persists across subsequent requests via session; an invalid `?lang=xx` is ignored.
+  No visible toggle exists yet — this was query-param/session only, by design.
+
+---
+
 ## 2026-07-02 (later) — branch: `main`
 
 By: Claude Code
