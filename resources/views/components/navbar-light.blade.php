@@ -55,7 +55,7 @@
             @endauth
         </div>
 
-        <button id="hamburger-btn-light" class="md:hidden ml-auto text-[#1a2b4c] focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-[#094174]/10 transition">
+        <button id="hamburger-btn-light" aria-label="Toggle menu" aria-controls="mobile-menu-light" class="md:hidden ml-auto text-[#1a2b4c] focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-[#094174]/10 transition">
             <svg class="w-7 h-7 transition-transform duration-300" id="hamburger-icon-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
@@ -67,10 +67,11 @@
         <div class="flex flex-col gap-4 mt-6 pt-4 border-t border-gray-200/60 text-center pb-2">
             <a href="/" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Home</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Explore</a>
-            <a href="#" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Community</a>
+            <a href="/community" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Community</a>
             <div class="pt-4 border-t border-gray-200/60 flex flex-col gap-2">
                 @auth
                     <p class="text-sm text-gray-500 mb-2">Logged in as {{ Auth::user()->username }}</p>
+                    <a href="{{ route('profile') }}" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">Profile</a>
                     <form action="{{ route('logout') }}" method="POST" class="mt-2 confirm-submit-form" data-confirm-title="Log out?" data-confirm-message="Are you sure you want to log out of your account?" data-confirm-label="Yes, log out" data-confirm-variant="danger">
                         @csrf
                         <button type="submit" class="font-bold text-red-500 py-2 rounded-lg hover:bg-red-50 transition w-full">Log out</button>

@@ -148,7 +148,7 @@
                         </h2>
                         <div id="weather-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"
                             data-weather-url="{{ $weatherUrl }}" data-forecast-url="{{ $forecastUrl }}">
-                            <div class="col-span-3 text-center py-6 text-gray-500">
+                            <div class="md:col-span-3 text-center py-6 text-gray-500">
                                 Loading weather forecast...
                             </div>
                         </div>

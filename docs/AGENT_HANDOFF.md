@@ -11,6 +11,76 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-03 — branch: `main`
+
+By: Claude Code
+
+**What changed**
+
+- **Mobile navbar fixes** (`navbar.blade.php`, `navbar-light.blade.php`,
+  `HamburgerMenu.js`): the mobile menu's Community link pointed at `#` (fixed to
+  `/community` in both navbars); the light navbar's mobile menu was missing the
+  Profile link for logged-in users; the menu's fixed `max-h-[400px]` cap could
+  clip the bottom items (logout) — the menu now animates to its measured
+  `scrollHeight` instead; the menu now closes on link tap, outside click,
+  Escape, and when resizing up past the `md` breakpoint; hamburger buttons got
+  `aria-label`/`aria-expanded`/`aria-controls`.
+- **Home page responsiveness** (`home.blade.php`, `HomeWeatherHero.js`): the
+  Popular Mountains carousel used desktop-sized transforms
+  (`-200% - 4rem`) anchored at `right-0`, which threw the front card entirely
+  off-screen on phones — transforms are now breakpoint-aware (2 visible cards
+  under 640px, 3 above) and reposition on breakpoint change; the SUMORROW hero
+  title jumped to a fixed 140px at `sm`, overflowing 640–770px viewports (now
+  `text-[min(10vw,140px)]`); the hero weather widget is slightly smaller on
+  phones; stray `ml-2`/`mr-2` on the stacked search form caused an 8px overflow
+  (now `sm:`-scoped).
+- **Home mobile polish (follow-up pass)**: tightened the phone-size vertical
+  rhythm (hero 500px, section gaps `mb-20`/`mt-24`/`gap-6` scale back up at
+  `sm`/`lg`), the About heading's forced `<br>`s now only apply from `sm` up
+  (they fought natural wrapping on phones — note the space after each `<br>` is
+  load-bearing), search-bar/community paddings and borders slimmed on mobile,
+  carousel container shortened to `h-[330px]` on phones, and the weather
+  widget's `rounded-tr-3xl` now matches the hero's `2rem` corner radius.
+- **Home images now always come from the local catalog**: the Community
+  showcase cards' hardcoded Unsplash stock photo (which fell back to
+  `placeholder.svg` whenever the external host was slow/blocked) is replaced
+  by catalog images passed as `$communityImages`; and the popular/peaks
+  showcases now filter out mountains whose cover resolves to the
+  `default-mountain.jpg` fallback (3 catalog rows have no local file). The
+  `mountains.home` day-long cache gained a `has_real_image` flag — run
+  `php artisan cache:clear` after deploying this. New
+  `HomeControllerTest::test_home_only_showcases_mountains_with_real_images`
+  locks the behavior in.
+- **Root cause of "home still shows fallbacks in the browser": cache-poisoned
+  absolute URLs.** `mountains.home` cached `asset()` output, so whoever built
+  the cache first (a CLI render → `http://localhost`, no port) baked their
+  origin into every image URL for a day; browsers on `localhost:8000` then
+  404'd against Apache on port 80 and every card fell back to the placeholder.
+  The cache now stores raw disk paths only (`image_raw`) and
+  `HomeController::resolveImageUrl()` builds URLs per request. Hero images
+  stay static from `public/images/hero`. Regression test:
+  `test_home_image_urls_follow_the_request_host_not_the_cache_builder`.
+  Rule of thumb going forward: never cache `asset()`/`url()` output.
+- **Mountain-detail weather semantics** (`MountainWeatherForecast.js`,
+  `WeatherController::mockForecastData`, `explore/show.blade.php`): the hero
+  card keeps showing today's *current* weather; the forecast section now shows
+  the **3 days after today** (entries dated today are filtered out before
+  grouping — previously today appeared as the first forecast card). Daily
+  icon/description now comes from the entry nearest midday instead of the 00:00
+  slot (which always carried a night icon). The backend mock and the JS fetch
+  fallback both emit tomorrow..+3 to match, and the mock's test now asserts the
+  exact 3 dates. The forecast "Loading" placeholder used `col-span-3` inside a
+  1-column mobile grid (now `md:col-span-3`).
+
+**How to verify**
+
+- `php artisan test` — 229 passing. `npm run build` — succeeds.
+- In a narrow viewport (<640px): open the hamburger menu (all links incl.
+  Community/Profile work, menu closes on outside tap/Escape), scroll the home
+  page (hero title fits, carousel front card stays on-screen, prev/next works).
+- On a mountain detail page: hero card shows current conditions; the three
+  forecast cards are dated tomorrow, +2, +3 — never today.
+
 ## 2026-07-02 (later) — branch: `main`
 
 By: Claude Code
