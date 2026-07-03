@@ -68,7 +68,7 @@
             @endauth
         </div>
 
-        <button id="hamburger-btn"
+        <button id="hamburger-btn" aria-label="Toggle menu" aria-controls="mobile-menu"
             class="md:hidden ml-auto text-white focus:outline-none relative z-20 p-2 -mr-2 rounded-lg hover:bg-white/10 transition">
             <svg class="h-7 w-7 transition-transform duration-300" id="hamburger-icon" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor">
@@ -82,7 +82,7 @@
         <div class="flex flex-col gap-4 mt-6 pt-4 border-t border-white/20 text-center pb-2">
             <a href="/" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Home</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Explore</a>
-            <a href="#" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Community</a>
+            <a href="/community" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">Community</a>
 
             <div class="pt-4 border-t border-white/10">
                 @auth

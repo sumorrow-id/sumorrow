@@ -89,6 +89,19 @@ class PostControllerTest extends TestCase
         $this->assertDatabaseCount('posts', 0);
     }
 
+    public function test_feed_page_shows_forum_tab_and_has_no_save_buttons()
+    {
+        $user = User::factory()->create();
+        $post = $user->posts()->create(['title' => '', 'body' => 'hello forum']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        $response->assertSee('Forum');
+        $response->assertDontSee('save-btn');
+        $response->assertDontSee('/community/posts/'.$post->id.'/save');
+    }
+
     public function test_composer_repopulates_body_from_old_input()
     {
         $user = User::factory()->create();

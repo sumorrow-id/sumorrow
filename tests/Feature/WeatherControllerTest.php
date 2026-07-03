@@ -80,7 +80,7 @@ class WeatherControllerTest extends TestCase
         $response->assertJsonStructure(['list']);
     }
 
-    public function test_weather_forecast_mock_spans_three_distinct_days(): void
+    public function test_weather_forecast_mock_spans_the_three_days_after_today(): void
     {
         config(['services.openweathermap.key' => null]);
         $mountain = $this->makeMountain();
@@ -91,8 +91,18 @@ class WeatherControllerTest extends TestCase
 
         $days = collect($response->json('list'))
             ->map(fn (array $item) => date('Y-m-d', $item['dt']))
-            ->unique();
+            ->unique()
+            ->sort()
+            ->values();
 
-        $this->assertCount(3, $days, 'Forecast should span 3 distinct calendar days.');
+        $this->assertSame(
+            [
+                now()->addDay()->toDateString(),
+                now()->addDays(2)->toDateString(),
+                now()->addDays(3)->toDateString(),
+            ],
+            $days->all(),
+            'Forecast mock should cover the 3 days after today (today belongs to the hero card).'
+        );
     }
 }

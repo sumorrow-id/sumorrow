@@ -1,6 +1,6 @@
-export class FeedLikeSave {
+export class FeedLike {
     /**
-     * Initializes the FeedLikeSave class.
+     * Initializes the FeedLike class.
      */
     constructor() {
         this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || document
@@ -87,71 +87,5 @@ export class FeedLikeSave {
             });
         });
 
-        // ── SAVE / BOOKMARK BUTTONS ───────────────────────────────────────
-        document.querySelectorAll('.save-btn').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                var url = btn.dataset.saveUrl;
-                var saved = btn.dataset.saved === 'true';
-                var icon = btn.querySelector('.save-icon');
-
-                // Optimistic UI Update
-                var newSaved = !saved;
-                btn.dataset.saved = newSaved ? 'true' : 'false';
-
-                if (newSaved) {
-                    icon.setAttribute('fill', '#094174');
-                    icon.setAttribute('stroke', '#094174');
-                    btn.classList.add('text-[#094174]');
-                } else {
-                    icon.setAttribute('fill', 'none');
-                    icon.setAttribute('stroke', 'currentColor');
-                    btn.classList.remove('text-[#094174]');
-                }
-
-                fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(function(res) {
-                        if (!res.ok) throw new Error('Request failed with status ' + res
-                        .status);
-                        return res.json();
-                    })
-                    .then(function(data) {
-                        // Sync with real server state
-                        btn.dataset.saved = data.saved ? 'true' : 'false';
-                        if (data.saved) {
-                            icon.setAttribute('fill', '#094174');
-                            icon.setAttribute('stroke', '#094174');
-                            btn.classList.add('text-[#094174]');
-                        } else {
-                            icon.setAttribute('fill', 'none');
-                            icon.setAttribute('stroke', 'currentColor');
-                            btn.classList.remove('text-[#094174]');
-                        }
-                    })
-                    .catch(function(error) {
-                        console.error('Fetch Error:', error);
-
-                        // Rollback Optimistic UI Update
-                        btn.dataset.saved = saved ? 'true' : 'false';
-                        if (saved) {
-                            icon.setAttribute('fill', '#094174');
-                            icon.setAttribute('stroke', '#094174');
-                            btn.classList.add('text-[#094174]');
-                        } else {
-                            icon.setAttribute('fill', 'none');
-                            icon.setAttribute('stroke', 'currentColor');
-                            btn.classList.remove('text-[#094174]');
-                        }
-                    });
-            });
-        });
     }
 }

@@ -9,7 +9,6 @@ use App\Models\PostTag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -36,17 +35,11 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $activeTag = $request->query('tag');
-        $search    = $request->query('search');
+        $search = $request->query('search');
 
         // ----------------------------------------------------------------
         // 1. Main Feed Query
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes', 'saves']);
-
-        if (Auth::check()) {
-            $postsQuery->withExists(['saves as is_saved' => function ($query) {
-                $query->where('user_id', Auth::id());
-            }])->orderByDesc('is_saved');
-        }
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes']);
 
         $postsQuery->latest();
 
@@ -57,7 +50,7 @@ class PostController extends Controller
         }
 
         if ($search) {
-            $postsQuery->where('body', 'like', '%' . $search . '%');
+            $postsQuery->where('body', 'like', '%'.$search.'%');
         }
 
         $posts = $postsQuery->paginate(10)->withQueryString();
@@ -84,11 +77,11 @@ class PostController extends Controller
         // 4. Who to Follow
         // ----------------------------------------------------------------
         $whoToFollow = User::when(Auth::check(), function ($query) {
-                $query->where('id', '!=', Auth::id())
-                      ->whereDoesntHave('followers', function ($q) {
-                          $q->where('follower_id', Auth::id());
-                      });
-            })
+            $query->where('id', '!=', Auth::id())
+                ->whereDoesntHave('followers', function ($q) {
+                    $q->where('follower_id', Auth::id());
+                });
+        })
             ->inRandomOrder()
             ->limit(5)
             ->get();
@@ -137,7 +130,7 @@ class PostController extends Controller
             'comments.user',   // thread replies with their authors
         ]);
 
-        $comments      = $post->comments;
+        $comments = $post->comments;
         $commentsCount = $comments->count();
 
         return view('community.post-detail', compact(
@@ -156,33 +149,32 @@ class PostController extends Controller
      *
      * Route:  POST /community/posts
      * Name:   community.posts.store
-     *
      */
     public function store(Request $request)
     {
         $request->validate([
             // A post must have at least a body, images, OR a gif
-            'body'            => 'nullable|required_without_all:images,gif_url|string|max:5000',
-            'category_tags'   => 'required|array|min:1',
-            'category_tags.*' => ['string', 'in:' . implode(',', self::CATEGORY_TAGS)],
-            'images'          => 'nullable|required_without_all:body,gif_url|array|max:10',
-            'images.*'        => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'gif_url'         => 'nullable|url|max:2048',
+            'body' => 'nullable|required_without_all:images,gif_url|string|max:5000',
+            'category_tags' => 'required|array|min:1',
+            'category_tags.*' => ['string', 'in:'.implode(',', self::CATEGORY_TAGS)],
+            'images' => 'nullable|required_without_all:body,gif_url|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'gif_url' => 'nullable|url|max:2048',
         ], [
-            'body.required_without_all'   => 'Please write something, attach an image, or select a GIF before posting.',
+            'body.required_without_all' => 'Please write something, attach an image, or select a GIF before posting.',
             'images.required_without_all' => 'Please write something, attach an image, or select a GIF before posting.',
-            'category_tags.required'      => 'Please select at least one category tag.',
-            'images.*.image'              => 'One or more files are not valid images.',
-            'images.*.max'                => 'Each image must be smaller than 4 MB.',
+            'category_tags.required' => 'Please select at least one category tag.',
+            'images.*.image' => 'One or more files are not valid images.',
+            'images.*.max' => 'Each image must be smaller than 4 MB.',
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // Create the post
         $post = $user->posts()->create([
-            'title'   => '',
-            'body'    => $request->body ?? '',
+            'title' => '',
+            'body' => $request->body ?? '',
             'gif_url' => $request->gif_url,
         ]);
 
@@ -197,8 +189,8 @@ class PostController extends Controller
                 $path = $file->store('posts', 'public');
 
                 $post->images()->create([
-                    'image_url' => 'storage/' . $path,
-                    'position'  => $position + 1,   // 1-indexed
+                    'image_url' => 'storage/'.$path,
+                    'position' => $position + 1,   // 1-indexed
                 ]);
             }
         }
@@ -207,8 +199,6 @@ class PostController extends Controller
             ->route('community.explore')
             ->with('success', 'Your post has been published!');
     }
-
-
 
     // ====================================================================
     // STORE COMMENT — Save a comment on a specific post
@@ -227,13 +217,13 @@ class PostController extends Controller
             'body' => 'required|string|max:2000',
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         PostComment::create([
             'user_id' => $user->id,
             'post_id' => $post->id,
-            'body'    => $request->body,
+            'body' => $request->body,
         ]);
 
         return redirect()
@@ -258,25 +248,6 @@ class PostController extends Controller
         return response()->json([
             'liked' => $post->likes()->where('user_id', auth()->id())->exists(),
             'count' => $post->likes()->count(),
-        ]);
-    }
-
-    // ====================================================================
-    // TOGGLE SAVE / BOOKMARK
-    // ====================================================================
-
-    /**
-     * Toggle a bookmark on a post.
-     *
-     * Route: POST /community/posts/{post}/save
-     * Name:  community.posts.save
-     */
-    public function toggleSave(Request $request, Post $post)
-    {
-        $post->saves()->toggle(auth()->id());
-
-        return response()->json([
-            'saved' => $post->saves()->where('user_id', auth()->id())->exists(),
         ]);
     }
 }

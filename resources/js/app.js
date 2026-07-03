@@ -14,7 +14,7 @@ import { CommunityForum } from './features/CommunityForum';
 import { GearModal } from './features/GearModal';
 import { EmailVerificationPoll } from './features/EmailVerificationPoll';
 import { MountainWeatherForecast } from './features/MountainWeatherForecast';
-import { FeedLikeSave } from './features/FeedLikeSave';
+import { FeedLike } from './features/FeedLike';
 import { HomeWeatherHero } from './features/HomeWeatherHero';
 import { FeedComposer } from './features/FeedComposer';
 import { ConfirmSubmit } from './features/ConfirmSubmit';
@@ -199,9 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
         new MountainWeatherForecast(weatherContainerEl);
     }
 
-    // Community feed: like/save buttons (async)
-    if (document.querySelector('.like-btn') || document.querySelector('.save-btn')) {
-        new FeedLikeSave();
+    // Community feed: like buttons (async)
+    if (document.querySelector('.like-btn')) {
+        new FeedLike();
     }
 
     // Home page: weather widget cycling, hero image crossfade, elevation slider, mountain carousel

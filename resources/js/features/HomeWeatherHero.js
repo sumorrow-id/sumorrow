@@ -117,8 +117,30 @@ export class HomeWeatherHero {
         if (mtnCards.length > 0) {
             let currentMtnIndex = 0;
             const totalMtns = mtnCards.length;
+            const desktopQuery = window.matchMedia('(min-width: 640px)');
 
             function updateCarousel() {
+                // Kartu diposisikan dari tepi kanan kontainer; jarak geser harus
+                // mengikuti lebar layar — nilai desktop melempar kartu terdepan
+                // keluar layar pada layar sempit.
+                const positions = desktopQuery.matches
+                    ? {
+                        front: 'translate(calc(-200% - 4rem), -35%) scale(1.15)',
+                        middle: 'translate(calc(-100% - 1.5rem), -65%) scale(0.95)',
+                        back: 'translate(0, -45%) scale(0.8)',
+                        exitLeft: 'translate(calc(-300% - 6rem), -35%) scale(1.15)',
+                        hiddenRight: 'translate(calc(100% + 1rem), -50%) scale(0.7)',
+                        visibleDepth: 3,
+                    }
+                    : {
+                        front: 'translate(calc(-100% - 0.75rem), -35%) scale(1.1)',
+                        middle: 'translate(0, -60%) scale(0.9)',
+                        back: 'translate(0, -60%) scale(0.9)', // not shown on mobile
+                        exitLeft: 'translate(calc(-200% - 2rem), -35%) scale(1.1)',
+                        hiddenRight: 'translate(calc(100% + 1rem), -50%) scale(0.7)',
+                        visibleDepth: 2,
+                    };
+
                 mtnCards.forEach((card, i) => {
                     // Reset classes, kita pakai transform manual di javascript agar lebih dinamis posisinya (sejajar/bertumpuk)
                     card.className =
@@ -130,29 +152,30 @@ export class HomeWeatherHero {
                     if (diff === 0) {
                         // Posisi 1 (Paling Kiri yang terlihat, Paling Depan & Terbesar)
                         card.classList.add('z-30', 'opacity-100', 'pointer-events-auto');
-                        card.style.transform = 'translate(calc(-200% - 4rem), -35%) scale(1.15)';
+                        card.style.transform = positions.front;
                     } else if (diff === 1) {
                         // Posisi 2 (Tengah, Sedikit Menjauh / Lebih Kecil)
                         card.classList.add('z-20', 'opacity-100', 'pointer-events-auto');
-                        card.style.transform = 'translate(calc(-100% - 1.5rem), -65%) scale(0.95)';
-                    } else if (diff === 2) {
+                        card.style.transform = positions.middle;
+                    } else if (diff === 2 && positions.visibleDepth > 2) {
                         // Posisi 3 (Paling Kanan layar, Paling Distant / Terkecil)
                         card.classList.add('z-10', 'opacity-100', 'pointer-events-auto');
-                        card.style.transform = 'translate(0, -45%) scale(0.8)';
+                        card.style.transform = positions.back;
                     } else if (diff === totalMtns - 1) {
                         // Posisi Sebelumnya (Menghilang keluar ke kiri)
                         card.classList.add('z-0', 'opacity-0', 'pointer-events-none');
-                        card.style.transform = 'translate(calc(-300% - 6rem), -35%) scale(1.15)';
+                        card.style.transform = positions.exitLeft;
                     } else {
                         // Sisanya disembunyikan (Muncul dari luar kanan)
                         card.classList.add('z-0', 'opacity-0', 'pointer-events-none');
-                        card.style.transform = 'translate(calc(100% + 1rem), -50%) scale(0.7)';
+                        card.style.transform = positions.hiddenRight;
                     }
                 });
             }
 
-            // Inisialisasi awal
+            // Inisialisasi awal + reposisi saat melewati breakpoint
             updateCarousel();
+            desktopQuery.addEventListener('change', updateCarousel);
 
             // Next = Move forward (card indeks 1 maju jadi indeks 0)
             btnNextMtn.addEventListener('click', () => {

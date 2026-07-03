@@ -32,7 +32,7 @@
                     data-forum-tab="explore"
                     id="tab-explore"
                     class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap">
-                    Explore
+                    Forum
                 </button>
                 <button
                     data-forum-tab="community"
