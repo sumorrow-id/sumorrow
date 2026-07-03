@@ -60,23 +60,12 @@ class CommunityController extends Controller
             ->limit(5)
             ->get();
 
-        // ----------------------------------------------------------------
-        // 5. Who to Follow (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        $whoToFollow = User::when(Auth::check(), function ($query) {
-            $query->where('id', '!=', Auth::id());
-        })
-            ->inRandomOrder()
-            ->limit(5)
-            ->get();
-
         return view('community.index', compact(
             'myCommunities',
             'suggestedCommunities',
             'posts',
             'popularTags',
             'forumLeaders',
-            'whoToFollow',
             'activeTag'
         ));
     }

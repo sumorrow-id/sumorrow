@@ -11,6 +11,22 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-03 — branch: `main` (uncommitted)
+
+By: Claude Code
+
+**What changed**
+
+- Community "Explore" sub-tab renamed to "Forum" (lang key `community.tab_explore`, EN + ID).
+- Removed the "Who to Follow" sidebar section and the whole follow feature with it: `users.follow` route, `UserController`, `FollowToggle.js`, its test file, and related lang keys. The `follows` table and `User` model relations remain.
+- Profile page restructured: the **Posts** tab now shows the user's forum posts (posts that have category tags) with a "Last Reviews" sidebar (mountains the user most recently rated, replacing "Top Mountains"); a new **Hikings** tab shows the Summit Log (posts without tags — formerly "Hiking History", renamed in EN/ID). `ProfileController::index` now passes `forumPosts`, `hikingPosts`, `lastReviews`. `ProfilePostController::index` ("My Activities") excludes forum posts.
+- New delete-post feature: `DELETE /community/posts/{post}` (`community.posts.destroy`, `PostController::destroy`, author-only via 403 guard, deletes stored image files; DB rows cascade). Delete buttons on the forum feed (own posts), profile Posts tab, and Hikings tab.
+
+**How to verify**
+
+- `php artisan test --compact` — 247 passing (new destroy/authorization tests in `PostControllerTest`, tab-split tests in `ProfileControllerTest` / `ProfilePostControllerTest`).
+- `npm run build` — passes.
+
 ## 2026-07-03 — branch: `feat/bilingual-localization`
 
 By: Claude Code

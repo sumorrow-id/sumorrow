@@ -102,6 +102,68 @@ class PostControllerTest extends TestCase
         $response->assertDontSee('/community/posts/'.$post->id.'/save');
     }
 
+    public function test_author_can_delete_own_post_and_image_files_are_removed()
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post(route('community.posts.store'), [
+            'body' => 'Post to delete',
+            'category_tags' => ['Hiking Stories'],
+            'images' => [UploadedFile::fake()->create('photo.jpg', 100, 'image/jpeg')],
+        ]);
+
+        $post = Post::where('author_id', $user->id)->firstOrFail();
+        $imagePath = str_replace('storage/', '', $post->images()->first()->image_url);
+        Storage::disk('public')->assertExists($imagePath);
+
+        $response = $this->actingAs($user)->delete(route('community.posts.destroy', $post));
+
+        $response->assertRedirect();
+        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
+        $this->assertDatabaseCount('post_images', 0);
+        $this->assertDatabaseCount('post_tags', 0);
+        Storage::disk('public')->assertMissing($imagePath);
+    }
+
+    public function test_user_cannot_delete_another_users_post()
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $post = $owner->posts()->create(['title' => '', 'body' => 'not yours']);
+
+        $response = $this->actingAs($other)->delete(route('community.posts.destroy', $post));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('posts', ['id' => $post->id]);
+    }
+
+    public function test_guest_cannot_delete_a_post()
+    {
+        $owner = User::factory()->create();
+        $post = $owner->posts()->create(['title' => '', 'body' => 'guest cannot touch']);
+
+        $response = $this->delete(route('community.posts.destroy', $post));
+
+        $response->assertRedirect('/login');
+        $this->assertDatabaseHas('posts', ['id' => $post->id]);
+    }
+
+    public function test_feed_shows_delete_button_only_on_own_posts()
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $ownPost = $user->posts()->create(['title' => '', 'body' => 'my own post']);
+        $otherPost = $other->posts()->create(['title' => '', 'body' => 'someone elses post']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        // The destroy URL equals the show URL, so match the form action attribute specifically
+        $response->assertSee('action="'.route('community.posts.destroy', $ownPost->id).'"', false);
+        $response->assertDontSee('action="'.route('community.posts.destroy', $otherPost->id).'"', false);
+    }
+
     public function test_composer_repopulates_body_from_old_input()
     {
         $user = User::factory()->create();

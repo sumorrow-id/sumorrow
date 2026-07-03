@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Achievement;
-use App\Models\Mountain;
 use App\Models\User;
 use App\Services\AchievementService;
 use Illuminate\Http\Request;
@@ -20,8 +19,20 @@ class ProfileController extends Controller
         // Cek dan unlock achievement baru jika memenuhi kriteria
         $achievementService->checkAndUnlockAchievements($user);
 
-        // 1. Ambil data kontribusi user
-        $posts = $user->posts()
+        // 1. Ambil data kontribusi user.
+        // Post forum dibedakan dari catatan puncak lewat category tags:
+        // hanya post forum yang memiliki baris di post_tags.
+        $forumPosts = $user->posts()
+            ->whereHas('tags')
+            ->with(['tags', 'images' => function ($query) {
+                $query->orderBy('position', 'asc');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $hikingPosts = $user->posts()
+            ->whereDoesntHave('tags')
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
@@ -34,15 +45,15 @@ class ProfileController extends Controller
         $allAchievements = Achievement::all();
         $userAchievements = $user->achievements()->get()->keyBy('id');
 
-        // 2. Ambil data gunung terpopuler untuk sidebar
-        $topMountains = Mountain::with(['province', 'images'])
-            ->withAvg('ratings', 'score')
-            ->orderByDesc('ratings_avg_score')
+        // 2. Ambil ulasan gunung terakhir milik user untuk sidebar
+        $lastReviews = $user->ratings()
+            ->with(['mountain.province', 'mountain.images'])
+            ->latest('created_at')
             ->take(5)
             ->get();
 
         // 3. Kirim semua variabel ke view profile
-        return view('profile.profile', compact('posts', 'gears', 'allAchievements', 'userAchievements', 'user', 'topMountains'));
+        return view('profile.profile', compact('forumPosts', 'hikingPosts', 'gears', 'allAchievements', 'userAchievements', 'user', 'lastReviews'));
     }
 
     public function edit()

@@ -9,6 +9,8 @@ use App\Models\PostTag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -74,20 +76,7 @@ class PostController extends Controller
             ->get();
 
         // ----------------------------------------------------------------
-        // 4. Who to Follow
-        // ----------------------------------------------------------------
-        $whoToFollow = User::when(Auth::check(), function ($query) {
-            $query->where('id', '!=', Auth::id())
-                ->whereDoesntHave('followers', function ($q) {
-                    $q->where('follower_id', Auth::id());
-                });
-        })
-            ->inRandomOrder()
-            ->limit(5)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 5. My Communities & Suggested Communities
+        // 4. My Communities & Suggested Communities
         // ----------------------------------------------------------------
         $myCommunities = collect();
         if (Auth::check()) {
@@ -104,7 +93,6 @@ class PostController extends Controller
             'posts',
             'popularTags',
             'forumLeaders',
-            'whoToFollow',
             'activeTag',
             'search',
             'myCommunities',
@@ -229,6 +217,34 @@ class PostController extends Controller
         return redirect()
             ->route('community.posts.show', $post->id)
             ->with('success', __('community.reply_posted'));
+    }
+
+    // ====================================================================
+    // DESTROY — Delete an own post (forum post or summit log)
+    // ====================================================================
+
+    /**
+     * Delete a post owned by the authenticated user, including its
+     * uploaded image files. Related rows (tags, images, comments, likes)
+     * are removed by database cascade.
+     *
+     * Route: DELETE /community/posts/{post}
+     * Name:  community.posts.destroy
+     */
+    public function destroy(Post $post)
+    {
+        abort_unless($post->author_id === Auth::id(), 403);
+
+        foreach ($post->images as $image) {
+            if (! str_contains($image->image_url, 'http')) {
+                // image_url is stored either as "posts/x.jpg" or "storage/posts/x.jpg"
+                Storage::disk('public')->delete(Str::after($image->image_url, 'storage/'));
+            }
+        }
+
+        $post->delete();
+
+        return back()->with('success', __('community.post_deleted'));
     }
 
     // ====================================================================

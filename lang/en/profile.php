@@ -12,6 +12,7 @@ return [
     'not_available' => 'N/A',
     'default_bio' => 'Hello, I am using Sumorrow to explore and share my hiking journey!',
     'tab_posts' => 'Posts',
+    'tab_hikings' => 'Hikings',
     'tab_achievements' => 'Achievements',
     'tab_gear' => 'Gear List',
 
@@ -42,9 +43,18 @@ return [
     'no_achievements' => 'No achievements available yet.',
 
     // profile/partials/posts.blade.php
-    'hiking_history' => 'Hiking History',
-    'view_all_activities' => 'View All Activities',
-    'new_activity' => '+ New Activity',
+    'forum_posts' => 'Forum Posts',
+    'go_to_forum' => 'Go to Forum',
+    'no_forum_posts' => "You haven't posted anything in the forum yet.",
+    'view_post' => 'View Post',
+    'last_reviews' => 'Last Reviews',
+    'recent' => 'Recent',
+    'no_reviews_yet' => "You haven't reviewed any mountains yet.",
+
+    // profile/partials/hikings.blade.php
+    'hiking_history' => 'Summit Log',
+    'view_all_activities' => 'View All Summit Logs',
+    'new_activity' => '+ New Summit Log',
     'expedition_days_badge' => ':daysD Expedition',
     'duration_days_badge' => ':daysD',
     'route_label' => 'Route:',
@@ -52,26 +62,23 @@ return [
     'standard_trail' => 'Standard Trail',
     'image_alt_suffix' => 'image',
     'view_full_log' => 'View Full Log',
-    'no_hiking_history' => 'No hiking history yet.',
-    'top_mountains' => 'Top Mountains',
-    'popular' => 'Popular',
-    'no_popular_mountains' => 'No popular mountains available.',
+    'no_hiking_history' => 'No summit logs yet.',
 
     // profile/posts/index.blade.php
-    'my_activities' => 'My Activities',
-    'my_activities_subtitle' => 'All your hiking stories and upcoming expeditions',
+    'my_activities' => 'Summit Log',
+    'my_activities_subtitle' => 'All your summit logs and upcoming expeditions',
     'back_to_profile' => 'Back to Profile',
-    'no_activities_yet' => 'No activities yet',
-    'no_activities_text' => 'Start sharing your hiking adventures and experiences.',
-    'create_first_activity' => 'Create First Activity',
+    'no_activities_yet' => 'No summit logs yet',
+    'no_activities_text' => 'Start sharing your summit logs and hiking experiences.',
+    'create_first_activity' => 'Create First Summit Log',
     'post_image_alt' => 'Post Image',
     'location_varies' => 'Location varies',
 
     // profile/posts/create.blade.php
-    'new_activity_heading' => 'New Activity',
+    'new_activity_heading' => 'New Summit Log',
     'new_activity_subtitle' => 'Log your hiking trip or share your expedition plan.',
-    'back_to_activities' => 'Back to Activities',
-    'activity_title' => 'Activity Title',
+    'back_to_activities' => 'Back to Summit Log',
+    'activity_title' => 'Summit Log Title',
     'activity_title_placeholder' => 'e.g., Summit Attack to Mt. Rinjani',
     'mountain_optional' => 'Mountain (Optional)',
     'select_mountain' => '-- Select Mountain --',
@@ -83,8 +90,8 @@ return [
     'markdown_help' => 'You can use Markdown for formatting.',
     'photos' => 'Photos',
     'photos_help' => 'Select up to 12 images. Maximum 2MB per image to ensure successful upload.',
-    'post_activity' => 'Post Activity',
-    'activity_posted' => 'Activity posted!',
+    'post_activity' => 'Post Summit Log',
+    'activity_posted' => 'Summit log posted!',
 
     // profile/posts/show.blade.php
     'back' => 'Back',

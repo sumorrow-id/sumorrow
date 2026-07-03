@@ -12,7 +12,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePostController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -52,11 +51,6 @@ Route::middleware('redirect.admin')->group(function () {
 
     // Post detail / thread view (public — guests can read)
     Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
-
-    // Follow user toggle
-    Route::post('/users/{user}/follow', [UserController::class, 'toggleFollow'])
-        ->middleware('auth')
-        ->name('users.follow');
 
     Route::get('/api/docs', function () {
         if (! Auth::check()) {
@@ -129,6 +123,9 @@ Route::middleware('redirect.admin')->group(function () {
 
         // Community Forum — Toggle like on a post
         Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
+
+        // Delete an own post (forum post or summit log)
+        Route::delete('/community/posts/{post}', [PostController::class, 'destroy'])->name('community.posts.destroy');
 
         // Email Verification Configuration
         Route::prefix('email')->group(function () {

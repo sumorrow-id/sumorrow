@@ -314,6 +314,26 @@
                         </svg>
                     </button>
 
+                    {{-- Delete button — only for the post author --}}
+                    @auth
+                        @if (Auth::id() === $post->author_id)
+                            <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
+                                onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="hover:text-red-500 transition"
+                                    title="{{ __('community.delete_post') }}"
+                                    aria-label="{{ __('community.delete_post') }}">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
+
                 </div>
             </div>
         </div>
