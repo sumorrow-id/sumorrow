@@ -35,7 +35,8 @@ class HomeController extends Controller
                     'location' => $provinceName,
                     'elevation' => $mountain->elevation_masl,
                     'difficulty' => $mountain->difficulty ?? 'moderate',
-                    'image' => $firstImage?->image_url ?? $fallbackImage,
+                    'image_raw' => $rawImage,
+                    'has_real_image' => $this->isRealImage($rawImage),
                 ];
             })->values()->all();
 

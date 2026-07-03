@@ -11,6 +11,19 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-03 — branch: `feat/bilingual-localization`
+
+By: Claude Code
+
+**What changed**
+
+- Fixed a bad merge resolution in `HomeController` (merge `a2fe9d5`): the mountain-mapping closure still referenced the pre-merge `$firstImage`/`$fallbackImage` variables while the rest of the method used `main`'s `image_raw` + `has_real_image` cache shape, causing a 500 on `/home` and two CI test failures.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` — 7 passing.
+- Full suite: `php artisan test --compact` — 245 passing.
+
 ## 2026-07-03 — branch: `main`
 
 By: Codex
