@@ -112,6 +112,6 @@ class ExploreController extends Controller
         $avgRating = $mountain->ratings()->avg('score');
         $mountain->update(['avg_rating' => $avgRating]);
 
-        return back()->with('success', 'Your review has been submitted successfully.');
+        return back()->with('success', __('explore.review_submitted'));
     }
 }

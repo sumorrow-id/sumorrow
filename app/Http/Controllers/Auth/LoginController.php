@@ -46,7 +46,7 @@ class LoginController extends Controller
             return redirect()->route('home');
         }
 
-        return back()->withErrors(['email' => 'Email or password incorrect.'])->onlyInput('email');
+        return back()->withErrors(['email' => __('auth.invalid_credentials')])->onlyInput('email');
     }
 
     public function handleGoogleCallback()
@@ -64,7 +64,7 @@ class LoginController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return redirect('/login')->with('error', 'Gagal login menggunakan Google. Silakan coba lagi.');
+            return redirect('/login')->with('error', __('auth.google_login_failed'));
         }
     }
 

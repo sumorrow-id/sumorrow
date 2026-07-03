@@ -89,11 +89,11 @@ class CommunityController extends Controller
             $community->members()->attach($user->id, ['role' => 'member']);
 
             return redirect()->route('community', ['tab' => 'community'])
-                ->with('success', 'Welcome to '.$community->name.'!');
+                ->with('success', __('community.joined_community', ['name' => $community->name]));
         }
 
         return redirect()->route('community', ['tab' => 'community'])
-            ->with('info', 'You are already a member of this community.');
+            ->with('info', __('community.already_a_member'));
     }
 
     public function store(Request $request)
@@ -116,7 +116,7 @@ class CommunityController extends Controller
         $community->members()->attach(Auth::id(), ['role' => 'admin']);
 
         return redirect()->route('community', ['tab' => 'community'])
-            ->with('success', $community->name.' created successfully!');
+            ->with('success', __('community.community_created', ['name' => $community->name]));
     }
 
     public function leave(Community $community)
@@ -126,6 +126,6 @@ class CommunityController extends Controller
         $user->communities()->detach($community->id);
 
         return redirect()->route('community', ['tab' => 'community'])
-            ->with('info', 'You are not a member of this community.');
+            ->with('info', __('community.left_community'));
     }
 }

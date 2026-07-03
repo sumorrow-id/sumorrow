@@ -6,20 +6,20 @@
     <div class="relative rounded-2xl md:rounded-3xl overflow-hidden mb-6 md:mb-8 shadow-md">
 
         <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2670&auto=format&fit=crop"
-             alt="Mountain Background"
+             alt="{{ __('community.hero_image_alt') }}"
              class="absolute inset-0 w-full h-full object-cover z-0" />
 
         <div class="absolute inset-0 bg-[#03305c]/85 z-10"></div>
 
         <div class="relative z-20 px-6 pt-20 pb-6 md:px-12 md:pt-32 md:pb-8">
             <span class="text-white/90 text-xs md:text-sm font-bold tracking-widest uppercase mb-3 md:mb-4 block">
-                Forum Discussion
+                {{ __('community.forum_discussion_label') }}
             </span>
             <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 tracking-tight leading-tight max-w-3xl">
-                Climber Perspective:<br class="hidden sm:block">Alpine Fluidity
+                {{ __('community.hero_title_line1') }}<br class="hidden sm:block">{{ __('community.hero_title_line2') }}
             </h1>
             <p class="text-white/90 text-xs sm:text-sm md:text-base leading-relaxed max-w-3xl">
-                Join the conversation on technical ascent strategies, atmospheric pressure adaptation, and the collective wisdom of the high-altitude community.
+                {{ __('community.hero_description') }}
             </p>
         </div>
     </div>
@@ -32,19 +32,19 @@
                     data-forum-tab="explore"
                     id="tab-explore"
                     class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-[#094174] text-[#094174] font-bold whitespace-nowrap">
-                    Forum
+                    {{ __('community.tab_explore') }}
                 </button>
                 <button
                     data-forum-tab="community"
                     id="tab-community"
                     class="pb-3 border-b-2 transition-all duration-300 text-sm sm:text-base cursor-pointer border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap">
-                    My Community
+                    {{ __('community.my_community') }}
                 </button>
             </div>
 
             <button
                 class="mobile-sidebar-toggle pb-3 text-sm sm:text-base cursor-pointer text-gray-500 hover:text-[#094174] transition whitespace-nowrap flex items-center gap-1.5 lg:hidden">
-                <span class="font-bold">Discover</span>
+                <span class="font-bold">{{ __('community.discover') }}</span>
             </button>
         </div>
 
@@ -64,16 +64,16 @@
                 {{-- Top Bar: Title & Create Community Button --}}
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-heading">My Communities</h2>
-                        <p class="text-gray-500 text-sm mt-1">Communities you have joined or managed.</p>
+                        <h2 class="text-2xl font-bold text-heading">{{ __('community.my_communities_heading') }}</h2>
+                        <p class="text-gray-500 text-sm mt-1">{{ __('community.my_communities_subheading') }}</p>
                     </div>
-                    
+
                     @auth
                         <button class="open-create-community-modal bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
-                            Create Community
+                            {{ __('community.create_community') }}
                         </button>
                     @endauth
 
@@ -82,7 +82,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
-                            Create Community
+                            {{ __('community.create_community') }}
                         </a>
                     @endguest
                 </div>
@@ -95,8 +95,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM15 20H9m6 0h6" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-[#001E3A] mb-1">You haven't joined any community yet.</h3>
-                        <p class="text-gray-400 text-sm mb-4">Discover exciting climbing spaces through recommendations below!</p>
+                        <h3 class="text-lg font-bold text-[#001E3A] mb-1">{{ __('community.no_communities_joined') }}</h3>
+                        <p class="text-gray-400 text-sm mb-4">{{ __('community.discover_recommendations_text') }}</p>
                     </div>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -108,10 +108,10 @@
 
                 {{-- Section: Suggested For You --}}
                 <div class="mt-4 border-t border-gray-100 pt-8">
-                    <h3 class="text-xl font-bold text-[#001E3A] mb-4">Suggested For You</h3>
-                    
+                    <h3 class="text-xl font-bold text-[#001E3A] mb-4">{{ __('community.suggested_for_you') }}</h3>
+
                     @if ($suggestedCommunities->isEmpty())
-                        <p class="text-sm text-gray-400">No new recommendations available right now.</p>
+                        <p class="text-sm text-gray-400">{{ __('community.no_recommendations') }}</p>
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($suggestedCommunities as $suggested)
@@ -129,7 +129,7 @@
 <div id="modal-create-community" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-xs">
     <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-bold text-[#001E3A]">Create Community</h3>
+            <h3 class="text-2xl font-bold text-[#001E3A]">{{ __('community.create_community') }}</h3>
             <button type="button" class="close-create-community-modal text-gray-400 hover:text-gray-600 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -140,29 +140,29 @@
         <form method="POST" action="{{ route('community.store') }}" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">Community Name</label>
-                <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#094174] text-sm text-heading" placeholder="e.g., Summit Space" />
+                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">{{ __('community.community_name_label') }}</label>
+                <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#094174] text-sm text-heading" placeholder="{{ __('community.community_name_placeholder') }}" />
             </div>
 
             <div>
-                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">Description</label>
-                <textarea name="description" rows="3" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#094174] text-sm text-heading resize-none" placeholder="Describe your community..."></textarea>
+                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">{{ __('community.description_label') }}</label>
+                <textarea name="description" rows="3" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#094174] text-sm text-heading resize-none" placeholder="{{ __('community.community_description_placeholder') }}"></textarea>
             </div>
 
             <div>
-                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">Privacy</label>
+                <label class="block text-sm font-bold text-[#1a2b4c] mb-1">{{ __('community.privacy_label') }}</label>
                 <select name="privacy" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#094174] text-sm text-heading bg-white">
-                    <option value="public">Public - Anyone can join</option>
-                    <option value="private">Private - Invite only</option>
+                    <option value="public">{{ __('community.privacy_public_option') }}</option>
+                    <option value="private">{{ __('community.privacy_private_option') }}</option>
                 </select>
             </div>
 
             <div class="flex items-center gap-3 pt-2">
                 <button type="button" class="close-create-community-modal flex-1 px-4 py-2 border border-gray-200 text-gray-500 font-bold rounded-full hover:bg-gray-50 transition cursor-pointer">
-                    Cancel
+                    {{ __('common.cancel') }}
                 </button>
                 <button type="submit" class="flex-1 px-4 py-2 bg-[#094174] text-white font-bold rounded-full hover:bg-[#105DA3] transition shadow-md cursor-pointer">
-                    Create
+                    {{ __('community.create_button') }}
                 </button>
             </div>
         </form>
@@ -173,7 +173,7 @@
 <div id="mobile-sidebar-overlay" class="mobile-sidebar-toggle fixed inset-0 bg-black/50 z-100 hidden backdrop-blur-sm transition-opacity opacity-0"></div>
     <div id="mobile-sidebar-drawer" class="fixed top-0 right-0 h-full w-[85%] sm:w-[60%] max-w-sm bg-gray-50 z-110 transform translate-x-full transition-transform duration-300 overflow-y-auto lg:hidden">
         <div class="p-5 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0 z-10">
-            <h2 class="font-bold text-lg text-[#1a2b4c]">Discover</h2>
+            <h2 class="font-bold text-lg text-[#1a2b4c]">{{ __('community.discover') }}</h2>
             <button class="mobile-sidebar-toggle text-gray-400 hover:text-gray-600 transition p-1 bg-gray-100 rounded-full">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>

@@ -1,13 +1,12 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8 mt-6">
 
     <div class="space-y-6">
-        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-end mb-6">
-            <h2 class="text-2xl font-bold text-[#0F172A]">Hiking History</h2>
-            <div class="flex flex-wrap gap-x-4 gap-y-2 items-center">
-                <a href="{{ route('profile.posts.index') }}" class="text-sm font-bold text-[#2A5C9A] hover:underline whitespace-nowrap">View All Activities</a>
+        <div class="flex justify-between items-end mb-6">
+            <h2 class="text-2xl font-bold text-[#0F172A]">{{ __('profile.hiking_history') }}</h2>
+            <div class="flex gap-4 items-center">
+                <a href="{{ route('profile.posts.index') }}" class="text-sm font-bold text-[#2A5C9A] hover:underline">{{ __('profile.view_all_activities') }}</a>
                 <a href="{{ route('profile.posts.create') }}"
-                    class="bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2 px-4 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">+
-                    New Activity</a>
+                    class="bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2 px-4 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">{{ __('profile.new_activity') }}</a>
             </div>
         </div>
 
@@ -24,22 +23,22 @@
                             @if ($post->duration_days)
                                 <span
                                     class="bg-[#BDE0FE] text-[#1E40AF] text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap">
-                                    {{ $post->duration_days }}D Expedition
+                                    {{ __('profile.expedition_days_badge', ['days' => $post->duration_days]) }}
                                 </span>
                             @endif
                         </div>
 
                         <p class="text-[13px] text-gray-500 mt-1">
                             {{ $post->mountain?->province?->name ?? 'Indonesia' }} •
-                            {{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                            {{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}
                         </p>
 
                         @if ($post->route_name || isset($post->mountain->route))
                             <div class="flex items-center gap-2 mt-3 text-sm text-gray-600">
-                                <img src="{{ asset('images/profile/route.png') }}" alt="Route"
+                                <img src="{{ asset('images/profile/route.png') }}" alt="{{ __('profile.route_icon_alt') }}"
                                     class="w-4 h-4 object-contain">
-                                <span>Route:
-                                    {{ $post->route_name ?? ($post->mountain->route ?? 'Standard Trail') }}</span>
+                                <span>{{ __('profile.route_label') }}
+                                    {{ $post->route_name ?? ($post->mountain->route ?? __('profile.standard_trail')) }}</span>
                             </div>
                         @endif
 
@@ -56,7 +55,7 @@
                                 @if ($index == 3 && $post->images->count() > 4)
                                     <div
                                         class="relative w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group">
-                                        <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
+                                        <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} {{ __('profile.image_alt_suffix') }}"
                                             class="w-full h-full object-cover">
                                         <div
                                             class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-2xl group-hover:bg-black/70 transition">
@@ -64,7 +63,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} image"
+                                    <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" alt="{{ $post->title }} {{ __('profile.image_alt_suffix') }}"
                                         class="w-full aspect-4/3 sm:aspect-square rounded-xl md:rounded-2xl object-cover">
                                 @endif
                             @endforeach
@@ -73,14 +72,14 @@
 
                     <a href="{{ route('profile.posts.show', $post->id) }}"
                         class="w-full xl:w-auto text-center bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2.5 px-6 rounded-full transition shadow-md hover:shadow-lg hover:-translate-y-0.5 shrink-0">
-                        View Full Log
+                        {{ __('profile.view_full_log') }}
                     </a>
                 </div>
 
             </div>
         @empty
             <div class="bg-white rounded-3xl p-6 shadow-sm text-center py-12">
-                <p class="text-gray-500">No hiking history yet.</p>
+                <p class="text-gray-500">{{ __('profile.no_hiking_history') }}</p>
             </div>
         @endforelse
 
@@ -90,9 +89,9 @@
         <div
             class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] h-full flex flex-col">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-[#0F172A] text-lg">Top Mountains</h3>
+                <h3 class="font-bold text-[#0F172A] text-lg">{{ __('profile.top_mountains') }}</h3>
                 <span
-                    class="bg-gray-100 text-gray-500 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md">Popular</span>
+                    class="bg-gray-100 text-gray-500 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md">{{ __('profile.popular') }}</span>
             </div>
 
             <div class="grow flex flex-col gap-5">
@@ -123,7 +122,7 @@
                     @endforeach
                 @else
                     <div class="text-center py-6">
-                        <p class="text-sm text-gray-500">No popular mountains available.</p>
+                        <p class="text-sm text-gray-500">{{ __('profile.no_popular_mountains') }}</p>
                     </div>
                 @endif
             </div>

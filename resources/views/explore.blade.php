@@ -11,13 +11,13 @@
                 <div class="flex items-center justify-between lg:justify-start gap-2 mb-6 lg:mb-0">
                     <div class="flex items-center gap-2 lg:hidden">
                         <h2 class="font-bold text-xl text-[#001E3A]">
-                            Filter by
+                            {{ __('explore.filter_by') }}
                         </h2>
                     </div>
                     <div class="hidden lg:flex items-center gap-2">
-                        <img src="{{ asset('images/explore/sort.png') }}" alt="Sort Icon" class="w-5 h-5 object-contain" />
+                        <img src="{{ asset('images/explore/sort.png') }}" alt="{{ __('explore.sort_icon_alt') }}" class="w-5 h-5 object-contain" />
                         <h2 class="font-bold text-lg text-[#001E3A]">
-                            Refine Discovery
+                            {{ __('explore.refine_discovery') }}
                         </h2>
                     </div>
                     <button type="button" id="close-filter-btn" class="lg:hidden text-gray-500 hover:text-black">
@@ -29,7 +29,7 @@
 
                 <div class="mb-5 lg:mb-0">
                     <h3 class="text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase">
-                        Difficulty
+                        {{ __('explore.difficulty') }}
                     </h3>
                     <div class="flex flex-col gap-1">
                         @foreach (['easy', 'moderate', 'hard', 'strenuous'] as $difficulty)
@@ -37,14 +37,14 @@
                                 <input type="checkbox" name="difficulty[]" value="{{ $difficulty }}"
                                     @if(in_array($difficulty, request('difficulty', []))) checked @endif
                                     class="w-4 h-4 rounded border-gray-300 text-[#094174] focus:ring-[#094174]" />
-                                <span class="text-sm text-[#1a2b4c] font-medium capitalize">{{ $difficulty }}</span>
+                                <span class="text-sm text-[#1a2b4c] font-medium capitalize">{{ __('explore.difficulty_' . $difficulty) }}</span>
                             </label>
                         @endforeach
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase">Region</h3>
+                    <h3 class="text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase">{{ __('explore.region') }}</h3>
                     <div class="flex flex-col gap-1">
                         @foreach (['Sumatera', 'Jawa', 'Kalimantan', 'Sulawesi', 'Maluku', 'Papua', 'Bali & Nusa Tenggara'] as $region)
                             <label class="flex items-center gap-3 cursor-pointer py-1">
@@ -60,7 +60,7 @@
                 <div class="pt-4 hidden lg:block">
                     <button type="submit"
                         class="bg-[#094174] text-white font-bold text-sm py-2 px-6 rounded-full w-fit hover:bg-[#105DA3] transition shadow-md">
-                        Apply Filters
+                        {{ __('explore.apply_filters') }}
                     </button>
                 </div>
             </aside>
@@ -68,11 +68,11 @@
             <div class="w-full min-w-0">
                 <div class="mb-8 lg:mb-10 lg:ml-7 flex items-center gap-2">
                     <div class="flex items-center gap-3 bg-gray-200/60 rounded-full px-5 py-3 w-full">
-                        <img src="{{ asset('images/explore/search.png') }}" alt="Search Icon"
+                        <img src="{{ asset('images/explore/search.png') }}" alt="{{ __('explore.search_icon_alt') }}"
                             class="w-4 h-4 object-contain opacity-70" />
-                        <input id="search-input" type="text" name="search" value="{{ request('search') }}" placeholder="Find mountains"
+                        <input id="search-input" type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('explore.find_mountains_placeholder') }}"
                             class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 w-full text-sm text-[#1a2b4c] placeholder-gray-500 font-medium" />
-                        <button type="submit" class="hidden">Search</button>
+                        <button type="submit" class="hidden">{{ __('explore.search') }}</button>
                     </div>
                     <button type="button" id="mobile-filter-btn" class="lg:hidden flex items-center justify-center bg-gray-200/60 text-gray-500 rounded-full w-11 h-11 shrink-0 hover:bg-gray-300/60 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,7 +107,7 @@
                                         </span>
                                     </div>
                                     <div class="flex items-center gap-1">
-                                        <img src="{{ asset('images/explore/mountainelevation.png') }}" alt="Elevation"
+                                        <img src="{{ asset('images/explore/mountainelevation.png') }}" alt="{{ __('explore.elevation_alt') }}"
                                             class="h-4 w-4 object-contain" />
                                         <span class="text-xs font-bold text-[#094174]">{{ $mountain->elevation_masl }}
                                             mdpl</span>
@@ -116,14 +116,14 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#094174]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                         </svg>
-                                        <span class="text-xs font-bold text-[#094174] capitalize">{{ $mountain->difficulty }}</span>
+                                        <span class="text-xs font-bold text-[#094174] capitalize">{{ $mountain->difficulty && \Illuminate\Support\Facades\Lang::has('explore.difficulty_' . $mountain->difficulty) ? __('explore.difficulty_' . $mountain->difficulty) : $mountain->difficulty }}</span>
                                     </div>
                                     <div class="flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#094174]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        <span class="text-xs font-bold text-[#094174]">{{ optional($mountain->province)->name ?? 'Unknown Region' }}</span>
+                                        <span class="text-xs font-bold text-[#094174]">{{ optional($mountain->province)->name ?? __('explore.unknown_region') }}</span>
                                     </div>
                                 </div>
 
@@ -132,7 +132,7 @@
 
                                 <a href="{{ route('explore.show', $mountain->id) }}"
                                     class="block w-full text-center bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-2.5 rounded-full text-sm transition shadow-md mt-auto">
-                                    Explore Now
+                                    {{ __('explore.explore_now') }}
                                 </a>
                             </div>
                         </div>

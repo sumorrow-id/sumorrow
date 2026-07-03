@@ -11,11 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // The cache stores host-independent data only (raw disk paths, never
-        // asset() URLs). Absolute URLs are built per request further down —
-        // caching them once baked the first visitor's host/port into every
-        // image for a day, 404ing for anyone browsing on a different origin.
-        $cached = Cache::remember('mountains.home', now()->addDay(), function () {
+        $cached = Cache::remember('mountains.home.localized', now()->addDay(), function () {
             $mountains = Mountain::with(['province', 'images'])->get();
 
             $weatherData = $mountains->map(function ($mountain) {
@@ -37,8 +33,8 @@ class HomeController extends Controller
                     'id' => $mountain->id,
                     'name' => $mountain->name,
                     'location' => $provinceName,
-                    'elevation' => $mountain->elevation_masl ? $mountain->elevation_masl.' mdpl' : 'Unknown',
-                    'difficulty' => $mountain->difficulty ? ucfirst($mountain->difficulty) : 'Moderate',
+                    'elevation' => $mountain->elevation_masl,
+                    'difficulty' => $mountain->difficulty ?? 'moderate',
                     'image_raw' => $rawImage,
                     'has_real_image' => $this->isRealImage($rawImage),
                 ];

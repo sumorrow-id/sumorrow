@@ -54,25 +54,25 @@ class AdminController extends Controller
         ]);
 
         if ($user->id === $request->user()->id) {
-            return back()->with('error', 'You cannot change your own role.');
+            return back()->with('error', __('admin.cannot_change_own_role'));
         }
 
         // 'role' is guarded against mass assignment; set it explicitly on this admin-only path.
         $user->role = $validated['role'];
         $user->save();
 
-        return back()->with('success', "Role for {$user->username} updated to {$user->role}.");
+        return back()->with('success', __('admin.role_updated', ['username' => $user->username, 'role' => $user->role]));
     }
 
     public function destroyUser(Request $request, User $user): RedirectResponse
     {
         if ($user->id === $request->user()->id) {
-            return back()->with('error', 'You cannot delete your own account.');
+            return back()->with('error', __('admin.cannot_delete_own_account'));
         }
 
         $user->delete();
 
-        return back()->with('success', "User {$user->username} has been deleted.");
+        return back()->with('success', __('admin.user_deleted', ['username' => $user->username]));
     }
 
     public function exportUsers(): StreamedResponse
@@ -136,7 +136,7 @@ class AdminController extends Controller
 
         $mountain = Mountain::create($data);
 
-        return redirect()->route('admin.mountain-data')->with('success', "Mountain {$mountain->name} has been created.");
+        return redirect()->route('admin.mountain-data')->with('success', __('admin.mountain_created', ['name' => $mountain->name]));
     }
 
     public function editMountain(Mountain $mountain): View
@@ -152,14 +152,14 @@ class AdminController extends Controller
 
         $mountain->update($data);
 
-        return redirect()->route('admin.mountain-data')->with('success', "Mountain {$mountain->name} has been updated.");
+        return redirect()->route('admin.mountain-data')->with('success', __('admin.mountain_updated', ['name' => $mountain->name]));
     }
 
     public function destroyMountain(Mountain $mountain): RedirectResponse
     {
         $mountain->delete();
 
-        return back()->with('success', "Mountain {$mountain->name} has been deleted.");
+        return back()->with('success', __('admin.mountain_deleted', ['name' => $mountain->name]));
     }
 
     /**

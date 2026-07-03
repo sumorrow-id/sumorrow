@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Mountain - Sumorrow Admin')
-@section('page_title', 'Edit Mountain')
+@section('title', __('admin.edit_mountain_title') . ' - Sumorrow Admin')
+@section('page_title', __('admin.edit_mountain_title'))
 
 @section('admin_content')
 <header class="mb-10">
     <a href="{{ route('admin.mountain-data') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-summit-blue hover:underline">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-        Mountain Registry
+        {{ __('admin.mountain_registry') }}
     </a>
-    <h1 class="text-4xl font-extrabold text-heading mt-3">Edit {{ $mountain->name }}</h1>
-    <p class="text-sm text-lithic-blue mt-2">Changes are published to Explore and the API immediately.</p>
+    <h1 class="text-4xl font-extrabold text-heading mt-3">{{ __('admin.edit_mountain_heading', ['name' => $mountain->name]) }}</h1>
+    <p class="text-sm text-lithic-blue mt-2">{{ __('admin.edit_mountain_subtitle') }}</p>
 </header>
 
 <section class="bg-white rounded-3xl border border-morning-mist/70 shadow-sm p-8">

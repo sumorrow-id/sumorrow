@@ -7,20 +7,20 @@
 
     // Weight Category logic
     if ($totalWeight == 0) {
-        $loadType = 'EMPTY LOAD';
-        $loadDesc = 'Add gear to see your pack weight';
+        $loadType = __('gear.load_empty');
+        $loadDesc = __('gear.desc_empty');
         $maxWeight = 0;
     } elseif ($totalWeight < 10) {
-        $loadType = 'ULTRALIGHT LOAD';
-        $loadDesc = 'Optimized for speed and agility';
+        $loadType = __('gear.load_ultralight');
+        $loadDesc = __('gear.desc_ultralight');
         $maxWeight = 15;
     } elseif ($totalWeight <= 20) {
-        $loadType = 'MEDIUM LOAD';
-        $loadDesc = 'Optimized for 3-5 day expeditions';
+        $loadType = __('gear.load_medium');
+        $loadDesc = __('gear.desc_medium');
         $maxWeight = 20;
     } else {
-        $loadType = 'HEAVY LOAD';
-        $loadDesc = 'Heavy duty expedition';
+        $loadType = __('gear.load_heavy');
+        $loadDesc = __('gear.desc_heavy');
         $maxWeight = 35;
     }
 
@@ -57,11 +57,11 @@
         </div>
 
         <div class="relative z-10 p-4 sm:p-0">
-            <p class="text-[10px] sm:text-[10px] font-bold text-[#6D8A9F] tracking-widest uppercase mb-2">Sumorrow Inventory Core</p>
-            <h2 class="text-3xl sm:text-4xl font-normal text-[#094174] tracking-tight">Total Pack Weight:</h2>
+            <p class="text-[10px] sm:text-[10px] font-bold text-[#6D8A9F] tracking-widest uppercase mb-2">{{ __('gear.inventory_core') }}</p>
+            <h2 class="text-3xl sm:text-4xl font-normal text-[#094174] tracking-tight">{{ __('gear.total_pack_weight') }}</h2>
             <div class="flex items-baseline gap-2 mt-2">
                 <span class="text-6xl sm:text-7xl font-light text-[#5B9DC4] tracking-tighter">{{ number_format($totalWeight, 1) }}</span>
-                <span class="text-3xl text-[#6D8A9F] font-light">kg</span>
+                <span class="text-3xl text-[#6D8A9F] font-light">{{ __('gear.kg') }}</span>
             </div>
 
             <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end mt-8 sm:mt-12 gap-4 sm:gap-0">
@@ -71,7 +71,7 @@
                     <span class="text-xs sm:text-sm text-[#6D8A9F] mt-1 sm:mt-0 w-full sm:w-auto">{{ $loadDesc }}</span>
                 </div>
                 <div class="flex items-center gap-4 sm:gap-6 text-[10px] font-extrabold text-[#6D8A9F] uppercase tracking-wider w-full sm:w-auto justify-between sm:justify-end mt-2 sm:mt-0">
-                    <span>Limit ({{ $maxWeight }}kg)</span>
+                    <span>{{ __('gear.limit', ['weight' => $maxWeight]) }}</span>
                 </div>
             </div>
         </div>
@@ -84,22 +84,22 @@
             <div class="bg-[#E5E6FF] rounded-xl p-1.5 flex overflow-x-auto whitespace-nowrap hide-scrollbar mb-6 sm:mb-8 gap-1">
                 <button data-gear-filter="all" id="gear-btn-all"
                     class="gear-cat-btn px-6 py-2 bg-white font-bold text-[#8C4F34] shadow-sm rounded-lg text-[13px] transition shrink-0">
-                    All Gear
+                    {{ __('gear.all_gear') }}
                 </button>
                 @foreach($categories as $index => $cat)
                     <button data-gear-filter="{{ Str::slug($cat) }}" id="gear-btn-{{ Str::slug($cat) }}"
                         class="gear-cat-btn px-6 py-2 font-medium text-[#6B7280] hover:text-[#0F172A] rounded-lg text-[13px] transition shrink-0">
-                        {{ $cat }}
+                        {{ \Illuminate\Support\Facades\Lang::has('gear.category_'.Str::snake($cat)) ? __('gear.category_'.Str::snake($cat)) : $cat }}
                     </button>
                 @endforeach
             </div>
             @endif
 
             <div class="flex justify-between items-center mb-5 px-1">
-                <h3 class="text-base sm:text-lg font-bold text-[#0F172A]" id="gear-category-title">All Gear <span class="text-[13px] font-normal text-[#94A3B8] ml-1" id="gear-category-count">({{ $gears->count() }} items)</span></h3>
+                <h3 class="text-base sm:text-lg font-bold text-[#0F172A]" id="gear-category-title">{{ __('gear.all_gear') }} <span class="text-[13px] font-normal text-[#94A3B8] ml-1" id="gear-category-count">{{ __('gear.items_count', ['count' => $gears->count()]) }}</span></h3>
                 <button class="open-gear-modal-btn text-[12px] sm:text-[13px] font-bold text-[#094174] flex items-center gap-1 sm:gap-2 hover:text-blue-600 transition">
                     <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Add <span class="hidden sm:inline">New Gear</span>
+                    {{ __('gear.add') }} <span class="hidden sm:inline">{{ __('gear.new_gear') }}</span>
                 </button>
             </div>
 
@@ -112,14 +112,14 @@
                             </div>
                             <div class="flex-1 pr-4 sm:pr-0">
                                 <h4 class="text-[14px] font-bold text-[#0F172A] leading-tight">{{ $item->name }}</h4>
-                                <p class="text-[11px] text-[#94A3B8] mt-0.5 max-w-50 truncate sm:max-w-none">{{ $item->brand ?? 'No Brand' }}</p>
+                                <p class="text-[11px] text-[#94A3B8] mt-0.5 max-w-50 truncate sm:max-w-none">{{ $item->brand ?? __('gear.no_brand') }}</p>
                             </div>
                         </div>
 
                         <div class="flex items-center justify-between w-full sm:w-auto sm:ml-auto border-t sm:border-t-0 pt-3 sm:pt-0 mt-1 sm:mt-0 border-gray-100 gap-4">
                             <div class="text-left sm:text-right w-1/2 sm:w-auto">
-                                <p class="text-[14px] font-bold text-[#0F172A]">{{ number_format($item->weight_grams / 1000, 2) }} kg</p>
-                                <p class="text-[8px] font-extrabold text-[#94A3B8] uppercase mt-0.5 tracking-wider">Weight</p>
+                                <p class="text-[14px] font-bold text-[#0F172A]">{{ number_format($item->weight_grams / 1000, 2) }} {{ __('gear.kg') }}</p>
+                                <p class="text-[8px] font-extrabold text-[#94A3B8] uppercase mt-0.5 tracking-wider">{{ __('gear.weight') }}</p>
                             </div>
                             <div class="flex items-center justify-end gap-3 sm:gap-4 text-[#CBD5E1] w-1/2 sm:w-auto">
                                 <button
@@ -128,11 +128,11 @@
                                     data-gear-brand="{{ $item->brand ?? '' }}"
                                     data-gear-weight="{{ $item->weight_grams }}"
                                     data-gear-category="{{ $item->category }}"
-                                    class="hover:text-amber-600 transition" title="Edit Gear"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                                <form action="{{ route('gears.destroy', $item) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this gear?');">
+                                    class="hover:text-amber-600 transition" title="{{ __('gear.edit_gear') }}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                                <form action="{{ route('gears.destroy', $item) }}" method="POST" class="inline" onsubmit="return confirm({{ Illuminate\Support\Js::from(__('gear.confirm_delete')) }})">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="hover:text-red-500 transition" title="Delete Gear"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                    <button type="submit" class="hover:text-red-500 transition" title="{{ __('gear.delete_gear') }}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                                 </form>
                             </div>
                         </div>
@@ -142,11 +142,11 @@
                         <div class="w-16 h-16 bg-[#F8FAFC] rounded-2xl flex items-center justify-center mb-4 text-[#94A3B8] shadow-inner border border-gray-100">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         </div>
-                        <h4 class="text-[16px] font-bold text-[#0F172A] mb-2">Your pack is empty</h4>
-                        <p class="text-[#64748B] text-[13px] max-w-sm mx-auto leading-relaxed">Start building your inventory to track weight, analyze your loadout, and get smart recommendations for your next hike.</p>
+                        <h4 class="text-[16px] font-bold text-[#0F172A] mb-2">{{ __('gear.pack_empty') }}</h4>
+                        <p class="text-[#64748B] text-[13px] max-w-sm mx-auto leading-relaxed">{{ __('gear.pack_empty_text') }}</p>
                         <button class="open-gear-modal-btn mt-6 px-6 py-2.5 bg-[#094174] hover:bg-[#1E40AF] text-white text-[13px] font-bold rounded-xl transition shadow-md flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            Add Your First Gear
+                            {{ __('gear.add_first_gear') }}
                         </button>
                     </div>
                 @endforelse
@@ -156,32 +156,32 @@
                 <img src="{{ asset('images/profile/gear.jpeg') }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 max-w-sm">
-                    <h3 class="text-white text-[22px] font-light tracking-wide mb-1">Your Gear, Your Legacy.</h3>
-                    <p class="text-white/70 text-[11px] font-light leading-relaxed">Every gram counts when you're reaching for the clouds.<br>Keep your pack lean and your legs strong.</p>
+                    <h3 class="text-white text-[22px] font-light tracking-wide mb-1">{{ __('gear.tagline') }}</h3>
+                    <p class="text-white/70 text-[11px] font-light leading-relaxed">{!! __('gear.tagline_desc') !!}</p>
                 </div>
             </div>
         </div>
 
         <div class="flex flex-col gap-6 mt-8 xl:mt-0">
             <div class="bg-[#E5E6FF] rounded-3xl p-6 shadow-sm">
-                <h3 class="font-bold text-[#0F172A] text-[15px] mb-5">Weight Breakdown</h3>
+                <h3 class="font-bold text-[#0F172A] text-[15px] mb-5">{{ __('gear.weight_breakdown') }}</h3>
                 <ul class="space-y-3.5">
                     @foreach($gearsByCategory as $cat => $catGears)
                         <li class="flex justify-between items-center text-[13px]">
                             <div class="flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 rounded-full" style="background-color: {{ $categoryColors[$cat] ?? $categoryColors['default'] }};"></span>
-                                <span class="font-medium text-[#334155]">{{ $cat }}</span>
+                                <span class="font-medium text-[#334155]">{{ \Illuminate\Support\Facades\Lang::has('gear.category_'.Str::snake($cat)) ? __('gear.category_'.Str::snake($cat)) : $cat }}</span>
                             </div>
-                            <span class="font-bold text-[#0F172A]">{{ number_format($catGears->sum('weight_grams') / 1000, 2) }} kg</span>
+                            <span class="font-bold text-[#0F172A]">{{ number_format($catGears->sum('weight_grams') / 1000, 2) }} {{ __('gear.kg') }}</span>
                         </li>
                     @endforeach
                     @if($gearsByCategory->isEmpty())
-                        <li class="text-[#64748B] text-[13px] text-center italic py-4">Add gear to see breakdown</li>
+                        <li class="text-[#64748B] text-[13px] text-center italic py-4">{{ __('gear.no_breakdown') }}</li>
                     @endif
                 </ul>
                 <div class="mt-6 pt-4 border-t border-white/60 flex justify-between items-center">
-                    <span class="text-[10px] font-bold text-[#6D8A9F] tracking-widest uppercase">Base Weight</span>
-                    <span class="font-bold text-[#8C4F34] text-[14px] sm:text-[15px]">{{ number_format($totalWeight, 1) }} kg</span>
+                    <span class="text-[10px] font-bold text-[#6D8A9F] tracking-widest uppercase">{{ __('gear.base_weight') }}</span>
+                    <span class="font-bold text-[#8C4F34] text-[14px] sm:text-[15px]">{{ number_format($totalWeight, 1) }} {{ __('gear.kg') }}</span>
                 </div>
             </div>
             
@@ -190,10 +190,10 @@
                 <div class="bg-[#E9F7F1] rounded-[20px] p-5 shadow-sm">
                     <div class="flex items-center gap-2 mb-2">
                         <svg class="w-4 h-4 text-[#4A7C59]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <h3 class="text-[10px] font-extrabold text-[#4A7C59] tracking-widest uppercase">Efficiency Tip</h3>
+                        <h3 class="text-[10px] font-extrabold text-[#4A7C59] tracking-widest uppercase">{{ __('gear.efficiency_tip') }}</h3>
                     </div>
                     <p class="text-[12px] text-[#4A7C59]/80 leading-relaxed font-medium">
-                        "Your pack is quite heavy. Consider replacing your heaviest items or leaving non-essentials to prevent fatigue."
+                        "{{ __('gear.efficiency_tip_text') }}"
                     </p>
                 </div>
             @endif
@@ -209,7 +209,7 @@
     <!-- Modal Content -->
     <div class="relative bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 m-4 shadow-2xl transform transition-all">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-[#0F172A]" id="gear-modal-title">Add New Gear</h3>
+            <h3 class="text-xl font-bold text-[#0F172A]" id="gear-modal-title">{{ __('gear.add') }} {{ __('gear.new_gear') }}</h3>
             <button class="close-gear-modal-btn text-[#94A3B8] hover:text-[#0F172A] transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -231,37 +231,37 @@
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-[13px] font-bold text-[#334155] mb-1">Gear Name</label>
+                    <label class="block text-[13px] font-bold text-[#334155] mb-1">{{ __('gear.gear_name') }}</label>
                     <input type="text" name="name" id="gear-name" required value="{{ old('name') }}"
                         class="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-3 text-sm text-[#0F172A] focus:ring-2 focus:ring-[#094174]/20 transition"
-                        placeholder="e.g. Osprey Atmos AG 65">
+                        placeholder="{{ __('gear.gear_name_placeholder') }}">
                 </div>
-                
+
                 <div>
-                    <label class="block text-[13px] font-bold text-[#334155] mb-1">Brand (Optional)</label>
+                    <label class="block text-[13px] font-bold text-[#334155] mb-1">{{ __('gear.brand_optional') }}</label>
                     <input type="text" name="brand" id="gear-brand" value="{{ old('brand') }}"
                         class="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-3 text-sm text-[#0F172A] focus:ring-2 focus:ring-[#094174]/20 transition"
-                        placeholder="e.g. Osprey">
+                        placeholder="{{ __('gear.brand_placeholder') }}">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[13px] font-bold text-[#334155] mb-1">Weight (grams)</label>
+                        <label class="block text-[13px] font-bold text-[#334155] mb-1">{{ __('gear.weight_grams') }}</label>
                         <input type="number" name="weight_grams" id="gear-weight" required min="0" value="{{ old('weight_grams') }}"
                             class="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-3 text-sm text-[#0F172A] focus:ring-2 focus:ring-[#094174]/20 transition"
-                            placeholder="e.g. 2100">
+                            placeholder="{{ __('gear.weight_placeholder') }}">
                     </div>
                     <div>
-                        <label class="block text-[13px] font-bold text-[#334155] mb-1">Category</label>
+                        <label class="block text-[13px] font-bold text-[#334155] mb-1">{{ __('gear.category') }}</label>
                         <select name="category" id="gear-category" required
                             class="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-3 text-sm text-[#0F172A] focus:ring-2 focus:ring-[#094174]/20 transition appearance-none">
-                            <option value="Backpack">Backpack</option>
-                            <option value="Tent">Tent</option>
-                            <option value="Apparel">Apparel</option>
-                            <option value="Footwear">Footwear</option>
-                            <option value="Cooking">Cooking</option>
-                            <option value="Accessories">Accessories</option>
-                            <option value="Other">Other</option>
+                            <option value="Backpack">{{ __('gear.category_backpack') }}</option>
+                            <option value="Tent">{{ __('gear.category_tent') }}</option>
+                            <option value="Apparel">{{ __('gear.category_apparel') }}</option>
+                            <option value="Footwear">{{ __('gear.category_footwear') }}</option>
+                            <option value="Cooking">{{ __('gear.category_cooking') }}</option>
+                            <option value="Accessories">{{ __('gear.category_accessories') }}</option>
+                            <option value="Other">{{ __('gear.category_other') }}</option>
                         </select>
                     </div>
                 </div>
@@ -269,11 +269,11 @@
 
             <div class="mt-8 flex gap-3">
                 <button type="button" class="close-gear-modal-btn flex-1 px-4 py-3 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#475569] font-bold rounded-xl text-sm transition">
-                    Cancel
+                    {{ __('common.cancel') }}
                 </button>
-                <button type="submit" 
+                <button type="submit"
                     class="flex-1 px-4 py-3 bg-[#094174] hover:bg-[#1E40AF] text-white font-bold rounded-xl text-sm transition shadow-md">
-                    Save Gear
+                    {{ __('gear.save_gear') }}
                 </button>
             </div>
         </form>

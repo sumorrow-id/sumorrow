@@ -4,13 +4,13 @@
 <div class="w-[95%] max-w-350 mx-auto pt-32 pb-8 px-4 sm:px-8">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold text-[#0F172A] tracking-wide mb-2">My Activities</h1>
-            <p class="text-[#6D8A9F] text-sm md:text-base">All your hiking stories and upcoming expeditions</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-[#0F172A] tracking-wide mb-2">{{ __('profile.my_activities') }}</h1>
+            <p class="text-[#6D8A9F] text-sm md:text-base">{{ __('profile.my_activities_subtitle') }}</p>
         </div>
         <div class="flex gap-4">
-            <a href="{{ route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline self-center">Back to Profile</a>
+            <a href="{{ route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline self-center">{{ __('profile.back_to_profile') }}</a>
             <a href="{{ route('profile.posts.create') }}" class="bg-[#094174] hover:bg-[#105DA3] text-white text-sm font-bold py-2 px-6 rounded-full transition shadow-md hover:shadow-lg whitespace-nowrap">
-                + New Activity
+                {{ __('profile.new_activity') }}
             </a>
         </div>
     </div>
@@ -27,7 +27,7 @@
                 <!-- Images Carousel if applicable, keeping simple for lists -->
                 @if($post->images && $post->images->count() > 0)
                     <div class="w-full h-48 rounded-2xl overflow-hidden mb-4 bg-gray-100">
-                        <img src="{{ str_contains($post->images->first()->image_url, 'http') ? $post->images->first()->image_url : asset('storage/' . $post->images->first()->image_url) }}" alt="Post Image" class="w-full h-full object-cover">
+                        <img src="{{ str_contains($post->images->first()->image_url, 'http') ? $post->images->first()->image_url : asset('storage/' . $post->images->first()->image_url) }}" alt="{{ __('profile.post_image_alt') }}" class="w-full h-full object-cover">
                     </div>
                 @endif
                 
@@ -38,7 +38,7 @@
                         </h3>
                         @if ($post->duration_days)
                             <span class="bg-[#BDE0FE] text-[#1E40AF] text-[10px] font-semibold px-2 py-1 rounded-full whitespace-nowrap mt-1">
-                                {{ $post->duration_days }}D
+                                {{ __('profile.duration_days_badge', ['days' => $post->duration_days]) }}
                             </span>
                         @endif
                     </div>
@@ -48,8 +48,8 @@
                     @endif
                     
                     <p class="text-[12px] text-gray-500 mb-3">
-                        {{ $post->mountain?->province?->name ?? 'Location varies' }} • 
-                        {{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}
+                        {{ $post->mountain?->province?->name ?? __('profile.location_varies') }} •
+                        {{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}
                     </p>
 
                     <div class="text-sm text-gray-600 line-clamp-3">
@@ -64,10 +64,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">No activities yet</h3>
-                <p class="text-gray-500 mb-6">Start sharing your hiking adventures and experiences.</p>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('profile.no_activities_yet') }}</h3>
+                <p class="text-gray-500 mb-6">{{ __('profile.no_activities_text') }}</p>
                 <a href="{{ route('profile.posts.create') }}" class="inline-block bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-2 px-6 rounded-full transition shadow-md">
-                    Create First Activity
+                    {{ __('profile.create_first_activity') }}
                 </a>
             </div>
         @endforelse

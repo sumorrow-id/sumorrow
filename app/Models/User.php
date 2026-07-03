@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,12 +63,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return ! is_null($this->created_at) || ! is_null($this->google_id);
     }
 
-    /**
-     * Kirim notifikasi reset password menggunakan template kustom (Bahasa Indonesia).
-     */
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify((new ResetPasswordNotification($token))->locale(app()->getLocale()));
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify((new VerifyEmail)->locale(app()->getLocale()));
     }
 
     public function ratings(): HasMany

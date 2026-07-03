@@ -161,11 +161,11 @@ class PostController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'gif_url' => 'nullable|url|max:2048',
         ], [
-            'body.required_without_all' => 'Please write something, attach an image, or select a GIF before posting.',
-            'images.required_without_all' => 'Please write something, attach an image, or select a GIF before posting.',
-            'category_tags.required' => 'Please select at least one category tag.',
-            'images.*.image' => 'One or more files are not valid images.',
-            'images.*.max' => 'Each image must be smaller than 4 MB.',
+            'body.required_without_all' => __('community.validation_post_content'),
+            'images.required_without_all' => __('community.validation_post_content'),
+            'category_tags.required' => __('community.validation_category_tags'),
+            'images.*.image' => __('community.validation_image'),
+            'images.*.max' => __('community.validation_image_size'),
         ]);
 
         /** @var User $user */
@@ -197,7 +197,7 @@ class PostController extends Controller
 
         return redirect()
             ->route('community.explore')
-            ->with('success', 'Your post has been published!');
+            ->with('success', __('community.post_published'));
     }
 
     // ====================================================================
@@ -228,7 +228,7 @@ class PostController extends Controller
 
         return redirect()
             ->route('community.posts.show', $post->id)
-            ->with('success', 'Reply posted!');
+            ->with('success', __('community.reply_posted'));
     }
 
     // ====================================================================

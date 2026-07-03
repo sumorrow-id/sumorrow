@@ -24,6 +24,6 @@ class AdminMiddleware
             return response()->json(['message' => 'Forbidden.'], 403);
         }
 
-        return redirect('/')->with('error', 'Unauthorized access.');
+        return redirect('/')->with('error', __('admin.unauthorized_access'));
     }
 }

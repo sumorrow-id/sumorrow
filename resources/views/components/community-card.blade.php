@@ -21,7 +21,7 @@
         <div class="absolute top-3 left-3">
             <span
                 class="inline-block px-3 py-1 text-xs font-bold text-white rounded-full {{ $community->privacy === 'public' ? 'bg-green-500/80' : 'bg-purple-500/80' }}">
-                {{ strtoupper($community->privacy) }}
+                {{ __('community.privacy_'.$community->privacy) }}
             </span>
         </div>
     </div>
@@ -44,7 +44,7 @@
                 <path
                     d="M12 12a3 3 0 100-6 3 3 0 000 6zm0 1.5c-4.42 0-8 2.686-8 6 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-3.314-3.58-6-8-6z" />
             </svg>
-            <span class="font-medium">{{ $community->getMemberCount() }} Members</span>
+            <span class="font-medium">{{ __('community.members_count', ['count' => $community->getMemberCount()]) }}</span>
         </div>
 
         <!-- Action Button -->
@@ -53,7 +53,7 @@
                 @csrf
                 <button type="submit"
                     class="w-full py-2 px-4 bg-red-500/10 text-red-600 font-bold text-sm rounded-lg hover:bg-red-500/20 transition border border-red-200">
-                    Leave Community
+                    {{ __('community.leave_community_button') }}
                 </button>
             </form>
         @else
@@ -61,7 +61,7 @@
                 @csrf
                 <button type="submit"
                     class="w-full py-2 px-4 bg-[#094174] text-white font-bold text-sm rounded-lg hover:bg-[#105DA3] transition shadow-md">
-                    Join Community
+                    {{ __('community.join_community_button') }}
                 </button>
             </form>
         @endif

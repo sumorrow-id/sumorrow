@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mountain;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +11,7 @@ class ProfilePostController extends Controller
 {
     public function index()
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $posts = $user->posts()
@@ -19,19 +20,20 @@ class ProfilePostController extends Controller
             }])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+
         return view('profile.posts.index', compact('posts'));
     }
 
     public function create()
     {
         $mountains = Mountain::orderBy('name')->get();
+
         return view('profile.posts.create', compact('mountains'));
     }
 
     public function show($id)
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $post = $user->posts()
@@ -54,7 +56,7 @@ class ProfilePostController extends Controller
             'images.*' => 'image|max:2048', // Enforce 2MB matching PHP default max file size
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $post = $user->posts()->create($request->only(
@@ -66,11 +68,11 @@ class ProfilePostController extends Controller
                 $path = $image->store('posts', 'public');
                 $post->images()->create([
                     'image_url' => $path,
-                    'position' => $index
+                    'position' => $index,
                 ]);
             }
         }
 
-        return redirect()->route('profile.posts.index')->with('success', 'Activity posted!');
+        return redirect()->route('profile.posts.index')->with('success', __('profile.activity_posted'));
     }
 }

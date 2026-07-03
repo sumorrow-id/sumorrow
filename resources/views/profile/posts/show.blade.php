@@ -7,7 +7,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back
+            {{ __('profile.back') }}
         </a>
     </div>
 
@@ -20,7 +20,7 @@
                 
                 @if ($post->duration_days)
                     <span class="bg-[#BDE0FE] text-[#1E40AF] text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap self-start md:self-auto">
-                        {{ $post->duration_days }}D Expedition
+                        {{ __('profile.expedition_days_badge', ['days' => $post->duration_days]) }}
                     </span>
                 @endif
             </div>
@@ -31,11 +31,11 @@
                         <a href="{{ route('explore.show', $post->mountain->id) }}" class="font-semibold text-[#094174] hover:underline">
                             {{ $post->mountain->name }}
                         </a>
-                        <span>• {{ $post->mountain->province?->name ?? 'Location varies' }}</span>
+                        <span>• {{ $post->mountain->province?->name ?? __('profile.location_varies') }}</span>
                     </div>
                 @endif
                 <div class="flex items-center gap-1.5 border-l pl-4 border-gray-200">
-                    <span>{{ $post->climbing_date ? $post->climbing_date->format('M d, Y') : $post->created_at->format('M d, Y') }}</span>
+                    <span>{{ $post->climbing_date ? $post->climbing_date->translatedFormat('M d, Y') : $post->created_at->translatedFormat('M d, Y') }}</span>
                 </div>
             </div>
             
@@ -45,7 +45,7 @@
                      class="w-10 h-10 rounded-full object-cover bg-gray-200">
                 <div>
                     <p class="font-bold text-[#0F172A] text-sm">{{ $post->author->username }}</p>
-                    <p class="text-xs text-gray-500">Author</p>
+                    <p class="text-xs text-gray-500">{{ __('profile.author') }}</p>
                 </div>
             </div>
         </div>
@@ -56,12 +56,12 @@
 
         @if ($post->images->count() > 0)
             <div class="space-y-4">
-                <h3 class="font-bold text-lg text-[#0F172A]">Photos ({{ $post->images->count() }})</h3>
+                <h3 class="font-bold text-lg text-[#0F172A]">{{ __('profile.photos_count', ['count' => $post->images->count()]) }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach ($post->images as $image)
                         <a href="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" target="_blank" class="block aspect-square overflow-hidden rounded-2xl bg-gray-100 group">
-                            <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}" 
-                                 alt="Post photo" 
+                            <img src="{{ str_contains($image->image_url, 'http') ? $image->image_url : asset('storage/' . $image->image_url) }}"
+                                 alt="{{ __('profile.post_photo_alt') }}"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </a>
                     @endforeach

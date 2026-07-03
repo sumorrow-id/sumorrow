@@ -10,8 +10,8 @@
             
             <!-- Left Side: Image Section -->
             <div class="hidden md:block md:w-1/2 relative">
-                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80" 
-                    alt="Mountain Background" 
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80"
+                    alt="{{ __('auth.login_mountain_background_alt') }}"
                     class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/5"></div>
             </div>
@@ -20,9 +20,9 @@
             <div class="w-full md:w-1/2 bg-white p-8 sm:p-14 flex flex-col justify-center">
 
                 <h1 class="text-4xl sm:text-5xl font-bold text-[#094174] mb-2 text-center md:text-left tracking-tight">
-                    Sign In
+                    {{ __('auth.login_heading') }}
                 </h1>
-                <p class="text-gray-400 text-sm mb-10 text-center md:text-left font-medium">Ready for your next summit?</p>
+                <p class="text-gray-400 text-sm mb-10 text-center md:text-left font-medium">{{ __('auth.login_subheading') }}</p>
 
                 <!-- Login Form -->
                 <form action="{{ url('/login') }}" method="POST" class="space-y-6 mb-8">
@@ -40,7 +40,7 @@
                         </div>
                         <input type="email" name="email" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-4 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
-                            placeholder="Enter your email">
+                            placeholder="{{ __('auth.login_email_placeholder') }}">
                     </div>
 
                     {{-- Input Password  --}}
@@ -51,7 +51,7 @@
                         
                         <input type="password" id="password" name="password" required
                             class="w-full bg-[#F8F9FA] border border-gray-100 rounded-2xl py-4 pl-14 pr-14 focus:outline-none focus:border-[#094174] focus:ring-1 focus:ring-[#094174] transition placeholder:text-gray-400 text-m text-[#1a2b4c] font-medium"
-                            placeholder="Enter your password">
+                            placeholder="{{ __('auth.login_password_placeholder') }}">
 
                         <button type="button" id="toggleBtn" class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#094174] transition-colors focus:outline-none">
                             <i class="fa-solid fa-eye-slash text-lg" id="eyeIcon"></i>
@@ -70,36 +70,36 @@
                                 class="w-4 h-4 rounded cursor-pointer"
                                 style="accent-color: #094174;">
                             <label for="remember" class="ml-2 text-sm text-gray-400 cursor-pointer select-none">
-                                Remember Me
+                                {{ __('auth.login_remember_me') }}
                             </label>
                         </div>
                         <div class="text-right">
-                            <a href="{{ route('password.request') }}" class="text-[#094174] text-sm font-bold hover:underline opacity-80">Forgot password?</a>
+                            <a href="{{ route('password.request') }}" class="text-[#094174] text-sm font-bold hover:underline opacity-80">{{ __('auth.login_forgot_password') }}</a>
                         </div>
                     </div>
 
-                    <button type="submit" 
+                    <button type="submit"
                         class="w-full bg-[#094174] hover:bg-[#073056] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#094174]/20 transition transform active:scale-[0.97] text-m tracking-wide mt-2">
-                        Login to Account
+                        {{ __('auth.login_submit') }}
                     </button>
                 </form>
 
                 <!-- Divider (OR) -->
                 <div class="flex items-center gap-3 mb-6"> {{-- Jarak bawah dikurangi dikit --}}
                     <div class="flex-1 border-t-2 border-dashed border-gray-200"></div>
-                    <span class="text-gray-300 text-xs font-bold tracking-widest uppercase">Or</span>
+                    <span class="text-gray-300 text-xs font-bold tracking-widest uppercase">{{ __('auth.login_divider_or') }}</span>
                     <div class="flex-1 border-t-2 border-dashed border-gray-200"></div>
                 </div>
 
                 <!-- Google Login Button -->
                 <a href="{{ route('google.redirect') }}" class="w-full bg-white text-[#1a2b4c] font-bold py-4 px-6 rounded-2xl shadow-sm flex items-center justify-center gap-3 hover:bg-gray-50 transition border border-gray-100 active:scale-[0.98]">
                     <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="w-8 h-8" alt="Google">
-                    <span class="text-m">Continue with Google</span>
+                    <span class="text-m">{{ __('auth.login_continue_with_google') }}</span>
                 </a>
 
                 <!-- Create Account Link -->
                 <p class="text-center text-sm text-gray-400 mt-10 font-medium">
-                    Don't have account yet? <a href="{{route('register')}}" class="text-[#094174] font-bold hover:underline">Create an account</a>
+                    {{ __('auth.login_no_account') }} <a href="{{route('register')}}" class="text-[#094174] font-bold hover:underline">{{ __('auth.login_create_account') }}</a>
                 </p>
             </div>
         </div>
