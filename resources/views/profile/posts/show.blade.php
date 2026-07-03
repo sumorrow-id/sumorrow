@@ -40,11 +40,11 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <img src="{{ $post->author->avatar_url ? (str_contains($post->author->avatar_url, 'http') ? $post->author->avatar_url : asset('storage/' . $post->author->avatar_url)) : 'https://ui-avatars.com/api/?name=' . urlencode(substr($post->author->username, 0, 2)) }}" 
-                     alt="{{ $post->author->username }}" 
+                <img src="{{ $post->user->avatar_url ? (str_contains($post->user->avatar_url, 'http') ? $post->user->avatar_url : asset('storage/' . $post->user->avatar_url)) : 'https://ui-avatars.com/api/?name=' . urlencode(substr($post->user->username, 0, 2)) }}" 
+                     alt="{{ $post->user->username }}" 
                      class="w-10 h-10 rounded-full object-cover bg-gray-200">
                 <div>
-                    <p class="font-bold text-[#0F172A] text-sm">{{ $post->author->username }}</p>
+                    <p class="font-bold text-[#0F172A] text-sm">{{ $post->user->username }}</p>
                     <p class="text-xs text-gray-500">Author</p>
                 </div>
             </div>

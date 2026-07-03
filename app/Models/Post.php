@@ -14,9 +14,10 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'author_id',
+        'user_id',
         'mountain_id',
         'climbing_date',
+        'community_id',
         'duration_days',
         'title',
         'body',
@@ -31,9 +32,9 @@ class Post extends Model
         ];
     }
 
-    public function author(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function mountain(): BelongsTo
@@ -69,6 +70,11 @@ class Post extends Model
     public function saves(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'post_saves')->withTimestamps();
+    }
+    
+    public function community()
+    {
+        return $this->belongsTo(Community::class, 'community_id');
     }
 
     /**

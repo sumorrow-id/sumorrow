@@ -44,20 +44,20 @@ class AdminControllerTest extends TestCase
         ], $overrides));
     }
 
-    private function makePost(User $author, array $overrides = []): Post
+    private function makePost(User $user, array $overrides = []): Post
     {
         return Post::create(array_merge([
-            'author_id' => $author->id,
+            'user_id' => $user->id,
             'title' => 'Sample Post',
             'body' => 'Sample body content.',
         ], $overrides));
     }
 
-    private function reply(Post $post, User $author): PostReply
+    private function reply(Post $post, User $user): PostReply
     {
         return PostReply::create([
             'post_id' => $post->id,
-            'author_id' => $author->id,
+            'user_id' => $user->id,
             'content' => 'A reply.',
         ]);
     }

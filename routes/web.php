@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\EventController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,11 +37,11 @@ Route::middleware('throttle:weather')->group(function () {
 
 /*
 --------------------------------------------------------------------------
-Community Forum Explore Tab Routes
+Community Forum Tab Routes
 --------------------------------------------------------------------------
 */
-// Main explore feed (supports ?tag= query filter)
-Route::get('/community/explore', [PostController::class, 'index'])->name('community.explore');
+// Main forum global (supports ?tag= query filter)
+Route::get('/community/forum', [PostController::class, 'index'])->name('community.forum');
 
 // Post detail / thread view (public — guests can read)
 Route::get('/community/posts/{post}', [PostController::class, 'show'])->name('community.posts.show');
@@ -101,6 +102,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
     Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
     Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
+    Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');
+    Route::patch('/community/{community}/update-image', [CommunityController::class, 'updateImage'])->name('community.update-image');
+    
+    // Forum Khusus MyCommunity
+    // Route::get('/community/mycommunity/{community}/forum', [CommunityController::class, 'showCommunityForum'])->name('community.forum.show');
+    
+    // Create & Delete Post
+    Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
+    Route::delete('/community/posts/{post}', [PostController::class, 'destroy'])->name('community.posts.destroy');
+    
+    // Event Khusus MyCommunity (Create & Delete Event)
+    Route::post('/community/{community}/events', [EventController::class, 'store'])->name('community.events.store');
+    Route::delete('/community/events/{event}', [EventController::class, 'destroy'])->name('community.events.destroy');
 
     // Gear
     Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
@@ -115,9 +129,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
     Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
     Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
-
-    // Community Forum — Store a new quick post from the Explore feed composer
-    Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
 
     // Community Forum — Store a comment on a specific post
     Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->name('community.posts.comments.store');

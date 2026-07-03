@@ -3,6 +3,7 @@
 ## Entities
 
 ### PROVINCE
+
 ```
 PROVINCE {
   int id PK
@@ -11,6 +12,7 @@ PROVINCE {
 ```
 
 ### MOUNTAIN
+
 ```
 MOUNTAIN {
   int id PK
@@ -31,6 +33,7 @@ MOUNTAIN {
 > **Note:** If a mountain has multiple access routes, each route is represented as a separate MOUNTAIN row with a different name (e.g., "Semeru via Ranu Pane", "Semeru via Tumpang"). Route-specific fields (`length_km`, `elevation_gain_m`, `elevation_masl`) reflect the attributes of that particular route.
 
 ### MOUNTAIN_IMAGE
+
 ```
 MOUNTAIN_IMAGE {
   int id PK
@@ -44,6 +47,7 @@ MOUNTAIN_IMAGE {
 ```
 
 ### BASECAMP
+
 ```
 BASECAMP {
   int id PK
@@ -57,6 +61,7 @@ BASECAMP {
 > ⚠️ **Model drift:** `App\Models\Basecamp::$fillable` currently lists `regency_id`, `base_elevation_masl`, `length_km`, `elevation_gain_m`, and `est_duration_minutes`, none of which exist in the `basecamps` table created by the migration. Likewise, `App\Models\Regency` and the `regencies` relations on `Province`/`Basecamp` reference a `regencies` table that has no migration. Either drop the unbacked fields/relations or add the migrations — see the code-review notes accompanying this update.
 
 ### MOUNTAIN_RATING
+
 ```
 MOUNTAIN_RATING {
   int id PK
@@ -70,6 +75,7 @@ MOUNTAIN_RATING {
 ```
 
 ### COMMENT
+
 ```
 COMMENT {
   int id PK
@@ -82,6 +88,7 @@ COMMENT {
 ```
 
 ### USER
+
 ```
 USER {
   uuid id PK
@@ -97,10 +104,11 @@ USER {
 ```
 
 ### POST
+
 ```
 POST {
   int id PK
-  uuid author_id FK → USER.id
+  uuid user_id FK → USER.id
   string title
   text body                -- full-text searchable
   timestamp created_at
@@ -109,6 +117,7 @@ POST {
 ```
 
 ### POST_IMAGE
+
 ```
 POST_IMAGE {
   int id PK
@@ -121,11 +130,12 @@ POST_IMAGE {
 ```
 
 ### POST_REPLY
+
 ```
 POST_REPLY {
   int id PK
   int post_id FK → POST.id
-  uuid author_id FK → USER.id
+  uuid user_id FK → USER.id
   int parent_reply_id FK → POST_REPLY.id  -- nullable (null = top-level reply)
   text content
   timestamp created_at
@@ -134,6 +144,7 @@ POST_REPLY {
 ```
 
 ### POST_TAG
+
 ```
 POST_TAG {
   int id PK
@@ -148,19 +159,23 @@ POST_TAG {
 ## Relationships
 
 ### Administrative hierarchy
+
 - PROVINCE → MOUNTAIN (one-to-many): one province has many mountains
 
 ### Mountain core
+
 - MOUNTAIN → MOUNTAIN_IMAGE (one-to-many): one mountain has many images
 - MOUNTAIN → BASECAMP (one-to-many): one mountain has many basecamps (entry points)
 
 ### Mountain interactions
+
 - MOUNTAIN → MOUNTAIN_RATING (one-to-many): one mountain receives many ratings
 - USER → MOUNTAIN_RATING (one-to-many): one user can rate many mountains
 - MOUNTAIN → COMMENT (one-to-many): one mountain receives many comments
 - USER → COMMENT (one-to-many): one user can write many comments
 
 ### Forum
+
 - USER → POST (one-to-many): one user can author many posts
 - POST → POST_IMAGE (one-to-many): one post has many images
 - POST → POST_REPLY (one-to-many): one post has many replies
@@ -173,6 +188,7 @@ POST_TAG {
 ## Constraints
 
 ### Unique constraints
+
 - MOUNTAIN_RATING → UNIQUE (user_id, mountain_id): one user can only rate each mountain once
 - MOUNTAIN_IMAGE → UNIQUE (mountain_id, position): no two images on the same mountain share the same position
 - POST_IMAGE → UNIQUE (post_id, position): no two images on the same post share the same position
@@ -182,10 +198,12 @@ POST_TAG {
 - PROVINCE.name → UNIQUE: no duplicate province names
 
 ### Check constraints
+
 - MOUNTAIN_RATING.score → CHECK (score BETWEEN 1 AND 5): score must be a value from 1 to 5
 - MOUNTAIN.difficulty → CHECK (difficulty IN ('easy', 'moderate', 'hard', 'strenuous')): only valid difficulty levels allowed
 
 ### Nullable fields
+
 - USER.avatar_url → nullable: user may not have a profile photo
 - USER.google_id → nullable: only OAuth-linked accounts carry a Google subject id
 - USER.password_hash → nullable: OAuth-only accounts have no local password
@@ -195,6 +213,7 @@ POST_TAG {
 - POST_REPLY.parent_reply_id → nullable: null means it is a top-level reply directly under the post; a value means it is a nested reply to another reply
 
 ### Default values
+
 - MOUNTAIN.is_active → default false: mountains are assumed inactive unless stated otherwise
 - MOUNTAIN.avg_rating → default 0: no ratings yet
 - MOUNTAIN_IMAGE.is_cover → default false: only one image per mountain should be the cover
@@ -204,6 +223,7 @@ POST_TAG {
 ## Indexes
 
 ### Foreign key indexes
+
 These should be created on every FK column since they are frequently used in JOIN operations:
 
 - MOUNTAIN (province_id)
@@ -211,12 +231,13 @@ These should be created on every FK column since they are frequently used in JOI
 - BASECAMP (mountain_id)
 - MOUNTAIN_RATING (mountain_id), MOUNTAIN_RATING (user_id)
 - COMMENT (mountain_id), COMMENT (user_id)
-- POST (author_id)
+- POST (user_id)
 - POST_IMAGE (post_id)
-- POST_REPLY (post_id), POST_REPLY (author_id), POST_REPLY (parent_reply_id)
+- POST_REPLY (post_id), POST_REPLY (user_id), POST_REPLY (parent_reply_id)
 - POST_TAG (post_id)
 
 ### Filter indexes
+
 Columns frequently used in WHERE clauses:
 
 - MOUNTAIN (is_active): filter active/inactive volcanoes
@@ -227,6 +248,7 @@ Columns frequently used in WHERE clauses:
 - POST (created_at): sort forum posts by newest
 
 ### Full-text search indexes
+
 For keyword search functionality:
 
 - POST (title, body): search forum posts by keyword — use a GIN index in PostgreSQL
@@ -239,16 +261,19 @@ For keyword search functionality:
 ## Design Notes
 
 ### avg_rating maintenance strategy
+
 - MOUNTAIN.avg_rating is a denormalized cache. It is kept in sync via **database triggers** created in the `2026_04_06_000500_create_mountain_ratings_table` migration.
 - A driver-specific trigger fires AFTER INSERT/UPDATE/DELETE on MOUNTAIN_RATING and recomputes `AVG(score)` for the affected `mountain_id` (and the old `mountain_id` when the rating is re-pointed during UPDATE).
 - The score range (1–5) is enforced by a `CHECK` constraint on MySQL/PostgreSQL and by an equivalent `BEFORE INSERT/UPDATE` trigger on SQLite, where `ALTER TABLE ADD CONSTRAINT` is not supported.
 
 ### POST_REPLY depth limit
+
 - Cap at 2 levels deep (reply to post → reply to reply)
 - Enforced at the application layer in `App\Models\PostReply::booted()` (validates `parent_reply_id` belongs to the same post and is itself top-level).
 - A matching MySQL `BEFORE INSERT/UPDATE` trigger (`post_replies_depth_guard_*`) provides the same guard at the database layer for MySQL deployments. SQLite/PostgreSQL deployments rely only on the application-level guard.
 
 ### Multiple routes per mountain
+
 - Each distinct hiking route is stored as its own MOUNTAIN row
 - Use a consistent naming convention to group variants, e.g.: `"Semeru via Ranu Pane"`, `"Semeru via Tumpang"`
 - Route-specific data (`length_km`, `elevation_gain_m`, `elevation_masl`) lives on each MOUNTAIN row

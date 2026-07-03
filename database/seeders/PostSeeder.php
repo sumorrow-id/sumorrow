@@ -30,7 +30,7 @@ class PostSeeder extends Seeder
         if ($semeru) {
             $post = Post::updateOrCreate(
                 [
-                    'author_id' => $user->id,
+                    'user_id' => $user->id,
                     'title' => 'Conquering Semeru',
                     'mountain_id' => $semeru->id,
                 ],
@@ -60,7 +60,7 @@ class PostSeeder extends Seeder
         if ($merapi) {
             $post2 = Post::updateOrCreate(
                 [
-                    'author_id' => $user->id,
+                    'user_id' => $user->id,
                     'title' => 'A day in Merapi',
                     'mountain_id' => $merapi->id,
                 ],

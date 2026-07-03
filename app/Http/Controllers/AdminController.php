@@ -14,7 +14,7 @@ class AdminController extends Controller
         $recentUsers = User::orderBy('created_at', 'desc')->take(5)->get();
         $newUsersCount = User::where('created_at', '>=', now()->subDays(7))->count();
         $forumPostsCount = Post::count();
-        $recentPosts = Post::with('author')->latest()->take(5)->get();
+        $recentPosts = Post::with('user')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('recentUsers', 'newUsersCount', 'forumPostsCount', 'recentPosts'));
     }
@@ -24,7 +24,7 @@ class AdminController extends Controller
         $totalPosts = Post::count();
         $postsToday = Post::whereDate('created_at', now()->toDateString())->count();
         $totalReplies = PostReply::count();
-        $recentPosts = Post::with('author')->latest()->take(10)->get();
+        $recentPosts = Post::with('user')->latest()->take(10)->get();
 
         return view('admin.forum-moderation', compact('totalPosts', 'postsToday', 'totalReplies', 'recentPosts'));
     }

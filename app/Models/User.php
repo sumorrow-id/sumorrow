@@ -82,16 +82,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class, 'author_id');
+        return $this->hasMany(Post::class, 'user_id');
     }
 
     public function postReplies(): HasMany
     {
-        return $this->hasMany(PostReply::class, 'author_id');
+        return $this->hasMany(PostReply::class, 'user_id');
     }
 
     public function communities() {
-        return $this->belongsToMany(Community::class);
+        return $this->belongsToMany(Community::class, 'community_user');
     }
     public function gears(): HasMany
     {
@@ -116,5 +116,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function achievements() // BelongsToMany relationship
     {
         return $this->belongsToMany(Achievement::class)->withPivot('unlocked_at');
+    }
+
+    public function creator()
+    {
+        // Menambahkan 'created_by' sebagai foreign key ketiga
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

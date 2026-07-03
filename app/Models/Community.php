@@ -17,6 +17,7 @@ class Community extends Model
         'slug',
         'privacy',
         'image_url',
+        'banner_url',
         'created_by',
     ];
 
@@ -51,5 +52,10 @@ class Community extends Model
     public function getMemberCount(): int
     {
         return $this->members()->count();
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
     }
 }

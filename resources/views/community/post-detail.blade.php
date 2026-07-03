@@ -4,7 +4,7 @@
     <div class="w-[95%] sm:w-[90%] max-w-2xl mx-auto pt-24 md:pt-32 pb-16">
 
         {{-- Back to Feed Link --}}
-        <a href="{{ route('community.explore') }}"
+        <a href="{{ route('community.forum') }}"
            class="inline-flex items-center gap-1.5 text-gray-500 font-semibold text-sm mb-6 transition-colors duration-200 hover:text-[#094174] group">
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
@@ -22,16 +22,28 @@
             {{-- Author Row --}}
             <div class="flex items-start justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
+                    <img src="{{ $post->user->avatar_url ? asset($post->user->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
                         class="w-11 h-11 rounded-full object-cover" alt="Avatar">
                     <div>
                         <div class="flex items-center gap-1">
-                            <span class="font-bold text-[#1a2b4c] text-base">{{ $post->author->username }}</span>
+                            <span class="font-bold text-[#1a2b4c] text-base">{{ $post->user->username }}</span>
                         </div>
                         <div class="text-xs text-gray-500">
-                            {{ '@' . strtolower(str_replace(' ', '', $post->author->username)) }}</div>
+                            {{ '@' . strtolower(str_replace(' ', '', $post->user->username)) }}</div>
                     </div>
                 </div>
+
+                @auth
+                    @if(auth()->id() === $post->user_id)
+                        <form action="{{ route('community.posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Hapus postingan?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-semibold">
+                                Delete
+                            </button>
+                        </form>
+                    @endif
+                @endauth
                 {{-- Category Tag Badge --}}
                 @if ($post->category_tag)
                     <div class="bg-[#e5f5fa] text-[#29b6f6] text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
@@ -42,7 +54,7 @@
 
             {{-- Post Body --}}
             <p class="text-[#1a2b4c] text-base leading-relaxed mb-4">{{ $post->body }}</p>
-
+            
             {{-- Post Images --}}
             @if ($post->images && $post->images->isNotEmpty())
                 <div class="mb-4 flex flex-col gap-4">
@@ -73,6 +85,19 @@
             <div class="flex items-center gap-6 text-sm text-gray-500">
                 <span><strong class="text-[#1a2b4c]">{{ $commentsCount }}</strong> Replies</span>
             </div>
+            @auth
+                @if(auth()->id() === $post->user_id)
+                    <form action="{{ route('community.posts.destroy', $post->id) }}" method="POST" 
+                        onsubmit="return confirm('Are you sure you want to delete this post?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold transition">
+                            Delete Post
+                        </button>
+                    </form>
+                @endif
+            @endauth
+                    
         </div>
 
         {{-- ================================================================

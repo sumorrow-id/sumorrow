@@ -16,6 +16,8 @@ class EventController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
+        dd($request->all());
+
         $imagePath = null;
         if ($request->hasFile('image')) {
             // Menyimpan file dan mendapatkan path-nya

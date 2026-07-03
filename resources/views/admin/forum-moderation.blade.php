@@ -43,8 +43,8 @@
                 @forelse ($recentPosts as $post)
                     <tr>
                         <td class="px-8 py-6">
-                            <p class="text-sm font-bold text-deep-midnight">{{ $post->author->name ?? 'Unknown User' }}</p>
-                            <p class="text-xs text-lithic-blue">{{ $post->author->email ?? '-' }}</p>
+                            <p class="text-sm font-bold text-deep-midnight">{{ $post->user->name ?? 'Unknown User' }}</p>
+                            <p class="text-xs text-lithic-blue">{{ $post->user->email ?? '-' }}</p>
                         </td>
                         <td class="px-8 py-6">
                             <p class="text-sm font-bold text-deep-midnight">{{ \Illuminate\Support\Str::limit($post->title, 60) }}</p>

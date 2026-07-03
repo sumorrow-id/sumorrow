@@ -2,7 +2,7 @@
 
 
     {{-- Search Bar --}}
-    <form method="GET" action="{{ route('community.explore') }}" role="search">
+    <form method="GET" action="{{ route('community.forum') }}" role="search">
         <div class="relative w-full">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,8 +76,8 @@
             @php
                 $isActive   = request('tag') === $tag->keyword;
                 $filterHref = $isActive
-                    ? route('community.explore')
-                    : route('community.explore', ['tag' => $tag->keyword]);
+                    ? route('community.forum')
+                    : route('community.forum', ['tag' => $tag->keyword]);
 
                 // Figma Color Palette Mapping
                 $tagConfig = match(true) {

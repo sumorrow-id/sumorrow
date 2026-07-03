@@ -22,9 +22,9 @@ class PostControllerTest extends TestCase
             'category_tags' => ['Hiking Stories'],
         ]);
 
-        $response->assertRedirect(route('community.explore'));
+        $response->assertRedirect(route('community.forum'));
         $this->assertDatabaseHas('posts', [
-            'author_id' => $user->id,
+            'user_id' => $user->id,
             'body' => 'This is a test post body',
         ]);
         $this->assertDatabaseHas('post_tags', [
@@ -45,10 +45,10 @@ class PostControllerTest extends TestCase
             'images' => [$file1, $file2],
         ]);
 
-        $response->assertRedirect(route('community.explore'));
+        $response->assertRedirect(route('community.forum'));
 
         // Post should be created
-        $post = Post::where('author_id', $user->id)->first();
+        $post = Post::where('user_id', $user->id)->first();
         $this->assertNotNull($post);
 
         // Images should be stored in the DB
@@ -98,7 +98,7 @@ class PostControllerTest extends TestCase
                 'body' => 'My draft text',
                 'category_tags' => ['Hiking Stories'],
             ]])
-            ->get(route('community.explore'));
+            ->get(route('community.forum'));
 
         $response->assertOk();
         // The typed text must survive a failed-validation reload.

@@ -44,14 +44,14 @@
             <tr>
                 <td class="px-8 py-6">
                     <div class="flex items-center gap-3">
-                        @if($post->author->avatar_url)
-                            <img src="{{ $post->author->avatar_url }}" alt="avatar" class="w-8 h-8 rounded-full border border-morning-mist">
+                        @if($post->user->avatar_url)
+                            <img src="{{ $post->user->avatar_url }}" alt="avatar" class="w-8 h-8 rounded-full border border-morning-mist">
                         @else
                             <div class="w-8 h-8 rounded-full bg-summit-blue flex items-center justify-center text-white text-xs font-bold">
-                                {{ strtoupper(substr($post->author->username, 0, 1)) }}
+                                {{ strtoupper(substr($post->user->username, 0, 1)) }}
                             </div>
                         @endif
-                        <span class="text-sm font-bold text-deep-midnight">{{ $post->author->username }}</span>
+                        <span class="text-sm font-bold text-deep-midnight">{{ $post->user->username }}</span>
                     </div>
                 </td>
                 <td class="px-8 py-6">

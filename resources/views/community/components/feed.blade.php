@@ -2,7 +2,7 @@
 
     @if (request('tag'))
         <div class="flex items-center gap-2 pb-2 mb-2 border-b border-gray-100">
-            <a href="{{ route('community.explore') }}"
+            <a href="{{ route('community.forum') }}"
                 class="p-1.5 hover:bg-gray-100 rounded-full transition text-gray-500 hover:text-[#1a2b4c]"
                 aria-label="Clear filter">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,9 @@
         <form id="post-composer-form" method="POST" action="{{ route('community.posts.store') }}"
             enctype="multipart/form-data">
             @csrf
-
+            @isset($community)
+                <input type="hidden" name="community_id" value="{{ $community->id }}">
+            @endisset
             {{-- ── Row 1: Avatar + text input + toolbar ── --}}
             <div class="flex items-center gap-3 mb-3">
                 <img src="{{ Auth::check() && Auth::user()->avatar_url ? asset(Auth::user()->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
@@ -165,7 +167,7 @@
             </div>
         </form>
 
-
+        
         {{-- ================================================================
              COMPOSER JAVASCRIPT
              ================================================================ --}}
@@ -464,17 +466,18 @@
             data-tag="{{ $post->tags->first()->keyword ?? '' }}">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
+                    <img src="{{ $post->user->avatar_url ? asset($post->user->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
                         class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" alt="Avatar">
                     <div>
                         <div class="flex items-center gap-1">
                             <span
-                                class="font-bold text-[#1a2b4c] text-sm md:text-base">{{ $post->author->username }}</span>
+                                class="font-bold text-[#1a2b4c] text-sm md:text-base">{{ $post->user->username }}</span>
                         </div>
                         <div class="text-xs text-gray-500">
-                            {{ '@' . strtolower(str_replace(' ', '', $post->author->username)) }}</div>
+                            {{ '@' . strtolower(str_replace(' ', '', $post->user->username)) }}</div>
                     </div>
                 </div>
+
                 {{-- Tags Badge(s) --}}
                 <div class="flex flex-wrap items-center justify-end gap-2">
                     @foreach ($post->tags as $tag)
@@ -508,7 +511,7 @@
 
             <p class="text-[#1a2b4c] text-sm md:text-base mb-2">
                 {{ $post->body }}
-            </p>
+            </p>             
 
             {{-- Post Images --}}
             @if ($post->images->isNotEmpty())
@@ -584,7 +587,6 @@
 
                 </div>
                 <div class="flex items-center gap-3 sm:gap-4">
-
                     @auth
                         <button type="button" data-post-id="{{ $post->id }}"
                             data-save-url="{{ route('community.posts.save', $post->id) }}"
@@ -623,7 +625,18 @@
                             </path>
                         </svg>
                     </button>
-
+                     
+                    @auth
+                        @if(auth()->id() === $post->user_id)
+                            <form action="{{ route('community.posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Hapus?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-semibold">
+                                    Delete
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </div>
@@ -790,5 +803,6 @@
                     });
             });
         });
+        
     })();
 </script>

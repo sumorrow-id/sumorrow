@@ -58,7 +58,7 @@ class AchievementService
                 case 'Visual Storyteller':
                     // Shared 10 or more stunning photos of your climbing journeys.
                     $unlocked = PostImage::whereHas('post', function($q) use ($user) {
-                        $q->where('author_id', $user->id);
+                        $q->where('user_id', $user->id);
                     })->count() >= 10;
                     break;
                     

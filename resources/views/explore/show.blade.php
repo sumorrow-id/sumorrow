@@ -620,5 +620,9 @@
                     { dt: Date.now() / 1000 + 172800, main: { temp: 20 }, weather: [{ icon: '10d', main: 'Rain' }] },
                 ]));
         });
+
+        function toggleModal(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
     </script>
 @endsection

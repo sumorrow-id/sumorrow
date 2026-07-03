@@ -26,13 +26,9 @@ class PostController extends Controller
     ];
 
     // ====================================================================
-    // INDEX — Explore feed
+    // INDEX — Forum feed
     // ====================================================================
 
-    /**
-     * Display the Explore feed.
-     * Display the Explore feed.
-     */
     public function index(Request $request)
     {
         $activeTag = $request->query('tag');
@@ -40,7 +36,7 @@ class PostController extends Controller
 
         // ----------------------------------------------------------------
         // 1. Main Feed Query
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes', 'saves']);
+        $postsQuery = Post::query()->whereNull('community_id')->with(['user', 'tags', 'images', 'likes', 'saves']);
 
         if (Auth::check()) {
             $postsQuery->withExists(['saves as is_saved' => function ($query) {
@@ -119,6 +115,18 @@ class PostController extends Controller
         ));
     }
 
+    // Tambahkan method ini di PostController.php untuk komunitas
+    // public function indexByCommunity($communityId)
+    // {
+    //     // Hanya ambil post yang milik komunitas ini
+    //     $posts = Post::where('community_id', $communityId)
+    //                 ->with(['user', 'tags', 'images'])
+    //                 ->latest()
+    //                 ->get();
+                    
+    //     return view('community.show', compact('posts', 'communityId'));
+    // }
+
     // ====================================================================
     // SHOW — Post detail / thread page
     // ====================================================================
@@ -131,10 +139,10 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->load([
-            'author',
+            'user',
             'tags',
             'images',
-            'comments.user',   // thread replies with their authors
+            'comments.user',   // thread replies with their users
         ]);
 
         $comments      = $post->comments;
@@ -160,18 +168,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             // A post must have at least a body, images, OR a gif
             'body'            => 'nullable|required_without_all:images,gif_url|string|max:5000',
-            'category_tags'   => 'required|array|min:1',
+            'category_tags'   => 'nullable|array',
             'category_tags.*' => ['string', 'in:' . implode(',', self::CATEGORY_TAGS)],
             'images'          => 'nullable|required_without_all:body,gif_url|array|max:10',
             'images.*'        => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'gif_url'         => 'nullable|url|max:2048',
+            'community_id'    => 'nullable|exists:communities,id',
         ], [
             'body.required_without_all'   => 'Please write something, attach an image, or select a GIF before posting.',
             'images.required_without_all' => 'Please write something, attach an image, or select a GIF before posting.',
-            'category_tags.required'      => 'Please select at least one category tag.',
             'images.*.image'              => 'One or more files are not valid images.',
             'images.*.max'                => 'Each image must be smaller than 4 MB.',
         ]);
@@ -181,14 +189,18 @@ class PostController extends Controller
 
         // Create the post
         $post = $user->posts()->create([
-            'title'   => '',
-            'body'    => $request->body ?? '',
-            'gif_url' => $request->gif_url,
+            'title'        => '',
+            'body'         => $request->body ?? '',
+            'gif_url'      => $request->gif_url,
+            // Jika community_id dari request kosong, simpan sebagai null secara eksplisit
+            'community_id' => $request->filled('community_id') ? $request->community_id : null,
         ]);
 
-        // Attach category tags
-        foreach ($request->category_tags as $tag) {
-            $post->tags()->create(['keyword' => $tag]);
+        // Attach category tags klo ada
+        if ($request->has('category_tags')) {
+            foreach ($request->category_tags as $tag) {
+                $post->tags()->create(['keyword' => $tag]);
+            }
         }
 
         // Store every uploaded image and attach to the post
@@ -202,9 +214,12 @@ class PostController extends Controller
                 ]);
             }
         }
-
+        if ($request->has('community_id') && $request->community_id) {
+            return redirect()->route('community.show', $request->community_id)
+                     ->with('success', 'Your post has been published to the community!');
+        }
         return redirect()
-            ->route('community.explore')
+            ->route('community.forum')
             ->with('success', 'Your post has been published!');
     }
 
@@ -278,5 +293,33 @@ class PostController extends Controller
         return response()->json([
             'saved' => $post->saves()->where('user_id', auth()->id())->exists(),
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $post = \App\Models\Post::findOrFail($id);
+        // Cek apakah user adalah pemilik post
+        if (auth()->id() !== (int)$post->user_id) {
+            return back()->with('error', 'Unauthorized action.');
+        }
+
+        // Hapus gambar terkait
+        if ($post->images) {
+            foreach ($post->images as $image) {
+                Storage::delete(str_replace('/storage/', '', $image->image_url));
+            }
+        }
+
+        $post->delete();
+
+        // Logika Redirect Pintar:
+        // Jika post punya community_id, kembali ke forum komunitas tersebut
+        if ($post->community_id) {
+            return redirect()->route('community.show', $post->community_id)
+                            ->with('success', 'Post deleted successfully.');
+        }
+
+        // Jika tidak, kembali ke forum global
+        return redirect()->route('community.index')->with('success', 'Post deleted successfully.');
     }
 }

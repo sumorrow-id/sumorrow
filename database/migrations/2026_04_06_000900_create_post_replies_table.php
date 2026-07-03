@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('post_replies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
-            $table->foreignUuid('author_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('parent_reply_id')->nullable()->constrained('post_replies')->nullOnDelete();
             $table->text('content');
             $table->timestamps();

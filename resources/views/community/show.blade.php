@@ -115,13 +115,29 @@
                     
                 </div>
                 
-                {{-- Sidebar internal info detail --}}
-                <div class="hidden lg:block space-y-4">
-                    <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs">
-                        <h4 class="font-bold text-sm text-[#001E3A] mb-3">Target Climbing Details</h4>
-                        <div class="space-y-3 text-xs">
-                            <div class="flex justify-between py-2 border-b border-gray-50"><span class="text-gray-400">Mountain</span><span class="font-semibold text-gray-700">Prau via Patakbanteng</span></div>
-                            <div class="flex justify-between py-2 border-b border-gray-50"><span class="text-gray-400">Elevation</span><span class="font-semibold text-gray-700">2,565 MASL</span></div>
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                            <span class="mr-2"></span> Rekomendasi Gunung
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            @foreach($recommendedMountains as $mountain)
+                                <a href="#" class="block group">
+                                    <div class="flex items-center gap-3">
+                                        {{-- Placeholder gambar jika ada --}}
+                                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0"></div>
+                                        
+                                        <div>
+                                            <p class="font-semibold text-gray-700 group-hover:text-blue-600 transition">
+                                                {{ $mountain->name }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">{{ $mountain->elevation }} MASL</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                @if(!$loop->last) <hr class="border-gray-100"> @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -168,10 +184,36 @@
                 
                 {{-- Tombol ini sekarang HANYA memerlukan @auth, bukan @if(admin) --}}
                 @auth
-                    <button onclick="toggleModal('event-modal')" class="bg-[#094174] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#073660] transition cursor-pointer shadow-md flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                        Create Event
+                    {{-- Tempatkan tombol ini di dekat header "Upcoming Community Events" --}}
+                    <button type="button" onclick="toggleModal('event-modal')" 
+                            class="bg-[#094174] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#073660] transition">
+                        + Create Event
                     </button>
+
+                    {{-- Modal Event (Pastikan di luar form lain) --}}
+                    <div id="event-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+                        <form action="{{ route('community.events.store', $community->id) }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-3xl w-full max-w-md shadow-2xl">
+                            @csrf
+                            <h2 class="text-lg font-bold mb-4">Create New Event</h2>
+                            
+                            @if ($errors->any())
+                                <div class="text-red-500 text-xs mb-2">
+                                    @foreach ($errors->all() as $error) <p>{{ $error }}</p> @endforeach
+                                </div>
+                            @endif
+
+                            <input type="text" name="title" placeholder="Title" class="w-full mb-3 border p-2 rounded" required>
+                            <input type="datetime-local" name="event_date" class="w-full mb-3 border p-2 rounded" required>
+                            <input type="text" name="location" placeholder="Location" class="w-full mb-3 border p-2 rounded" required>
+                            <textarea name="description" placeholder="Description" class="w-full mb-3 border p-2 rounded" required></textarea>
+                            <input type="file" name="image" class="w-full mb-3">
+
+                            <div class="flex gap-2">
+                                <button type="button" onclick="toggleModal('event-modal')" class="flex-1 py-2 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100">Cancel</button>
+                                <button type="submit" class="flex-1 py-2 rounded-xl text-sm font-bold bg-[#094174] text-white">Publish</button>
+                            </div>
+                        </form>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition cursor-pointer">
                         Login to Create Event
@@ -208,7 +250,7 @@
                             
                             <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-4">
                                 <div class="text-xs text-gray-400 font-medium">
-                                    Created by: {{ $event->author->name ?? 'Member' }}
+                                    Created by: {{ $event->user->name ?? 'Member' }}
                                 </div>
                                 <button class="bg-gray-50 text-[#094174] px-5 py-2 rounded-xl text-sm font-bold hover:bg-blue-100 transition cursor-pointer">
                                     Details
@@ -285,22 +327,7 @@
             </button>
         </form>
     </div>
-    <div id="event-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-        <form action="{{ route('community.events.store', $community) }}" method="POST" class="bg-white p-6 rounded-3xl w-full max-w-md shadow-2xl">
-            @csrf
-            <h2 class="text-lg font-bold mb-4">Create New Event</h2>
-            
-            <input type="text" name="title" placeholder="Event Name" class="w-full mb-3 p-3 bg-gray-50 rounded-xl text-sm border-none focus:ring-2 focus:ring-[#094174]" required>
-            <input type="datetime-local" name="event_date" class="w-full mb-3 p-3 bg-gray-50 rounded-xl text-sm border-none focus:ring-2 focus:ring-[#094174]" required>
-            <input type="text" name="location" placeholder="Location" class="w-full mb-3 p-3 bg-gray-50 rounded-xl text-sm border-none focus:ring-2 focus:ring-[#094174]" required>
-            <textarea name="description" placeholder="Short description..." class="w-full mb-4 p-3 bg-gray-50 rounded-xl text-sm border-none focus:ring-2 focus:ring-[#094174]" rows="3"></textarea>
-            
-            <div class="flex gap-2">
-                <button type="button" onclick="toggleModal('event-modal')" class="flex-1 py-2 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100">Cancel</button>
-                <button type="submit" class="flex-1 py-2 rounded-xl text-sm font-bold bg-[#094174] text-white hover:bg-[#073660]">Publish</button>
-            </div>
-        </form>
-    </div>
+    
 </div>
 
 {{-- Tambahan Javascript Pendukung --}}

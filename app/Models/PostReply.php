@@ -14,7 +14,7 @@ class PostReply extends Model
 
     protected $fillable = [
         'post_id',
-        'author_id',
+        'user_id',
         'parent_reply_id',
         'content',
     ];
@@ -53,9 +53,9 @@ class PostReply extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function author(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function parentReply(): BelongsTo

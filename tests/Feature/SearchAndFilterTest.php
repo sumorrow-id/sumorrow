@@ -17,7 +17,7 @@ class SearchAndFilterTest extends TestCase
         $post1 = $user->posts()->create(['title' => '', 'body' => 'I love hiking up Everest']);
         $post2 = $user->posts()->create(['title' => '', 'body' => 'Camping near the lake was peaceful']);
 
-        $response = $this->actingAs($user)->get(route('community.explore', ['search' => 'Everest']));
+        $response = $this->actingAs($user)->get(route('community.forum', ['search' => 'Everest']));
 
         $response->assertStatus(200);
         $response->assertSee('I love hiking up Everest');
@@ -33,7 +33,7 @@ class SearchAndFilterTest extends TestCase
         $post2 = $user->posts()->create(['title' => '', 'body' => 'Lost in the woods']);
         $post2->tags()->create(['keyword' => 'Safety & Survival']);
 
-        $response = $this->actingAs($user)->get(route('community.explore', ['tag' => 'Gear & Equipment']));
+        $response = $this->actingAs($user)->get(route('community.forum', ['tag' => 'Gear & Equipment']));
 
         $response->assertStatus(200);
         $response->assertSee('Mountain gear review');
@@ -50,7 +50,7 @@ class SearchAndFilterTest extends TestCase
         $post2->tags()->create(['keyword' => 'Hiking Stories']);
 
         // Only post1 matches both "Mountain" and "Gear & Equipment"
-        $response = $this->actingAs($user)->get(route('community.explore', [
+        $response = $this->actingAs($user)->get(route('community.forum', [
             'search' => 'Mountain',
             'tag' => 'Gear & Equipment'
         ]));
