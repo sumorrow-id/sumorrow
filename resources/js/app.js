@@ -9,7 +9,6 @@ import { AvatarBioPreview } from './features/AvatarBioPreview';
 import { PostImageUploadValidator } from './features/PostImageUploadValidator';
 import { ProfileTabs } from './features/ProfileTabs';
 import { CommentModal } from './features/CommentModal';
-import { FollowToggle } from './features/FollowToggle';
 import { CommunityForum } from './features/CommunityForum';
 import { GearModal } from './features/GearModal';
 import { EmailVerificationPoll } from './features/EmailVerificationPoll';
@@ -144,13 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (commentModal && commentModalContent) {
         new CommentModal(commentModal, commentModalContent, commentModalCloseTriggers);
-    }
-
-    // Community sidebar: follow/unfollow buttons
-    const followButtons = document.querySelectorAll('.follow-btn');
-
-    if (followButtons.length) {
-        new FollowToggle(followButtons);
     }
 
     // Community page: forum tabs, create-community modal, mobile sidebar drawer

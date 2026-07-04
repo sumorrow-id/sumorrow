@@ -32,7 +32,12 @@ class CommunityController extends Controller
         // 2. Main Feed (required by feed.blade.php component)
         // ----------------------------------------------------------------
         $activeTag = $request->query('tag');
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])->latest();
+
+        // Forum feed only: summit logs carry no category tags, so exclude
+        // tag-less posts — same convention as PostController::index.
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
+            ->whereHas('tags')
+            ->latest();
 
         if ($activeTag) {
             $postsQuery->whereHas('tags', function ($query) use ($activeTag) {
@@ -55,18 +60,11 @@ class CommunityController extends Controller
         // ----------------------------------------------------------------
         // 4. Forum Leaders (required by sidebar.blade.php component)
         // ----------------------------------------------------------------
-        $forumLeaders = User::withCount('posts')
+        // Rank by forum posts only — summit logs (tag-less posts) don't count.
+        $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
+            $query->whereHas('tags');
+        }])
             ->orderByDesc('posts_count')
-            ->limit(5)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 5. Who to Follow (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        $whoToFollow = User::when(Auth::check(), function ($query) {
-            $query->where('id', '!=', Auth::id());
-        })
-            ->inRandomOrder()
             ->limit(5)
             ->get();
 
@@ -76,7 +74,6 @@ class CommunityController extends Controller
             'posts',
             'popularTags',
             'forumLeaders',
-            'whoToFollow',
             'activeTag'
         ));
     }

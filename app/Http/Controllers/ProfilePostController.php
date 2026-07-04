@@ -14,7 +14,9 @@ class ProfilePostController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        // Hanya catatan puncak (summit log) — post forum ditandai dengan tags
         $posts = $user->posts()
+            ->whereDoesntHave('tags')
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])

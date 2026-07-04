@@ -12,6 +12,7 @@ return [
     'not_available' => 'Tidak tersedia',
     'default_bio' => 'Halo, saya menggunakan Sumorrow untuk menjelajahi dan berbagi perjalanan mendaki saya!',
     'tab_posts' => 'Postingan',
+    'tab_hikings' => 'Pendakian',
     'tab_achievements' => 'Pencapaian',
     'tab_gear' => 'Daftar Perlengkapan',
 
@@ -42,9 +43,18 @@ return [
     'no_achievements' => 'Belum ada pencapaian yang tersedia.',
 
     // profile/partials/posts.blade.php
-    'hiking_history' => 'Riwayat Pendakian',
-    'view_all_activities' => 'Lihat Semua Aktivitas',
-    'new_activity' => '+ Aktivitas Baru',
+    'forum_posts' => 'Postingan Forum',
+    'go_to_forum' => 'Ke Forum',
+    'no_forum_posts' => 'Anda belum memposting apa pun di forum.',
+    'view_post' => 'Lihat Postingan',
+    'last_reviews' => 'Ulasan Terakhir',
+    'recent' => 'Terbaru',
+    'no_reviews_yet' => 'Anda belum mengulas gunung apa pun.',
+
+    // profile/partials/hikings.blade.php
+    'hiking_history' => 'Catatan Puncak',
+    'view_all_activities' => 'Lihat Semua Catatan Puncak',
+    'new_activity' => '+ Catatan Puncak Baru',
     'expedition_days_badge' => ':daysD Ekspedisi',
     'duration_days_badge' => ':daysD',
     'route_label' => 'Rute:',
@@ -52,26 +62,23 @@ return [
     'standard_trail' => 'Jalur Standar',
     'image_alt_suffix' => 'gambar',
     'view_full_log' => 'Lihat Log Lengkap',
-    'no_hiking_history' => 'Belum ada riwayat pendakian.',
-    'top_mountains' => 'Gunung Populer',
-    'popular' => 'Populer',
-    'no_popular_mountains' => 'Belum ada gunung populer yang tersedia.',
+    'no_hiking_history' => 'Belum ada catatan puncak.',
 
     // profile/posts/index.blade.php
-    'my_activities' => 'Aktivitas Saya',
-    'my_activities_subtitle' => 'Semua cerita pendakian dan rencana ekspedisi Anda',
+    'my_activities' => 'Catatan Puncak',
+    'my_activities_subtitle' => 'Semua catatan puncak dan rencana ekspedisi Anda',
     'back_to_profile' => 'Kembali ke Profil',
-    'no_activities_yet' => 'Belum ada aktivitas',
-    'no_activities_text' => 'Mulai bagikan petualangan dan pengalaman mendaki Anda.',
-    'create_first_activity' => 'Buat Aktivitas Pertama',
+    'no_activities_yet' => 'Belum ada catatan puncak',
+    'no_activities_text' => 'Mulai bagikan catatan puncak dan pengalaman mendaki Anda.',
+    'create_first_activity' => 'Buat Catatan Puncak Pertama',
     'post_image_alt' => 'Gambar Postingan',
     'location_varies' => 'Lokasi bervariasi',
 
     // profile/posts/create.blade.php
-    'new_activity_heading' => 'Aktivitas Baru',
+    'new_activity_heading' => 'Catatan Puncak Baru',
     'new_activity_subtitle' => 'Catat perjalanan mendaki Anda atau bagikan rencana ekspedisi Anda.',
-    'back_to_activities' => 'Kembali ke Aktivitas',
-    'activity_title' => 'Judul Aktivitas',
+    'back_to_activities' => 'Kembali ke Catatan Puncak',
+    'activity_title' => 'Judul Catatan Puncak',
     'activity_title_placeholder' => 'contoh, Pendakian Puncak Gunung Rinjani',
     'mountain_optional' => 'Gunung (Opsional)',
     'select_mountain' => '-- Pilih Gunung --',
@@ -83,8 +90,8 @@ return [
     'markdown_help' => 'Anda dapat menggunakan Markdown untuk pemformatan.',
     'photos' => 'Foto',
     'photos_help' => 'Pilih hingga 12 gambar. Maksimal 2MB per gambar agar unggahan berhasil.',
-    'post_activity' => 'Posting Aktivitas',
-    'activity_posted' => 'Aktivitas berhasil diposting!',
+    'post_activity' => 'Posting Catatan Puncak',
+    'activity_posted' => 'Catatan puncak berhasil diposting!',
 
     // profile/posts/show.blade.php
     'back' => 'Kembali',

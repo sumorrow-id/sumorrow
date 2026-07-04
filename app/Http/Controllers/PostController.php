@@ -9,6 +9,8 @@ use App\Models\PostTag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -39,7 +41,11 @@ class PostController extends Controller
 
         // ----------------------------------------------------------------
         // 1. Main Feed Query
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes']);
+        // Only real forum posts belong here. Summit logs (created from the
+        // profile) carry no category tags, so exclude tag-less posts — same
+        // convention ProfileController uses to split the two.
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
+            ->whereHas('tags');
 
         $postsQuery->latest();
 
@@ -68,26 +74,16 @@ class PostController extends Controller
         // ----------------------------------------------------------------
         // 3. Forum Leaders
         // ----------------------------------------------------------------
-        $forumLeaders = User::withCount('posts')
+        // Rank by forum posts only — summit logs (tag-less posts) don't count.
+        $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
+            $query->whereHas('tags');
+        }])
             ->orderByDesc('posts_count')
             ->limit(5)
             ->get();
 
         // ----------------------------------------------------------------
-        // 4. Who to Follow
-        // ----------------------------------------------------------------
-        $whoToFollow = User::when(Auth::check(), function ($query) {
-            $query->where('id', '!=', Auth::id())
-                ->whereDoesntHave('followers', function ($q) {
-                    $q->where('follower_id', Auth::id());
-                });
-        })
-            ->inRandomOrder()
-            ->limit(5)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 5. My Communities & Suggested Communities
+        // 4. My Communities & Suggested Communities
         // ----------------------------------------------------------------
         $myCommunities = collect();
         if (Auth::check()) {
@@ -104,7 +100,6 @@ class PostController extends Controller
             'posts',
             'popularTags',
             'forumLeaders',
-            'whoToFollow',
             'activeTag',
             'search',
             'myCommunities',
@@ -229,6 +224,40 @@ class PostController extends Controller
         return redirect()
             ->route('community.posts.show', $post->id)
             ->with('success', __('community.reply_posted'));
+    }
+
+    // ====================================================================
+    // DESTROY — Delete an own post (forum post or summit log)
+    // ====================================================================
+
+    /**
+     * Delete a post owned by the authenticated user, including its
+     * uploaded image files. Related rows (tags, images, comments, likes)
+     * are removed by database cascade.
+     *
+     * Route: DELETE /community/posts/{post}
+     * Name:  community.posts.destroy
+     */
+    public function destroy(Request $request, Post $post)
+    {
+        abort_unless($post->author_id === Auth::id(), 403);
+
+        foreach ($post->images as $image) {
+            if (! str_contains($image->image_url, 'http')) {
+                // image_url is stored either as "posts/x.jpg" or "storage/posts/x.jpg"
+                Storage::disk('public')->delete(Str::after($image->image_url, 'storage/'));
+            }
+        }
+
+        $post->delete();
+
+        // Deleting from the summit-log detail page: back() would return to the
+        // now-deleted post and 404, so send the user to their activities list.
+        if ($request->boolean('redirect_to_activities')) {
+            return redirect()->route('profile.posts.index')->with('success', __('community.post_deleted'));
+        }
+
+        return back()->with('success', __('community.post_deleted'));
     }
 
     // ====================================================================

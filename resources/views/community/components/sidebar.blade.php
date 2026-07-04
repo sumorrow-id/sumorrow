@@ -143,45 +143,4 @@
         </div>
     </div>
 
-    {{-- 4. Who to Follow --}}
-    <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6 mb-8">
-        <h2 class="font-bold text-lg text-[#1a2b4c] mb-5 flex items-center justify-between cursor-pointer group hover:text-[#094174] transition">
-            <span>{{ __('community.who_to_follow_heading') }}</span>
-            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </h2>
-
-        <div class="flex flex-col gap-5">
-            @foreach ($whoToFollow as $user)
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <img src="{{ $user->avatar_url ? asset($user->avatar_url) : asset('images/dummymountain/rinjani.png') }}" alt="{{ $user->username }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover">
-                    <div>
-                        <div class="flex items-center gap-1">
-                            <span class="font-bold text-[#1a2b4c] text-sm md:text-base">{{ $user->username }}</span>
-                        </div>
-                        <div class="text-xs text-gray-500">{{ '@' . strtolower($user->username) }}</div>
-                    </div>
-                </div>
-                @auth
-                    @php $isFollowing = auth()->user()->isFollowing($user); @endphp
-                    <button
-                        type="button"
-                        data-url="{{ route('users.follow', $user->id) }}"
-                        data-following="{{ $isFollowing ? 'true' : 'false' }}"
-                        class="follow-btn border border-[#094174] text-xs md:text-sm font-bold px-4 py-1.5 md:px-5 md:py-2 rounded-full transition-all duration-300 transform active:scale-95 {{ $isFollowing ? 'bg-white text-[#094174] hover:bg-gray-50' : 'bg-[#094174] text-white hover:bg-[#105DA3]' }}">
-                        {{ $isFollowing ? __('community.following_button') : __('community.follow_button') }}
-                    </button>
-                @else
-                    <button
-                        type="button"
-                        onclick="window.location='{{ route('showLogin') }}'"
-                        class="border border-[#094174] bg-[#094174] text-white text-xs md:text-sm font-bold px-4 py-1.5 md:px-5 md:py-2 rounded-full transition-all duration-300 hover:bg-[#105DA3] active:scale-95">
-                        {{ __('community.follow_button') }}
-                    </button>
-                @endauth
-            </div>
-            @endforeach
-        </div>
-    </div>
-
 </div>

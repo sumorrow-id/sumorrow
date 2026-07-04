@@ -81,6 +81,8 @@
                     <div class="flex gap-6 md:gap-10 w-max">
                         <button data-tab="posts" id="btn-posts"
                             class="tab-btn border-b-[3px] border-[#094174] pb-3 pt-1 text-[14px] md:text-[15px] font-bold text-[#094174] hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_posts') }}</button>
+                        <button data-tab="hikings" id="btn-hikings"
+                            class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_hikings') }}</button>
                         <button data-tab="achievements" id="btn-achievements"
                             class="tab-btn border-b-[3px] border-transparent pb-3 pt-1 text-[14px] md:text-[15px] font-semibold text-gray-400 hover:text-gray-700 translate-y-[1.5px]">{{ __('profile.tab_achievements') }}</button>
                         <button data-tab="gear" id="btn-gear"
@@ -93,6 +95,10 @@
         <div id="tab-contents">
             <div id="content-posts" class="tab-content block">
                 @include('profile.partials.posts')
+            </div>
+
+            <div id="content-hikings" class="tab-content hidden">
+                @include('profile.partials.hikings')
             </div>
 
             <div id="content-achievements" class="tab-content hidden">

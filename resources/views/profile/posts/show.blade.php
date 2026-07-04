@@ -3,7 +3,7 @@
 @section('content')
 <div class="w-[95%] max-w-4xl mx-auto pt-32 pb-16 px-4 sm:px-8">
     <div class="mb-8">
-        <a href="{{ url()->previous() == route('profile.posts.index') ? route('profile.posts.index') : route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline flex items-center gap-2 mb-4">
+        <a href="{{ url()->previous() == route('profile.posts.index') ? route('profile.posts.index') : route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -68,6 +68,23 @@
                 </div>
             </div>
         @endif
+
+        <div class="flex justify-end mt-8">
+            <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
+                class="confirm-submit-form"
+                data-confirm-title="{{ __('community.delete_post') }}"
+                data-confirm-message="{{ __('community.confirm_delete_post') }}"
+                data-confirm-label="{{ __('common.delete') }}"
+                data-confirm-variant="danger">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="redirect_to_activities" value="1">
+                <button type="submit"
+                    class="border border-red-200 text-red-500 hover:bg-red-50 text-xs font-bold py-1.5 px-4 rounded-full transition">
+                    {{ __('common.delete') }}
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

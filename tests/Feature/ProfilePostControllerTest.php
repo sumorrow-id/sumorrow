@@ -28,6 +28,23 @@ class ProfilePostControllerTest extends TestCase
         $response->assertViewHas('posts');
     }
 
+    public function test_index_excludes_forum_posts(): void
+    {
+        $user = User::factory()->create();
+
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'forum only']);
+        $forumPost->tags()->create(['keyword' => 'Hiking Stories']);
+
+        $user->posts()->create(['title' => 'Summit Log Entry', 'body' => 'hiking log']);
+
+        $response = $this->actingAs($user)->get(route('profile.posts.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('posts', function ($posts) {
+            return $posts->count() === 1 && $posts->first()->title === 'Summit Log Entry';
+        });
+    }
+
     public function test_guest_cannot_view_profile_posts_index(): void
     {
         $response = $this->get(route('profile.posts.index'));
