@@ -21,9 +21,11 @@ By: Claude Code
 - Summit-log delete buttons restyled small and bottom-right: on the My Activities cards (`profile/posts/index.blade.php`) and moved from the top bar into the card footer on the detail page (`profile/posts/show.blade.php`).
 - Summit-log delete now confirms via the shared `ConfirmSubmit` modal (`confirm-submit-form` + data attributes) instead of the native `confirm()` dialog, on both pages above and on the profile Hikings tab (`profile/partials/hikings.blade.php`).
 
+- CI fix: `SearchAndFilterTest::test_feed_can_be_filtered_by_search_term` created tag-less posts, which the forum feed now correctly excludes as summit logs — the test's posts are now tagged.
+
 **How to verify**
 
-- `php artisan test --compact tests/Feature/CommunityControllerTest.php tests/Feature/PostControllerTest.php` — 25 passing (2 new tests in `CommunityControllerTest` covering feed exclusion and leaders count on `/community`).
+- `php artisan test --compact` — 253 passing (2 new tests in `CommunityControllerTest` covering feed exclusion and leaders count on `/community`).
 
 ## 2026-07-03 — branch: `main` (uncommitted)
 
