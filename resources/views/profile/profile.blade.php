@@ -20,11 +20,6 @@
                             <h1
                                 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wide drop-shadow-md leading-tight line-clamp-2">
                                 {{ Auth::user()->username }}</h1>
-
-                            @if(Auth::user()->email_verified_at)
-                                <img src="{{ asset('images/profile/verified.png') }}" alt="{{ __('profile.verified_alt') }}"
-                                    class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 drop-shadow-sm shrink-0">
-                            @endif
                         </div>
 
                         <a href="{{ route('profile.edit') }}" class="px-4 py-2 md:px-5 md:py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-full text-xs md:text-sm font-semibold flex items-center gap-2 transition shadow-sm border border-white/30 md:ml-2 shrink-0">

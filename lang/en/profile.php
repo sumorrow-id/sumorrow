@@ -2,7 +2,6 @@
 
 return [
     // profile/profile.blade.php
-    'verified_alt' => 'Verified',
     'cover_alt' => 'Cover',
     'edit_profile' => 'Edit Profile',
     'post_icon_alt' => 'Post Icon',

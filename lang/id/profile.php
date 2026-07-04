@@ -2,7 +2,6 @@
 
 return [
     // profile/profile.blade.php
-    'verified_alt' => 'Terverifikasi',
     'cover_alt' => 'Sampul',
     'edit_profile' => 'Ubah Profil',
     'post_icon_alt' => 'Ikon Postingan',
