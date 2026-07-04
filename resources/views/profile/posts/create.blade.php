@@ -7,10 +7,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to Activities
+            {{ __('profile.back_to_activities') }}
         </a>
-        <h1 class="text-3xl md:text-4xl font-bold text-[#0F172A] tracking-wide">New Activity</h1>
-        <p class="text-[#6D8A9F] text-sm md:text-base mt-2">Log your hiking trip or share your expedition plan.</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-[#0F172A] tracking-wide">{{ __('profile.new_activity_heading') }}</h1>
+        <p class="text-[#6D8A9F] text-sm md:text-base mt-2">{{ __('profile.new_activity_subtitle') }}</p>
     </div>
 
     @if ($errors->any())
@@ -29,19 +29,19 @@
 
             <!-- Title -->
             <div>
-                <label for="title" class="block text-sm font-bold text-gray-700 mb-2">Activity Title <span class="text-red-500">*</span></label>
+                <label for="title" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.activity_title') }} <span class="text-red-500">*</span></label>
                 <input type="text" name="title" id="title" value="{{ old('title') }}" required
                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#094174] focus:border-[#094174] transition"
-                    placeholder="e.g., Summit Attack to Mt. Rinjani">
+                    placeholder="{{ __('profile.activity_title_placeholder') }}">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Mountain -->
                 <div>
-                    <label for="mountain_id" class="block text-sm font-bold text-gray-700 mb-2">Mountain (Optional)</label>
-                    <select name="mountain_id" id="mountain_id" 
+                    <label for="mountain_id" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.mountain_optional') }}</label>
+                    <select name="mountain_id" id="mountain_id"
                         class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#094174] focus:border-[#094174] bg-white transition">
-                        <option value="">-- Select Mountain --</option>
+                        <option value="">{{ __('profile.select_mountain') }}</option>
                         @foreach($mountains as $mountain)
                             <option value="{{ $mountain->id }}" {{ old('mountain_id') == $mountain->id ? 'selected' : '' }}>
                                 {{ $mountain->name }}
@@ -52,7 +52,7 @@
 
                 <!-- Climbing Date -->
                 <div>
-                    <label for="climbing_date" class="block text-sm font-bold text-gray-700 mb-2">Climbing Date (Optional)</label>
+                    <label for="climbing_date" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.climbing_date_optional') }}</label>
                     <input type="date" name="climbing_date" id="climbing_date" value="{{ old('climbing_date') }}"
                         class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#094174] focus:border-[#094174] transition">
                 </div>
@@ -60,80 +60,37 @@
 
             <!-- Duration -->
             <div>
-                <label for="duration_days" class="block text-sm font-bold text-gray-700 mb-2">Duration (Days) (Optional)</label>
+                <label for="duration_days" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.duration_days_optional') }}</label>
                 <input type="number" name="duration_days" id="duration_days" min="1" value="{{ old('duration_days') }}"
                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#094174] focus:border-[#094174] transition"
-                    placeholder="e.g., 3">
+                    placeholder="{{ __('profile.duration_days_placeholder') }}">
             </div>
 
             <!-- Content / Body -->
             <div>
-                <label for="body" class="block text-sm font-bold text-gray-700 mb-2">Expedition Details <span class="text-red-500">*</span></label>
+                <label for="body" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.expedition_details') }} <span class="text-red-500">*</span></label>
                 <textarea name="body" id="body" rows="6" required
                     class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#094174] focus:border-[#094174] transition resize-y"
-                    placeholder="Share your story, route details, and tips for this journey. Markdown is supported.">{{ old('body') }}</textarea>
-                <p class="text-xs text-gray-500 mt-2">You can use Markdown for formatting.</p>
+                    placeholder="{{ __('profile.expedition_details_placeholder') }}">{{ old('body') }}</textarea>
+                <p class="text-xs text-gray-500 mt-2">{{ __('profile.markdown_help') }}</p>
             </div>
 
             <!-- Images -->
             <div>
-                <label for="images" class="block text-sm font-bold text-gray-700 mb-2">Photos</label>
+                <label for="images" class="block text-sm font-bold text-gray-700 mb-2">{{ __('profile.photos') }}</label>
                 <input type="file" name="images[]" id="images" multiple accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E2E8F0] file:text-[#094174] hover:file:bg-[#CBD5E1] transition">
-                <p class="text-xs text-gray-500 mt-2">Select up to 12 images. Maximum 2MB per image to ensure successful upload.</p>
+                <p class="text-xs text-gray-500 mt-2">{{ __('profile.photos_help') }}</p>
                 <p id="image-error" class="text-sm text-red-600 mt-2 hidden"></p>
             </div>
 
             <!-- Submit -->
             <div class="pt-4 flex justify-end">
                 <button type="submit" id="submit-btn" class="bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-3 px-8 rounded-full transition shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                    Post Activity
+                    {{ __('profile.post_activity') }}
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-<script>
-    document.getElementById('images').addEventListener('change', function(e) {
-        const files = e.target.files;
-        const errorEl = document.getElementById('image-error');
-        const submitBtn = document.getElementById('submit-btn');
-        let errorMsg = '';
-        let totalSize = 0;
-
-        if (files.length > 12) {
-            errorMsg = 'You can only upload a maximum of 12 images.';
-        } else {
-            for (let i = 0; i < files.length; i++) {
-                totalSize += files[i].size;
-                if (files[i].size > 2 * 1024 * 1024) { // 2MB
-                    errorMsg = 'Each image must be smaller than 2MB.';
-                    break;
-                }
-            }
-            if (!errorMsg && totalSize > 24 * 1024 * 1024) { 
-                errorMsg = 'Total size of all images cannot exceed 24MB.';
-            }
-        }
-
-        if (errorMsg) {
-            errorEl.textContent = errorMsg;
-            errorEl.classList.remove('hidden');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-            errorEl.classList.add('hidden');
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-    });
-
-    document.querySelector('form').addEventListener('submit', function(e) {
-        const submitBtn = document.getElementById('submit-btn');
-        if (submitBtn.disabled) {
-            e.preventDefault();
-        }
-    });
-</script>
 @endsection

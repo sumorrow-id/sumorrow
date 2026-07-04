@@ -12,11 +12,6 @@ class GearAndAchievementSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first();
-        if (! $user) {
-            return;
-        }
-
         // ==========================================
         // Pilar Jalur Ekspedisi
         // ==========================================
@@ -61,6 +56,11 @@ class GearAndAchievementSeeder extends Seeder
             ['description' => 'Logged at least 10 essential items in your personal gear list.', 'icon_url' => '🎒']
         );
 
+        $user = User::first();
+        if (! $user) {
+            return;
+        }
+
         // ------------------------------------------
         // Attach ke User
         // ------------------------------------------
@@ -71,7 +71,7 @@ class GearAndAchievementSeeder extends Seeder
         ]);
 
         // ------------------------------------------
-        // Seed Gear 
+        // Seed Gear
         // ------------------------------------------
         $gears = [
             ['name' => 'Atmos AG 65', 'brand' => 'Osprey', 'weight_grams' => 2040, 'category' => 'Backpack'],
@@ -87,9 +87,9 @@ class GearAndAchievementSeeder extends Seeder
             Gear::updateOrCreate(
                 ['user_id' => $user->id, 'name' => $gear['name']],
                 [
-                    'brand' => $gear['brand'], 
-                    'weight_grams' => $gear['weight_grams'], 
-                    'category' => $gear['category']
+                    'brand' => $gear['brand'],
+                    'weight_grams' => $gear['weight_grams'],
+                    'category' => $gear['category'],
                 ]
             );
         }

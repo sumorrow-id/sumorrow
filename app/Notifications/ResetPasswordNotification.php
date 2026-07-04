@@ -34,16 +34,16 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $resetUrl = url(
-            '/reset-password/' . $this->token . '?email=' . urlencode($notifiable->getEmailForPasswordReset())
+            '/reset-password/'.$this->token.'?email='.urlencode($notifiable->getEmailForPasswordReset())
         );
 
         return (new MailMessage)
-            ->subject('Notifikasi Reset Password Sumorrow')
-            ->greeting('Halo ' . $notifiable->username . '!')
-            ->line('Anda menerima email ini karena ada permintaan reset password untuk akun Anda.')
-            ->action('Reset Password', $resetUrl)
-            ->line('Link reset password ini berlaku selama 60 menit.')
-            ->line('Jika Anda tidak meminta reset password, abaikan email ini.')
-            ->line('Terima kasih!');
+            ->subject(__('auth.reset_notification_subject'))
+            ->greeting(__('auth.reset_notification_greeting', ['name' => $notifiable->username]))
+            ->line(__('auth.reset_notification_intro'))
+            ->action(__('auth.reset_notification_action'), $resetUrl)
+            ->line(__('auth.reset_notification_expiry'))
+            ->line(__('auth.reset_notification_ignore'))
+            ->line(__('auth.reset_notification_thanks'));
     }
 }

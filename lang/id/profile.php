@@ -1,0 +1,101 @@
+<?php
+
+return [
+    // profile/profile.blade.php
+    'verified_alt' => 'Terverifikasi',
+    'cover_alt' => 'Sampul',
+    'edit_profile' => 'Ubah Profil',
+    'post_icon_alt' => 'Ikon Postingan',
+    'join_icon_alt' => 'Ikon Bergabung',
+    'climber_posts' => 'Postingan Pendaki',
+    'joined_date' => 'Tanggal Bergabung',
+    'not_available' => 'Tidak tersedia',
+    'default_bio' => 'Halo, saya menggunakan Sumorrow untuk menjelajahi dan berbagi perjalanan mendaki saya!',
+    'tab_posts' => 'Postingan',
+    'tab_hikings' => 'Pendakian',
+    'tab_achievements' => 'Pencapaian',
+    'tab_gear' => 'Daftar Perlengkapan',
+
+    // profile/edit.blade.php
+    'cover_image' => 'Gambar Sampul',
+    'cover_preview_alt' => 'Pratinjau sampul',
+    'change_cover' => 'Ganti Sampul',
+    'profile_photo' => 'Foto Profil',
+    'avatar_preview_alt' => 'Pratinjau avatar',
+    'username' => 'Nama Pengguna',
+    'email_address' => 'Alamat Email',
+    'verified' => 'Terverifikasi',
+    'email_unverified' => 'Email Anda belum diverifikasi.',
+    'send_verification_link' => 'Kirim tautan verifikasi',
+    'bio' => 'Bio',
+    'bio_placeholder' => 'Ceritakan tentang perjalanan mendaki Anda...',
+    'bio_counter' => ':count / :max karakter',
+    'confirm_save_title' => 'Simpan perubahan?',
+    'confirm_save_message' => 'Profil Anda akan diperbarui dengan perubahan ini.',
+    'updated_successfully' => 'Profil berhasil diperbarui.',
+
+    // profile/partials/achievements.blade.php
+    'achievement_badges' => 'Lencana Pencapaian (:unlocked / :total)',
+    'achievement_goal' => 'Target Pencapaian',
+    'locked' => 'Terkunci',
+    'earned_on' => 'Diraih pada :date.',
+    'complete_requirements' => 'Selesaikan persyaratan untuk membuka lencana ini.',
+    'no_achievements' => 'Belum ada pencapaian yang tersedia.',
+
+    // profile/partials/posts.blade.php
+    'forum_posts' => 'Postingan Forum',
+    'go_to_forum' => 'Ke Forum',
+    'no_forum_posts' => 'Anda belum memposting apa pun di forum.',
+    'view_post' => 'Lihat Postingan',
+    'last_reviews' => 'Ulasan Terakhir',
+    'recent' => 'Terbaru',
+    'no_reviews_yet' => 'Anda belum mengulas gunung apa pun.',
+
+    // profile/partials/hikings.blade.php
+    'hiking_history' => 'Catatan Puncak',
+    'view_all_activities' => 'Lihat Semua Catatan Puncak',
+    'new_activity' => '+ Catatan Puncak Baru',
+    'expedition_days_badge' => ':daysD Ekspedisi',
+    'duration_days_badge' => ':daysD',
+    'route_label' => 'Rute:',
+    'route_icon_alt' => 'Rute',
+    'standard_trail' => 'Jalur Standar',
+    'image_alt_suffix' => 'gambar',
+    'view_full_log' => 'Lihat Log Lengkap',
+    'no_hiking_history' => 'Belum ada catatan puncak.',
+
+    // profile/posts/index.blade.php
+    'my_activities' => 'Catatan Puncak',
+    'my_activities_subtitle' => 'Semua catatan puncak dan rencana ekspedisi Anda',
+    'back_to_profile' => 'Kembali ke Profil',
+    'no_activities_yet' => 'Belum ada catatan puncak',
+    'no_activities_text' => 'Mulai bagikan catatan puncak dan pengalaman mendaki Anda.',
+    'create_first_activity' => 'Buat Catatan Puncak Pertama',
+    'post_image_alt' => 'Gambar Postingan',
+    'location_varies' => 'Lokasi bervariasi',
+
+    // profile/posts/create.blade.php
+    'new_activity_heading' => 'Catatan Puncak Baru',
+    'new_activity_subtitle' => 'Catat perjalanan mendaki Anda atau bagikan rencana ekspedisi Anda.',
+    'back_to_activities' => 'Kembali ke Catatan Puncak',
+    'activity_title' => 'Judul Catatan Puncak',
+    'activity_title_placeholder' => 'contoh, Pendakian Puncak Gunung Rinjani',
+    'mountain_optional' => 'Gunung (Opsional)',
+    'select_mountain' => '-- Pilih Gunung --',
+    'climbing_date_optional' => 'Tanggal Pendakian (Opsional)',
+    'duration_days_optional' => 'Durasi (Hari) (Opsional)',
+    'duration_days_placeholder' => 'contoh, 3',
+    'expedition_details' => 'Detail Ekspedisi',
+    'expedition_details_placeholder' => 'Bagikan cerita, detail rute, dan tips untuk perjalanan ini. Markdown didukung.',
+    'markdown_help' => 'Anda dapat menggunakan Markdown untuk pemformatan.',
+    'photos' => 'Foto',
+    'photos_help' => 'Pilih hingga 12 gambar. Maksimal 2MB per gambar agar unggahan berhasil.',
+    'post_activity' => 'Posting Catatan Puncak',
+    'activity_posted' => 'Catatan puncak berhasil diposting!',
+
+    // profile/posts/show.blade.php
+    'back' => 'Kembali',
+    'author' => 'Penulis',
+    'photos_count' => 'Foto (:count)',
+    'post_photo_alt' => 'Foto postingan',
+];

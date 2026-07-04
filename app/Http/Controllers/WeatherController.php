@@ -20,20 +20,24 @@ class WeatherController extends Controller
 
         $data = Cache::remember("weather.mountain.{$mountain->id}", now()->addMinutes(30), function () use ($mountain, $apiKey) {
             if (! $apiKey) {
-                return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
+                return $this->mockCurrentWeather();
             }
 
             $coords = $this->parseCoordinates($mountain->coordinates);
 
-            $response = Http::withoutVerifying()->timeout(5)->get('https://api.openweathermap.org/data/2.5/weather', [
-                'lat' => $coords['lat'],
-                'lon' => $coords['lng'],
-                'units' => 'metric',
-                'appid' => $apiKey,
-            ]);
+            try {
+                $response = Http::timeout(5)->get('https://api.openweathermap.org/data/2.5/weather', [
+                    'lat' => $coords['lat'],
+                    'lon' => $coords['lng'],
+                    'units' => 'metric',
+                    'appid' => $apiKey,
+                ]);
+            } catch (\Throwable $e) {
+                return $this->mockCurrentWeather();
+            }
 
             if (! $response->successful()) {
-                return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
+                return $this->mockCurrentWeather();
             }
 
             $body = $response->json();
@@ -64,12 +68,16 @@ class WeatherController extends Controller
 
             $coords = $this->parseCoordinates($mountain->coordinates);
 
-            $response = Http::withoutVerifying()->timeout(8)->get('https://api.openweathermap.org/data/2.5/forecast', [
-                'lat' => $coords['lat'],
-                'lon' => $coords['lng'],
-                'units' => 'metric',
-                'appid' => $apiKey,
-            ]);
+            try {
+                $response = Http::timeout(8)->get('https://api.openweathermap.org/data/2.5/forecast', [
+                    'lat' => $coords['lat'],
+                    'lon' => $coords['lng'],
+                    'units' => 'metric',
+                    'appid' => $apiKey,
+                ]);
+            } catch (\Throwable $e) {
+                return $this->mockForecastData();
+            }
 
             if (! $response->successful()) {
                 return $this->mockForecastData();
@@ -81,19 +89,30 @@ class WeatherController extends Controller
         return response()->json($data);
     }
 
+    private function mockCurrentWeather(): array
+    {
+        return ['temp' => '22°', 'wind' => 'Wind: 10 km/h', 'icon' => '01d', 'description' => 'Clear'];
+    }
+
     private function mockForecastData(): array
     {
-        $now = time();
-        $list = [];
+        // ponytail: anchored to calendar-day boundaries (not "now") so the
+        // frontend's per-day grouping always yields 3 distinct days. The
+        // frontend shows the 3 days AFTER today (today lives in the hero
+        // card), so the mock starts at tomorrow.
+        $today = now()->startOfDay();
         $icons = ['01d', '03d', '10d'];
         $descs = ['Clear', 'Clouds', 'Rain'];
+        $list = [];
 
-        for ($i = 0; $i < 9; $i++) {
-            $list[] = [
-                'dt' => $now + ($i * 10800),
-                'main' => ['temp' => 22 + ($i % 3)],
-                'weather' => [['icon' => $icons[$i % 3], 'main' => $descs[$i % 3]]],
-            ];
+        for ($day = 1; $day <= 3; $day++) {
+            foreach ([9, 15, 21] as $hour) {
+                $list[] = [
+                    'dt' => $today->copy()->addDays($day)->setHour($hour)->timestamp,
+                    'main' => ['temp' => 21 + $day],
+                    'weather' => [['icon' => $icons[$day - 1], 'main' => $descs[$day - 1]]],
+                ];
+            }
         }
 
         return ['list' => $list];

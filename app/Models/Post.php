@@ -59,7 +59,7 @@ class Post extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(PostComment::class)->with('user')->latest();
+        return $this->hasMany(PostComment::class)->with('user')->oldest();
     }
 
     public function likes(): BelongsToMany
@@ -71,8 +71,8 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'post_saves')->withTimestamps();
     }
-    
-    public function community()
+
+    public function community(): BelongsTo
     {
         return $this->belongsTo(Community::class, 'community_id');
     }
@@ -81,10 +81,6 @@ class Post extends Model
      * Scope to filter posts by a tag keyword.
      *
      * Usage: Post::byTag('hiking-stories')->latest()->paginate(10)
-     *
-     * @param  Builder  $query
-     * @param  string   $keyword
-     * @return Builder
      */
     public function scopeByTag(Builder $query, string $keyword): Builder
     {

@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Sumorrow is a Laravel 13 / PHP 8.4 application for Indonesian mountain hikers — directory + personal-assistant features (mountain info, weather, ratings, hiking logs). Frontend is server-rendered Blade with Vite + Tailwind 4. Database is MySQL (local dev assumes XAMPP on port 3306).
 
+## Session handoff
+
+This repo keeps a running handoff log at [docs/AGENT_HANDOFF.md](docs/AGENT_HANDOFF.md).
+
+- At the **start** of a session, read it to learn what changed recently (a `SessionStart` hook also injects it automatically).
+- Before you **finish** a session, append a short entry: date, branch, key changes, and how to verify.
+- Keep security details abstract in the log and in [docs/CHANGELOG.md](docs/CHANGELOG.md). Never write exploit-level specifics.
+
 ## Commands
 
 Setup and development:
@@ -79,7 +87,8 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.5
+- php - 8.4
+- laravel/ai (AI) - v0
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4

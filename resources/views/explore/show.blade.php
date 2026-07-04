@@ -1,121 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        /* Animasi untuk icon cuaca (SVG) agar terasa hidup */
-        @keyframes weather-spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes weather-bob {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-1.5px);
-            }
-        }
-
-        @keyframes weather-rain {
-            0% {
-                transform: translateY(-2px);
-                opacity: 0;
-            }
-
-            30% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(3px);
-                opacity: 0;
-            }
-        }
-
-        @keyframes weather-flash {
-
-            0%,
-            55%,
-            100% {
-                opacity: 1;
-            }
-
-            65%,
-            85% {
-                opacity: 0.25;
-            }
-        }
-
-        @keyframes weather-pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: scale(0.92);
-            }
-        }
-
-        .weather-spin {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: weather-spin 9s linear infinite;
-        }
-
-        .weather-bob {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: weather-bob 3s ease-in-out infinite;
-        }
-
-        .weather-rain {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: weather-rain 1.2s ease-in infinite;
-        }
-
-        .weather-flash {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: weather-flash 2s ease-in-out infinite;
-        }
-
-        .weather-pulse {
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: weather-pulse 3s ease-in-out infinite;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .weather-spin,
-            .weather-bob,
-            .weather-rain,
-            .weather-flash,
-            .weather-pulse {
-                animation: none;
-            }
-        }
-    </style>
-
     <div class="bg-[#F8F9FA] min-h-screen">
         <!-- Hero Section -->
         @php
             $heroImage = $mountain->images->first()
                 ? $mountain->images->first()->image_url
-                : asset('images/dummymountain/rinjani.png');
+                : asset('images/default-mountain.jpg');
+            $difficultyLabel = $mountain->difficulty && \Illuminate\Support\Facades\Lang::has('explore.difficulty_' . $mountain->difficulty)
+                ? __('explore.difficulty_' . $mountain->difficulty)
+                : ucfirst($mountain->difficulty ?? '');
         @endphp
         <div class="relative w-full h-[50vh] md:h-[60vh] lg:h-[70vh]">
-            <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" class="w-full h-full object-cover" />
+            <img src="{{ $heroImage }}" alt="{{ $mountain->name }}" onerror="this.onerror=null;this.src='{{ asset('images/default-mountain.jpg') }}'" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/40"></div>
             <div
                 class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:px-24 bg-linear-to-t from-black/80 to-transparent flex justify-between items-end gap-4">
@@ -123,13 +20,13 @@
                     <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-2 break-words">
                         {{ $mountain->name }}</h1>
                     <div class="flex flex-wrap items-center gap-4 text-white/90 text-sm md:text-base">
-                        <span id="hero-location-pin" role="button" tabindex="0" title="View on map" class="flex items-center gap-1 cursor-pointer transition-colors duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
+                        <span id="hero-location-pin" role="button" tabindex="0" title="{{ __('explore.view_on_map') }}" class="flex items-center gap-1 cursor-pointer transition-colors duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
                             <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            {{ $mountain->province->name ?? 'Indonesia' }}
+                            {{ $mountain->province->name ?? __('explore.indonesia') }}
                         </span>
                         <span class="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
                             <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -137,22 +34,22 @@
                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
                                 </path>
                             </svg>
-                            {{ number_format($mountain->avg_rating, 1) }} ({{ $mountain->ratings->count() }} reviews)
+                            {{ number_format($mountain->avg_rating, 1) }} ({{ __('explore.reviews_count', ['count' => $mountain->ratings->count()]) }})
                         </span>
                         <span class="bg-[#001E3A] text-white px-3 py-1 rounded-full font-semibold">
-                            {{ ucfirst($mountain->difficulty) }}
+                            {{ $difficultyLabel }}
                         </span>
                     </div>
                 </div>
 
                 <!-- Weather Card -->
-                <div id="hero-weather-card" role="button" tabindex="0" title="See full forecast"
+                <div id="hero-weather-card" role="button" tabindex="0" title="{{ __('explore.see_full_forecast') }}"
                     class="hidden shrink-0 flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4 min-w-[88px] sm:min-w-[100px] text-white shadow-lg cursor-pointer transition-all duration-300 hover:bg-white/20 hover:-translate-y-1 hover:shadow-xl">
                     <span class="text-xs font-medium text-white/80 uppercase tracking-wider mb-1"
                         id="hero-weather-desc"></span>
                     <div id="hero-weather-icon-container"></div>
                     <div class="mt-1 font-bold text-xl md:text-2xl" id="hero-weather-temp"></div>
-                    <span class="mt-1 text-[10px] text-white/60 uppercase tracking-wider">Tap for forecast</span>
+                    <span class="mt-1 text-[10px] text-white/60 uppercase tracking-wider">{{ __('explore.tap_for_forecast') }}</span>
                 </div>
             </div>
         </div>
@@ -166,32 +63,32 @@
 
                     <!-- About Section -->
                     <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">About</h2>
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.about') }}</h2>
                         <p class="text-gray-700 leading-relaxed text-justify">
-                            {{ $mountain->description ?: 'No description available for this mountain yet. Explore its beauty and share your experiences!' }}
+                            {{ $mountain->description ?: __('explore.no_description') }}
                         </p>
                     </section>
 
                     <!-- Critical Information -->
                     <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Critical Information</h2>
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.critical_information') }}</h2>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                                <span class="text-sm text-gray-500 mb-1">Height</span>
+                                <span class="text-sm text-gray-500 mb-1">{{ __('explore.height') }}</span>
                                 <span
                                     class="text-xl font-bold text-[#2A9D8F]">{{ number_format($mountain->elevation_masl) }}
-                                    <span class="text-sm font-normal">masl</span></span>
+                                    <span class="text-sm font-normal">{{ __('explore.unit_masl') }}</span></span>
                             </div>
                             <div
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                                <span class="text-sm text-gray-500 mb-1">Length</span>
+                                <span class="text-sm text-gray-500 mb-1">{{ __('explore.length') }}</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->length_km ?? '-' }} <span
                                         class="text-sm font-normal">km</span></span>
                             </div>
                             <div
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                                <span class="text-sm text-gray-500 mb-1">Elevation Gain</span>
+                                <span class="text-sm text-gray-500 mb-1">{{ __('explore.elevation_gain') }}</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $mountain->elevation_gain_m ?? '-' }}
                                     <span class="text-sm font-normal">m</span></span>
                             </div>
@@ -204,9 +101,9 @@
                             @endphp
                             <div
                                 class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                                <span class="text-sm text-gray-500 mb-1">Est. Time</span>
+                                <span class="text-sm text-gray-500 mb-1">{{ __('explore.est_time') }}</span>
                                 <span class="text-xl font-bold text-[#2A9D8F]">{{ $estHours > 0 ? $estHours : '-' }} <span
-                                        class="text-sm font-normal">hrs</span></span>
+                                        class="text-sm font-normal">{{ __('explore.unit_hours') }}</span></span>
                             </div>
                         </div>
                     </section>
@@ -250,18 +147,19 @@
                                     d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z">
                                 </path>
                             </svg>
-                            Weather Forecast
+                            {{ __('explore.weather_forecast') }}
                         </h2>
-                        <div id="weather-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div id="weather-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"
+                            data-weather-url="{{ $weatherUrl }}" data-forecast-url="{{ $forecastUrl }}">
                             <div class="col-span-3 text-center py-6 text-gray-500">
-                                Loading weather forecast...
+                                {{ __('explore.loading_weather_forecast') }}
                             </div>
                         </div>
                     </section>
 
                     <!-- Map Location -->
                     <section id="map-location" class="scroll-mt-24">
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Location</h2>
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.location') }}</h2>
                         <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 h-100 w-full overflow-hidden">
                             <iframe width="100%" height="100%" frameborder="0" style="border:0; border-radius: 0.5rem;"
                                 src="https://maps.google.com/maps?q={{ $lat }},{{ $lng }}&t=&z=12&ie=UTF8&iwloc=&output=embed"
@@ -272,16 +170,16 @@
 
                     <!-- Reviews Section -->
                     <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">Reviews ({{ $mountain->ratings->count() }})</h2>
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.reviews_heading', ['count' => $mountain->ratings->count()]) }}</h2>
 
                         <!-- Add Review Form -->
                         @auth
                             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Write a Review</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('explore.write_a_review') }}</h3>
                                 <form action="{{ route('explore.ratings.store', $mountain->id) }}" method="POST">
                                     @csrf
                                     <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('explore.rating') }}</label>
                                         <div class="flex gap-2 flex-row-reverse justify-end">
                                             @for ($i = 5; $i >= 1; $i--)
                                                 <input type="radio" id="star-{{ $i }}" name="score"
@@ -298,22 +196,20 @@
                                         </div>
                                     </div>
                                     <div class="mb-4">
-                                        <label for="review" class="block text-sm font-medium text-gray-700 mb-1">Your
-                                            Experience</label>
+                                        <label for="review" class="block text-sm font-medium text-gray-700 mb-1">{{ __('explore.your_experience') }}</label>
                                         <textarea id="review" name="review" rows="3"
                                             class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#001E3A] focus:border-[#001E3A] p-3 text-sm border"
-                                            placeholder="Tell us about your hike..."></textarea>
+                                            placeholder="{{ __('explore.tell_us_about_your_hike') }}"></textarea>
                                     </div>
                                     <button type="submit"
-                                        class="bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Submit
-                                        Review</button>
+                                        class="bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">{{ __('explore.submit_review') }}</button>
                                 </form>
                             </div>
                         @else
                             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 text-center mb-6">
-                                <p class="text-gray-600 mb-3">Login to share your experience on this mountain.</p>
+                                <p class="text-gray-600 mb-3">{{ __('explore.login_to_review') }}</p>
                                 <a href="{{ route('showLogin') }}"
-                                    class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">Login</a>
+                                    class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">{{ __('explore.login') }}</a>
                             </div>
                         @endauth
 
@@ -327,7 +223,7 @@
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-gray-900">
-                                                {{ $rating->user->username ?? 'Unknown Hiker' }}</h4>
+                                                {{ $rating->user->username ?? __('explore.unknown_hiker') }}</h4>
                                             <div class="flex text-yellow-400 text-xs mt-1">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <svg class="w-4 h-4 {{ $i <= $rating->score ? 'text-yellow-400' : 'text-gray-200' }}"
@@ -347,7 +243,7 @@
                             @empty
                                 <div
                                     class="bg-white p-6 rounded-xl border border-dashed border-gray-300 text-center text-gray-500">
-                                    No reviews yet. Be the first to conquer and review this mountain!
+                                    {{ __('explore.no_reviews_yet') }}
                                 </div>
                             @endforelse
                         </div>
@@ -355,14 +251,14 @@
 
                     <!-- FAQ Section -->
                     <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">FAQ</h2>
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.faq_heading') }}</h2>
                         <div class="space-y-3">
                             <!-- FAQ 1 -->
                             <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
                                 <input type="checkbox" id="faq1" class="peer hidden">
                                 <label for="faq1"
                                     class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>Do I need a permit to climb {{ $mountain->name }}?</span>
+                                    <span>{{ __('explore.faq_permit_question', ['name' => $mountain->name]) }}</span>
                                     <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -372,9 +268,7 @@
                                 <div
                                     class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
                                     <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        Yes, most mountains in Indonesia require a SIMAKSI (registration/permit) before
-                                        climbing. You should check with the local basecamp or national park authority for
-                                        online registration details.
+                                        {{ __('explore.faq_permit_answer') }}
                                     </p>
                                 </div>
                             </div>
@@ -384,7 +278,7 @@
                                 <input type="checkbox" id="faq2" class="peer hidden">
                                 <label for="faq2"
                                     class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>What is the best time to hike?</span>
+                                    <span>{{ __('explore.faq_best_time_question') }}</span>
                                     <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -394,8 +288,7 @@
                                 <div
                                     class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
                                     <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        The dry season (May to September) is generally the best time to hike. Avoid the
-                                        rainy season as trails become slippery and visibility is often poor.
+                                        {{ __('explore.faq_best_time_answer') }}
                                     </p>
                                 </div>
                             </div>
@@ -405,7 +298,7 @@
                                 <input type="checkbox" id="faq3" class="peer hidden">
                                 <label for="faq3"
                                     class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>Is {{ $mountain->name }} safe for beginners?</span>
+                                    <span>{{ __('explore.faq_beginner_question', ['name' => $mountain->name]) }}</span>
                                     <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -415,9 +308,7 @@
                                 <div
                                     class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
                                     <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        This depends on the difficulty level. Rated as
-                                        "{{ ucfirst($mountain->difficulty) }}", you should prepare adequately. Always hike
-                                        with experienced companions if you are new to mountaineering.
+                                        {{ __('explore.faq_beginner_answer', ['difficulty' => $difficultyLabel]) }}
                                     </p>
                                 </div>
                             </div>
@@ -431,7 +322,7 @@
 
                     @if ($mountain->basecamps->count() > 0)
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">Official Basecamps</h3>
+                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">{{ __('explore.official_basecamps') }}</h3>
                             <ul class="space-y-4">
                                 @foreach ($mountain->basecamps as $basecamp)
                                     <li
@@ -455,7 +346,7 @@
 
                     @if ($nearbyMountains->count() > 0)
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">Nearby Mountains</h3>
+                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">{{ __('explore.nearby_mountains') }}</h3>
                             <div class="space-y-4">
                                 @foreach ($nearbyMountains as $nearby)
                                     <a href="{{ route('explore.show', $nearby->id) }}"
@@ -463,16 +354,17 @@
                                         @php
                                             $thumb = $nearby->images->first()
                                                 ? $nearby->images->first()->image_url
-                                                : asset('images/dummymountain/rinjani.png');
+                                                : asset('images/default-mountain.jpg');
                                         @endphp
                                         <img src="{{ $thumb }}" alt="{{ $nearby->name }}"
+                                            onerror="this.onerror=null;this.src='{{ asset('images/default-mountain.jpg') }}'"
                                             class="w-20 h-20 rounded-lg object-cover bg-gray-100" />
                                         <div class="flex-1 py-1">
                                             <h4
                                                 class="font-semibold text-gray-900 group-hover:text-[#2A9D8F] transition-colors">
                                                 {{ $nearby->name }}</h4>
                                             <p class="text-xs text-gray-500 mt-1">
-                                                {{ number_format($nearby->elevation_masl) }} masl</p>
+                                                {{ number_format($nearby->elevation_masl) }} {{ __('explore.unit_masl') }}</p>
                                             <div class="flex items-center text-yellow-400 text-xs mt-1">
                                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                     <path
@@ -492,12 +384,11 @@
                     <div
                         class="bg-linear-to-br from-[#001E3A] to-[#003865] rounded-2xl shadow-sm text-white p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white/10 blur-2xl"></div>
-                        <h3 class="font-bold text-xl mb-2">Ready to conquer?</h3>
-                        <p class="text-sm text-white/80 mb-6">Log your hike, track your achievements, and share your
-                            journey with the community.</p>
+                        <h3 class="font-bold text-xl mb-2">{{ __('explore.ready_to_conquer') }}</h3>
+                        <p class="text-sm text-white/80 mb-6">{{ __('explore.ready_to_conquer_desc') }}</p>
                         <a href="{{ route('community') }}"
                             class="block text-center w-full bg-[#2A9D8F] hover:bg-[#21867a] text-white font-semibold py-3 rounded-xl transition-colors">
-                            Join Community
+                            {{ __('explore.join_community') }}
                         </a>
                     </div>
 
@@ -507,122 +398,11 @@
     </div>
 
     <!-- Back to Top Button -->
-    <button id="back-to-top" type="button" aria-label="Back to top"
+    <button id="back-to-top" type="button" aria-label="{{ __('explore.back_to_top') }}"
         class="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#001E3A] text-white shadow-lg ring-1 ring-white/10 opacity-0 translate-y-4 scale-90 pointer-events-none transition-all duration-300 ease-out hover:bg-[#003865] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] active:scale-95">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
         </svg>
     </button>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const weatherContainer = document.getElementById('weather-container');
-
-            // Scroll: pin lokasi -> map section
-            const heroLocationPin = document.getElementById('hero-location-pin');
-            const scrollToMap = () => document.getElementById('map-location')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (heroLocationPin) {
-                heroLocationPin.addEventListener('click', scrollToMap);
-                heroLocationPin.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToMap(); } });
-            }
-
-            // Scroll: kartu cuaca hero -> forecast section
-            const heroWeatherCard = document.getElementById('hero-weather-card');
-            const scrollToForecast = () => document.getElementById('weather-forecast')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (heroWeatherCard) {
-                heroWeatherCard.addEventListener('click', scrollToForecast);
-                heroWeatherCard.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToForecast(); } });
-            }
-
-            // Back to Top button
-            const backToTopBtn = document.getElementById('back-to-top');
-            if (backToTopBtn) {
-                const hiddenClasses = ['opacity-0', 'translate-y-4', 'scale-90', 'pointer-events-none'];
-                const toggleBackToTop = () => {
-                    if (window.scrollY > 400) { backToTopBtn.classList.remove(...hiddenClasses); }
-                    else { backToTopBtn.classList.add(...hiddenClasses); }
-                };
-                toggleBackToTop();
-                window.addEventListener('scroll', toggleBackToTop, { passive: true });
-                backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-            }
-
-            // SVG weather icon helper
-            const getWeatherSvg = (iconCode, classes) => {
-                const code = iconCode.substring(0, 2);
-                const isDay = iconCode.endsWith('d');
-                const sunSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FBBF24"/><path class="weather-spin" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const moonSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="weather-pulse" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="#93C5FD"/></svg>`;
-                const cloudPath = `<path class="weather-bob" d="M17.5 19H9a7 7 0 116.71-9h1.79a4.5 4.5 0 110 9z" fill="#E5E7EB"/>`;
-                const partlyCloudySvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${isDay ? '<circle class="weather-pulse" cx="8" cy="8" r="4" fill="#FBBF24"/>' : '<path class="weather-pulse" d="M11 4.5A5.5 5.5 0 114.5 11 4.5 4.5 0 0011 4.5z" fill="#93C5FD"/>'}${cloudPath}</svg>`;
-                const cloudSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}</svg>`;
-                const rainSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-rain" d="M9 19v3m4-3v3m4-3v3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
-                const thunderSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<path class="weather-flash" d="M13 14l-3 5h4l-3 5" stroke="#FBBF24" stroke-width="1.5" fill="#FCD34D"/></svg>`;
-                const snowSvg = `<svg class="${classes}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${cloudPath}<circle class="weather-rain" cx="9" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="13" cy="21" r="1.5" fill="#93C5FD"/><circle class="weather-rain" cx="17" cy="21" r="1.5" fill="#93C5FD"/></svg>`;
-                switch (code) {
-                    case '01': return isDay ? sunSvg : moonSvg;
-                    case '02': return partlyCloudySvg;
-                    case '03': case '04': case '50': return cloudSvg;
-                    case '09': case '10': return rainSvg;
-                    case '11': return thunderSvg;
-                    case '13': return snowSvg;
-                    default: return cloudSvg;
-                }
-            };
-
-            const showHeroCard = (icon, temp, description) => {
-                const heroCard = document.getElementById('hero-weather-card');
-                const heroIconContainer = document.getElementById('hero-weather-icon-container');
-                const heroTemp = document.getElementById('hero-weather-temp');
-                const heroDesc = document.getElementById('hero-weather-desc');
-                if (!heroCard) { return; }
-                heroIconContainer.innerHTML = getWeatherSvg(icon, 'w-12 h-12 md:w-14 md:h-14 drop-shadow-md');
-                heroTemp.innerHTML = temp + 'C';
-                heroDesc.innerHTML = description;
-                heroCard.classList.remove('hidden');
-                heroCard.classList.add('flex');
-            };
-
-            const renderForecast = (list) => {
-                const dailyData = {};
-                list.forEach(item => {
-                    const date = new Date(item.dt * 1000).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    if (!dailyData[date]) { dailyData[date] = { temp: [], icon: item.weather[0].icon, desc: item.weather[0].main }; }
-                    dailyData[date].temp.push(item.main.temp);
-                });
-                const days = Object.keys(dailyData).slice(0, 3);
-                weatherContainer.innerHTML = days.map(day => {
-                    const info = dailyData[day];
-                    const maxTemp = Math.round(Math.max(...info.temp));
-                    const minTemp = Math.round(Math.min(...info.temp));
-                    return `<div class="bg-white p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
-                        <span class="font-semibold text-[#001E3A] mb-1">${day}</span>
-                        ${getWeatherSvg(info.icon, 'w-16 h-16 drop-shadow-sm')}
-                        <span class="text-sm font-medium text-gray-700 capitalize mt-1">${info.desc}</span>
-                        <div class="mt-2 text-[#2A9D8F] font-bold">${maxTemp}&deg; <span class="text-gray-400 text-sm font-normal">/ ${minTemp}&deg;</span></div>
-                    </div>`;
-                }).join('');
-            };
-
-            // Current weather → hero card (same proxy as home.blade.php)
-            fetch('{{ $weatherUrl }}')
-                .then(res => { if (!res.ok) { throw new Error('Weather error'); } return res.json(); })
-                .then(data => showHeroCard(data.icon ?? '01d', data.temp, data.description ?? ''))
-                .catch(() => showHeroCard('01d', '22&deg;', 'Clear'));
-
-            // 3-day forecast → forecast section
-            fetch('{{ $forecastUrl }}')
-                .then(res => { if (!res.ok) { throw new Error('Forecast error'); } return res.json(); })
-                .then(data => renderForecast(data.list ?? []))
-                .catch(() => renderForecast([
-                    { dt: Date.now() / 1000, main: { temp: 22 }, weather: [{ icon: '01d', main: 'Clear' }] },
-                    { dt: Date.now() / 1000 + 86400, main: { temp: 23 }, weather: [{ icon: '03d', main: 'Clouds' }] },
-                    { dt: Date.now() / 1000 + 172800, main: { temp: 20 }, weather: [{ icon: '10d', main: 'Rain' }] },
-                ]));
-        });
-
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-    </script>
 @endsection

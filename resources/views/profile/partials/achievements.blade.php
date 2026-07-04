@@ -1,6 +1,6 @@
 <div class="mt-8 px-4 sm:px-0">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-4 sm:mb-6 gap-2 sm:gap-0">
-        <h2 class="text-xl md:text-2xl font-bold text-[#0F172A]">Achievement Badges ({{ $userAchievements->count() }} / {{ $allAchievements->count() }})</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-[#0F172A]">{{ __('profile.achievement_badges', ['unlocked' => $userAchievements->count(), 'total' => $allAchievements->count()]) }}</h2>
     </div>
 
     <div class="flex flex-col gap-4 md:gap-5 relative">
@@ -20,30 +20,30 @@
 
                 <div class="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] flex-1 flex flex-col justify-center">
                     <p class="text-xs md:text-[13px] text-[#2A5C9A] mb-1.5 font-bold tracking-wider flex items-center gap-2">
-                        Achievement Goal
+                        {{ __('profile.achievement_goal') }}
                         @if(!$isUnlocked)
-                            <span class="badge bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full text-[10px] ml-2">Locked</span>
+                            <span class="badge bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full text-[10px] ml-2">{{ __('profile.locked') }}</span>
                         @endif
                     </p>
                     <p class="text-xs md:text-[13px] font-medium text-gray-500 leading-relaxed">
                         @if($isUnlocked && $unlockedData->pivot->unlocked_at)
-                            <span class="text-green-600 font-semibold">Earned on {{ \Carbon\Carbon::parse($unlockedData->pivot->unlocked_at)->format('d M Y') }}.</span> <br class="block sm:hidden">
-                            <span class="hidden sm:inline">-</span> 
+                            <span class="text-green-600 font-semibold">{{ __('profile.earned_on', ['date' => \Carbon\Carbon::parse($unlockedData->pivot->unlocked_at)->translatedFormat('d M Y')]) }}</span> <br class="block sm:hidden">
+                            <span class="hidden sm:inline">-</span>
                         @endif
                         {{ $achievement->description }}
                     </p>
-                    
+
                     @if(!$isUnlocked)
                         <div class="mt-3 w-full bg-gray-200 rounded-full h-1.5">
                             <div class="bg-gray-400 h-1.5 rounded-full w-0"></div>
                         </div>
-                        <p class="text-[10px] text-gray-400 mt-1">Selesaikan syarat untuk mendapatkan badge ini.</p>
+                        <p class="text-[10px] text-gray-400 mt-1">{{ __('profile.complete_requirements') }}</p>
                     @endif
                 </div>
             </div>
         @empty
             <div class="bg-white rounded-3xl p-6 shadow-sm text-center py-12">
-                <p class="text-gray-500">Belum ada achievement yang tersedia.</p>
+                <p class="text-gray-500">{{ __('profile.no_achievements') }}</p>
             </div>
         @endforelse
     </div>

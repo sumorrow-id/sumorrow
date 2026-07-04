@@ -1,0 +1,101 @@
+<?php
+
+return [
+    // profile/profile.blade.php
+    'verified_alt' => 'Verified',
+    'cover_alt' => 'Cover',
+    'edit_profile' => 'Edit Profile',
+    'post_icon_alt' => 'Post Icon',
+    'join_icon_alt' => 'Join Icon',
+    'climber_posts' => 'Climber Posts',
+    'joined_date' => 'Joined Date',
+    'not_available' => 'N/A',
+    'default_bio' => 'Hello, I am using Sumorrow to explore and share my hiking journey!',
+    'tab_posts' => 'Posts',
+    'tab_hikings' => 'Hikings',
+    'tab_achievements' => 'Achievements',
+    'tab_gear' => 'Gear List',
+
+    // profile/edit.blade.php
+    'cover_image' => 'Cover Image',
+    'cover_preview_alt' => 'Cover preview',
+    'change_cover' => 'Change Cover',
+    'profile_photo' => 'Profile Photo',
+    'avatar_preview_alt' => 'Avatar preview',
+    'username' => 'Username',
+    'email_address' => 'Email Address',
+    'verified' => 'Verified',
+    'email_unverified' => 'Your email is unverified.',
+    'send_verification_link' => 'Send verification link',
+    'bio' => 'Bio',
+    'bio_placeholder' => 'Tell us about your hiking journey...',
+    'bio_counter' => ':count / :max characters',
+    'confirm_save_title' => 'Save changes?',
+    'confirm_save_message' => 'Your profile will be updated with these changes.',
+    'updated_successfully' => 'Profile updated successfully.',
+
+    // profile/partials/achievements.blade.php
+    'achievement_badges' => 'Achievement Badges (:unlocked / :total)',
+    'achievement_goal' => 'Achievement Goal',
+    'locked' => 'Locked',
+    'earned_on' => 'Earned on :date.',
+    'complete_requirements' => 'Complete the requirements to unlock this badge.',
+    'no_achievements' => 'No achievements available yet.',
+
+    // profile/partials/posts.blade.php
+    'forum_posts' => 'Forum Posts',
+    'go_to_forum' => 'Go to Forum',
+    'no_forum_posts' => "You haven't posted anything in the forum yet.",
+    'view_post' => 'View Post',
+    'last_reviews' => 'Last Reviews',
+    'recent' => 'Recent',
+    'no_reviews_yet' => "You haven't reviewed any mountains yet.",
+
+    // profile/partials/hikings.blade.php
+    'hiking_history' => 'Summit Log',
+    'view_all_activities' => 'View All Summit Logs',
+    'new_activity' => '+ New Summit Log',
+    'expedition_days_badge' => ':daysD Expedition',
+    'duration_days_badge' => ':daysD',
+    'route_label' => 'Route:',
+    'route_icon_alt' => 'Route',
+    'standard_trail' => 'Standard Trail',
+    'image_alt_suffix' => 'image',
+    'view_full_log' => 'View Full Log',
+    'no_hiking_history' => 'No summit logs yet.',
+
+    // profile/posts/index.blade.php
+    'my_activities' => 'Summit Log',
+    'my_activities_subtitle' => 'All your summit logs and upcoming expeditions',
+    'back_to_profile' => 'Back to Profile',
+    'no_activities_yet' => 'No summit logs yet',
+    'no_activities_text' => 'Start sharing your summit logs and hiking experiences.',
+    'create_first_activity' => 'Create First Summit Log',
+    'post_image_alt' => 'Post Image',
+    'location_varies' => 'Location varies',
+
+    // profile/posts/create.blade.php
+    'new_activity_heading' => 'New Summit Log',
+    'new_activity_subtitle' => 'Log your hiking trip or share your expedition plan.',
+    'back_to_activities' => 'Back to Summit Log',
+    'activity_title' => 'Summit Log Title',
+    'activity_title_placeholder' => 'e.g., Summit Attack to Mt. Rinjani',
+    'mountain_optional' => 'Mountain (Optional)',
+    'select_mountain' => '-- Select Mountain --',
+    'climbing_date_optional' => 'Climbing Date (Optional)',
+    'duration_days_optional' => 'Duration (Days) (Optional)',
+    'duration_days_placeholder' => 'e.g., 3',
+    'expedition_details' => 'Expedition Details',
+    'expedition_details_placeholder' => 'Share your story, route details, and tips for this journey. Markdown is supported.',
+    'markdown_help' => 'You can use Markdown for formatting.',
+    'photos' => 'Photos',
+    'photos_help' => 'Select up to 12 images. Maximum 2MB per image to ensure successful upload.',
+    'post_activity' => 'Post Summit Log',
+    'activity_posted' => 'Summit log posted!',
+
+    // profile/posts/show.blade.php
+    'back' => 'Back',
+    'author' => 'Author',
+    'photos_count' => 'Photos (:count)',
+    'post_photo_alt' => 'Post photo',
+];

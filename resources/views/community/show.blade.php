@@ -22,7 +22,7 @@
             
             {{-- Banner Image --}}
             <div class="h-48 md:h-64 w-full bg-gray-200 relative group/banner">
-                <img id="community-banner" src="{{$community->banner_url}}" class="w-full h-full object-cover" alt="Community Banner">
+                <img id="community-banner" src="{{ $community->banner_url ? asset($community->banner_url) : asset('images/placeholder.svg') }}" class="w-full h-full object-cover" alt="Community Banner">
                 {{-- Tombol Edit Banner (Hanya muncul jika admin/pembuat atau tampilkan saja untuk kebutuhan demo) --}}
                 <button onclick="openImageModal('banner')" class="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-xl text-xs font-medium backdrop-blur-xs opacity-0 group-hover/banner:opacity-100 transition shadow-md cursor-pointer flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -37,7 +37,7 @@
                 
                 {{-- Profile Image (Overlapping Banner) --}}
                 <div class="absolute -top-16 left-6 w-28 h-28 rounded-2xl border-4 border-white bg-gray-100 shadow-md overflow-hidden group/profile">
-                    <img id="community-profile" src="{{$community->image_url? asset($community->image_url) : asset('/images/default-community.jpg')}}" class="w-full h-full object-cover" alt="Community Profile">
+                    <img id="community-profile" src="{{$community->image_url? asset($community->image_url) : asset('images/placeholder.svg')}}" class="w-full h-full object-cover" alt="Community Profile">
                     {{-- Tombol Edit Avatar Profil --}}
                     <button onclick="openImageModal('profile')" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/profile:opacity-100 transition cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -62,10 +62,10 @@
                 <div class="flex items-center gap-2 self-start md:self-auto bg-gray-50/60 p-2 rounded-2xl border border-gray-100/50">
                     <div class="flex -space-x-3 overflow-hidden">
                         @if($community->members->count() > 0)
-                            @foreach($community->members as $member)
+                            @foreach($community->members->take(3) as $member)
                                 <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" 
-                                    src="{{ $member->avatar_url ? asset($member->avatar_url) : asset('images/default-avatar.png') }}" 
-                                    alt="{{ $member->name }}">
+                                    src="{{ $member->avatar_url ? asset($member->avatar_url) : asset('images/placeholder.svg') }}" 
+                                    alt="{{ $member->username }}">
                             @endforeach
                         @else
                             {{-- Jika belum ada member sama sekali --}}
@@ -132,7 +132,7 @@
                                             <p class="font-semibold text-gray-700 group-hover:text-blue-600 transition">
                                                 {{ $mountain->name }}
                                             </p>
-                                            <p class="text-xs text-gray-400">{{ $mountain->elevation }} MASL</p>
+                                            <p class="text-xs text-gray-400">{{ $mountain->elevation_masl }} MASL</p>
                                         </div>
                                     </div>
                                 </a>
@@ -155,18 +155,18 @@
                                     <img src="{{ $member->avatar_url }}" class="w-10 h-10 rounded-xl object-cover" alt="">
                                 @else
                                     <div class="w-10 h-10 rounded-xl bg-orange-200 flex items-center justify-center font-bold text-orange-700 text-sm">
-                                        {{ strtoupper(substr($member->name, 0, 2)) }}
+                                        {{ strtoupper(substr($member->username, 0, 2)) }}
                                     </div>
                                 @endif
                                 <div>
                                     <h4 class="font-bold text-sm text-gray-800">
-                                        {{ $member->name }} {{ auth()->id() === $member->id ? '(You)' : '' }}
+                                        {{ $member->username }} {{ auth()->id() === $member->id ? '(You)' : '' }}
                                     </h4>
-                                    <p class="text-[11px] text-gray-400">@​{{ $member->username ?? strtolower(explode(' ', $member->name)[0]) }}</p>
+                                    <p class="text-[11px] text-gray-400">@​{{ $member->username }}</p>
                                 </div>
                             </div>
                             <span class="text-[10px] {{ $community->created_by === $member->id ? 'bg-[#094174] text-white' : 'bg-gray-200 text-gray-600' }} px-2.5 py-1 rounded-full font-bold">
-                                {{ $community->user_id === $member->id ? 'Leader' : 'Member' }}
+                                {{ $community->created_by === $member->id ? 'Leader' : 'Member' }}
                             </span>
                         </div>
                     @empty
@@ -215,7 +215,7 @@
                         </form>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition cursor-pointer">
+                    <a href="{{ route('showLogin') }}" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-200 transition cursor-pointer">
                         Login to Create Event
                     </a>
                 @endauth
@@ -250,7 +250,7 @@
                             
                             <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-4">
                                 <div class="text-xs text-gray-400 font-medium">
-                                    Created by: {{ $event->user->name ?? 'Member' }}
+                                    Created by: {{ $event->user->username ?? 'Member' }}
                                 </div>
                                 <button class="bg-gray-50 text-[#094174] px-5 py-2 rounded-xl text-sm font-bold hover:bg-blue-100 transition cursor-pointer">
                                     Details
@@ -281,7 +281,7 @@
                 <div class="pt-4 border-t border-gray-100 grid grid-cols-2 gap-4 text-xs">
                     <div>
                         <span class="text-gray-400 block mb-0.5">Created By</span>
-                        <span class="font-semibold text-gray-700">{{ $community->creator->name ?? 'Admin' }}</span>
+                        <span class="font-semibold text-gray-700">{{ $community->creator->username ?? 'Admin' }}</span>
                     </div>
                     <div>
                         <span class="text-gray-400 block mb-0.5">Category</span>
