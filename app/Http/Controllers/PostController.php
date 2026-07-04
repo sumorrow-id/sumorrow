@@ -41,7 +41,11 @@ class PostController extends Controller
 
         // ----------------------------------------------------------------
         // 1. Main Feed Query
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes']);
+        // Only real forum posts belong here. Summit logs (created from the
+        // profile) carry no category tags, so exclude tag-less posts — same
+        // convention ProfileController uses to split the two.
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
+            ->whereHas('tags');
 
         $postsQuery->latest();
 
@@ -70,7 +74,10 @@ class PostController extends Controller
         // ----------------------------------------------------------------
         // 3. Forum Leaders
         // ----------------------------------------------------------------
-        $forumLeaders = User::withCount('posts')
+        // Rank by forum posts only — summit logs (tag-less posts) don't count.
+        $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
+            $query->whereHas('tags');
+        }])
             ->orderByDesc('posts_count')
             ->limit(5)
             ->get();
@@ -231,7 +238,7 @@ class PostController extends Controller
      * Route: DELETE /community/posts/{post}
      * Name:  community.posts.destroy
      */
-    public function destroy(Post $post)
+    public function destroy(Request $request, Post $post)
     {
         abort_unless($post->author_id === Auth::id(), 403);
 
@@ -243,6 +250,12 @@ class PostController extends Controller
         }
 
         $post->delete();
+
+        // Deleting from the summit-log detail page: back() would return to the
+        // now-deleted post and 404, so send the user to their activities list.
+        if ($request->boolean('redirect_to_activities')) {
+            return redirect()->route('profile.posts.index')->with('success', __('community.post_deleted'));
+        }
 
         return back()->with('success', __('community.post_deleted'));
     }

@@ -102,6 +102,48 @@ class PostControllerTest extends TestCase
         $response->assertDontSee('/community/posts/'.$post->id.'/save');
     }
 
+    public function test_forum_feed_shows_posts_that_have_category_tags()
+    {
+        $user = User::factory()->create();
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'FORUM_POST_BODY']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        $response->assertSee('FORUM_POST_BODY');
+    }
+
+    public function test_forum_feed_excludes_summit_logs_created_from_profile()
+    {
+        $user = User::factory()->create();
+        // A summit log is a post without any category tags.
+        $user->posts()->create(['title' => 'My Summit', 'body' => 'SUMMIT_LOG_BODY']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        $response->assertDontSee('SUMMIT_LOG_BODY');
+    }
+
+    public function test_forum_leaders_count_excludes_summit_logs()
+    {
+        $user = User::factory()->create();
+
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'tagged forum post']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        // Two summit logs (tag-less) that must NOT count toward the ranking.
+        $user->posts()->create(['title' => 'Summit A', 'body' => 'log a']);
+        $user->posts()->create(['title' => 'Summit B', 'body' => 'log b']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        $leader = $response->viewData('forumLeaders')->firstWhere('id', $user->id);
+        $this->assertSame(1, $leader->posts_count);
+    }
+
     public function test_author_can_delete_own_post_and_image_files_are_removed()
     {
         Storage::fake('public');
@@ -124,6 +166,19 @@ class PostControllerTest extends TestCase
         $this->assertDatabaseCount('post_images', 0);
         $this->assertDatabaseCount('post_tags', 0);
         Storage::disk('public')->assertMissing($imagePath);
+    }
+
+    public function test_deleting_from_summit_log_detail_redirects_to_activities()
+    {
+        $user = User::factory()->create();
+        $post = $user->posts()->create(['title' => 'My Summit', 'body' => 'summit log body']);
+
+        $response = $this->actingAs($user)->delete(route('community.posts.destroy', $post), [
+            'redirect_to_activities' => '1',
+        ]);
+
+        $response->assertRedirect(route('profile.posts.index'));
+        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
     }
 
     public function test_user_cannot_delete_another_users_post()
@@ -153,8 +208,11 @@ class PostControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $other = User::factory()->create();
+        // Both must be real forum posts (tagged) to appear in the feed.
         $ownPost = $user->posts()->create(['title' => '', 'body' => 'my own post']);
+        $ownPost->tags()->create(['keyword' => 'hiking-stories']);
         $otherPost = $other->posts()->create(['title' => '', 'body' => 'someone elses post']);
+        $otherPost->tags()->create(['keyword' => 'hiking-stories']);
 
         $response = $this->actingAs($user)->get(route('community.explore'));
 

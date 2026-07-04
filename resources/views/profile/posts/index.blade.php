@@ -56,6 +56,18 @@
                         {!! Str::markdown($post->body) !!}
                     </div>
                 </div>
+
+                <div class="pt-4" onclick="event.stopPropagation()">
+                    <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
+                        onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="w-full text-center border border-red-200 text-red-500 hover:bg-red-50 text-sm font-bold py-2 px-4 rounded-full transition">
+                            {{ __('common.delete') }}
+                        </button>
+                    </form>
+                </div>
             </div>
         @empty
             <div class="col-span-full py-12 text-center bg-white rounded-3xl shadow-sm border border-gray-100">

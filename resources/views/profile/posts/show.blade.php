@@ -2,13 +2,24 @@
 
 @section('content')
 <div class="w-[95%] max-w-4xl mx-auto pt-32 pb-16 px-4 sm:px-8">
-    <div class="mb-8">
-        <a href="{{ url()->previous() == route('profile.posts.index') ? route('profile.posts.index') : route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline flex items-center gap-2 mb-4">
+    <div class="mb-8 flex items-center justify-between gap-4">
+        <a href="{{ url()->previous() == route('profile.posts.index') ? route('profile.posts.index') : route('profile') }}" class="text-sm font-bold text-[#094174] hover:underline flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             {{ __('profile.back') }}
         </a>
+
+        <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
+            onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="redirect_to_activities" value="1">
+            <button type="submit"
+                class="text-center border border-red-200 text-red-500 hover:bg-red-50 text-sm font-bold py-2 px-5 rounded-full transition">
+                {{ __('common.delete') }}
+            </button>
+        </form>
     </div>
 
     <div class="bg-white rounded-3xl p-6 md:p-10 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
