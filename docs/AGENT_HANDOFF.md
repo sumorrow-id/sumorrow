@@ -11,6 +11,20 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-04 — branch: `feat/summit-log` (uncommitted)
+
+By: Claude Code
+
+**What changed**
+
+- `CommunityController::index` (route `/community`) now matches `PostController::index`: the feed excludes summit logs (tag-less posts) via `whereHas('tags')`, and Forum Leaders counts only tagged forum posts.
+- Summit-log delete buttons restyled small and bottom-right: on the My Activities cards (`profile/posts/index.blade.php`) and moved from the top bar into the card footer on the detail page (`profile/posts/show.blade.php`).
+- Summit-log delete now confirms via the shared `ConfirmSubmit` modal (`confirm-submit-form` + data attributes) instead of the native `confirm()` dialog, on both pages above and on the profile Hikings tab (`profile/partials/hikings.blade.php`).
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/CommunityControllerTest.php tests/Feature/PostControllerTest.php` — 25 passing (2 new tests in `CommunityControllerTest` covering feed exclusion and leaders count on `/community`).
+
 ## 2026-07-03 — branch: `main` (uncommitted)
 
 By: Claude Code

@@ -57,13 +57,17 @@
                     </div>
                 </div>
 
-                <div class="pt-4" onclick="event.stopPropagation()">
+                <div class="pt-4 flex justify-end" onclick="event.stopPropagation()">
                     <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
-                        onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})">
+                        class="confirm-submit-form"
+                        data-confirm-title="{{ __('community.delete_post') }}"
+                        data-confirm-message="{{ __('community.confirm_delete_post') }}"
+                        data-confirm-label="{{ __('common.delete') }}"
+                        data-confirm-variant="danger">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                            class="w-full text-center border border-red-200 text-red-500 hover:bg-red-50 text-sm font-bold py-2 px-4 rounded-full transition">
+                            class="border border-red-200 text-red-500 hover:bg-red-50 text-xs font-bold py-1.5 px-4 rounded-full transition">
                             {{ __('common.delete') }}
                         </button>
                     </form>

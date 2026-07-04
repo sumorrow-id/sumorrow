@@ -70,8 +70,11 @@
 
                 <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto shrink-0">
                     <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
-                        onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})"
-                        class="w-full sm:w-auto">
+                        class="w-full sm:w-auto confirm-submit-form"
+                        data-confirm-title="{{ __('community.delete_post') }}"
+                        data-confirm-message="{{ __('community.confirm_delete_post') }}"
+                        data-confirm-label="{{ __('common.delete') }}"
+                        data-confirm-variant="danger">
                         @csrf
                         @method('DELETE')
                         <button type="submit"

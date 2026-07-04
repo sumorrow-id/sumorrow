@@ -49,6 +49,39 @@ class CommunityControllerTest extends TestCase
         $response->assertSee('Gunung Lovers');
     }
 
+    public function test_community_feed_excludes_summit_logs(): void
+    {
+        $user = User::factory()->create();
+        // A summit log is a post without any category tags.
+        $user->posts()->create(['title' => 'My Summit', 'body' => 'SUMMIT_LOG_BODY']);
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'FORUM_POST_BODY']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        $response = $this->actingAs($user)->get(route('community'));
+
+        $response->assertOk();
+        $response->assertSee('FORUM_POST_BODY');
+        $response->assertDontSee('SUMMIT_LOG_BODY');
+    }
+
+    public function test_community_forum_leaders_count_excludes_summit_logs(): void
+    {
+        $user = User::factory()->create();
+
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'tagged forum post']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        // Two summit logs (tag-less) that must NOT count toward the ranking.
+        $user->posts()->create(['title' => 'Summit A', 'body' => 'log a']);
+        $user->posts()->create(['title' => 'Summit B', 'body' => 'log b']);
+
+        $response = $this->actingAs($user)->get(route('community'));
+
+        $response->assertOk();
+        $leader = $response->viewData('forumLeaders')->firstWhere('id', $user->id);
+        $this->assertSame(1, $leader->posts_count);
+    }
+
     // -------------------------------------------------------------------------
     // join
     // -------------------------------------------------------------------------
