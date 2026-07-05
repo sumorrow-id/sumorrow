@@ -62,4 +62,13 @@ return [
     'reset_notification_expiry' => 'This password reset link will expire in 60 minutes.',
     'reset_notification_ignore' => 'If you did not request a password reset, no further action is required.',
     'reset_notification_thanks' => 'Thank you!',
+
+    // App\Notifications\VerifyEmailNotification
+    'verify_notification_subject' => 'Verify Your Sumorrow Email Address',
+    'verify_notification_greeting' => 'Hello, :name!',
+    'verify_notification_intro' => 'Welcome to Sumorrow — your companion for exploring Indonesian mountains. Please verify your email address to get your verified badge and secure your account.',
+    'verify_notification_action' => 'Verify Email Address',
+    'verify_notification_expiry' => 'This verification link will expire in :count minutes.',
+    'verify_notification_ignore' => 'If you did not create a Sumorrow account, no further action is required.',
+    'verify_notification_thanks' => 'Happy hiking, from the Sumorrow team!',
 ];

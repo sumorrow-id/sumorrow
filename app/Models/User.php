@@ -4,8 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use Database\Factories\UserFactory;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,11 +58,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->password_hash;
     }
 
-    public function hasVerifiedEmail()
-    {
-        return ! is_null($this->created_at) || ! is_null($this->google_id);
-    }
-
     public function sendPasswordResetNotification($token): void
     {
         $this->notify((new ResetPasswordNotification($token))->locale(app()->getLocale()));
@@ -70,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify((new VerifyEmail)->locale(app()->getLocale()));
+        $this->notify((new VerifyEmailNotification)->locale(app()->getLocale()));
     }
 
     public function ratings(): HasMany

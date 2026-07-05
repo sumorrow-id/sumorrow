@@ -11,6 +11,21 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-05 — branch: `main` (uncommitted)
+
+By: Claude Code
+
+**What changed**
+
+- Fixed email verification: `User::hasVerifiedEmail()` previously reported all users as verified regardless of actual verification status; it now uses the framework's standard `email_verified_at` check. Google-OAuth users remain auto-verified (`GoogleAuthService` sets `email_verified_at`). Credential users only get the verified badge (Edit Profile + profile page) after clicking the emailed link.
+- `RegisterController` no longer sends the verification email manually — the `Registered` event's built-in listener handles it (avoids a double send now that the verified check is accurate).
+- New Sumorrow-branded verification email: `App\Notifications\VerifyEmailNotification` (extends the framework notification, queued, localized EN + ID via new `auth.verify_notification_*` lang keys).
+- Updated the stale `hasVerifiedEmail` note in CLAUDE.md.
+
+**How to verify**
+
+- `php artisan test --compact` — 258 passing (5 new tests in `tests/Feature/Auth/EmailVerificationTest.php`: single email on register, signed-link verification, invalid-hash rejection, Google auto-verify, badge visibility on Edit Profile).
+
 ## 2026-07-04 — branch: `feat/summit-log` (uncommitted)
 
 By: Claude Code

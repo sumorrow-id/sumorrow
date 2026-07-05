@@ -43,8 +43,8 @@ class RegisterController extends Controller
             'avatar_url' => $avatarUrl,
         ]);
 
+        // The Registered event triggers SendEmailVerificationNotification — do not also send manually.
         event(new Registered($user));
-        $user->sendEmailVerificationNotification();
         $this->auth->login($user);
 
         return redirect()->route('verification.notice');

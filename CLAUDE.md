@@ -54,7 +54,7 @@ Anything under `/api/*` is forced into JSON responses by exception handlers in [
 - Most catalog models (Mountain, Province, Basecamp, etc.) use auto-increment integer PKs.
 - **`User` uses UUIDs** (`HasUuids`), has `$incrementing = false`, `keyType = 'string'`, and **`UPDATED_AT = null`** (no `updated_at` column). It stores the password in `password_hash` (not `password`) — `getAuthPassword()` is overridden accordingly. There is a `role` column with `admin` as the privileged value, checked by `AdminMiddleware` and login redirects.
 - `Mountain::$timestamps = false` — the mountains table has no timestamps either.
-- `hasVerifiedEmail()` on `User` is custom: it returns true if either `created_at` is set or `google_id` is present (Google-OAuth users are auto-verified).
+- Email verification uses the standard `email_verified_at` check. Google-OAuth users are auto-verified because `GoogleAuthService` sets `email_verified_at` on create/login; credential users must click the emailed link (`App\Notifications\VerifyEmailNotification`).
 
 ### Pluggable social auth
 

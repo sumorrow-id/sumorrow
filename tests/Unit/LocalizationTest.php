@@ -5,8 +5,8 @@ namespace Tests\Unit;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use Carbon\Carbon;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Session\ArraySessionHandler;
 use Illuminate\Session\Store;
@@ -133,7 +133,7 @@ class LocalizationTest extends TestCase
 
         Notification::assertSentTo(
             $user,
-            fn (VerifyEmail $notification): bool => $notification->locale === 'id'
+            fn (VerifyEmailNotification $notification): bool => $notification->locale === 'id'
         );
     }
 }

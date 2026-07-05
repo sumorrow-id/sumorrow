@@ -62,4 +62,13 @@ return [
     'reset_notification_expiry' => 'Tautan pengaturan ulang kata sandi ini berlaku selama 60 menit.',
     'reset_notification_ignore' => 'Jika Anda tidak meminta pengaturan ulang kata sandi, abaikan email ini.',
     'reset_notification_thanks' => 'Terima kasih!',
+
+    // App\Notifications\VerifyEmailNotification
+    'verify_notification_subject' => 'Verifikasi Alamat Email Sumorrow Anda',
+    'verify_notification_greeting' => 'Halo, :name!',
+    'verify_notification_intro' => 'Selamat datang di Sumorrow — teman pendakian Anda menjelajahi gunung-gunung Indonesia. Silakan verifikasi alamat email Anda untuk mendapatkan badge terverifikasi dan mengamankan akun Anda.',
+    'verify_notification_action' => 'Verifikasi Alamat Email',
+    'verify_notification_expiry' => 'Tautan verifikasi ini berlaku selama :count menit.',
+    'verify_notification_ignore' => 'Jika Anda tidak membuat akun Sumorrow, abaikan email ini.',
+    'verify_notification_thanks' => 'Selamat mendaki, dari tim Sumorrow!',
 ];
