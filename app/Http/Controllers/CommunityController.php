@@ -83,19 +83,32 @@ class CommunityController extends Controller
         ));
     }
 
-    public function join(Community $community)
+    public function join(Request $request, Community $community)
     {
         $user = Auth::user();
 
-        if (! $community->isMember($user)) {
-            $community->members()->attach($user->id, ['role' => 'member']);
-
-            return redirect()->route('community', ['tab' => 'community'])
-                ->with('success', __('community.joined_community', ['name' => $community->name]));
+        if ($community->isMember($user)) {
+            return redirect()->route('community.show', $community)
+                ->with('info', __('community.already_a_member'));
         }
 
-        return redirect()->route('community', ['tab' => 'community'])
-            ->with('info', __('community.already_a_member'));
+        // Private communities are token-gated; the creator may always rejoin.
+        if ($community->privacy === 'private' && ! $community->isCreatedBy($user)) {
+            $request->validate(['join_token' => 'required|string']);
+
+            if (! hash_equals((string) $community->join_token, trim($request->join_token))) {
+                return back()
+                    ->withErrors(['join_token' => __('community.invalid_token')])
+                    ->withInput();
+            }
+        }
+
+        $community->members()->attach($user->id, [
+            'role' => $community->isCreatedBy($user) ? 'admin' : 'member',
+        ]);
+
+        return redirect()->route('community.show', $community)
+            ->with('success', __('community.joined_community', ['name' => $community->name]));
     }
 
     public function store(Request $request)
@@ -111,6 +124,7 @@ class CommunityController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'privacy' => $request->privacy,
+            'join_token' => $request->privacy === 'private' ? Str::upper(Str::random(8)) : null,
             'image_url' => null,
             'created_by' => Auth::id(),
         ]);
@@ -123,8 +137,14 @@ class CommunityController extends Controller
 
     public function show(Community $community)
     {
-        // Full member list feeds the Members tab; the header avatar stack
-        // takes the first few in the view.
+        // Private communities hide their content behind a join-token gate;
+        // the creator can always get back in.
+        $user = Auth::user();
+        if ($community->privacy === 'private' && ! $community->isMember($user) && ! $community->isCreatedBy($user)) {
+            return view('community.show-locked', compact('community'));
+        }
+
+        // Full member list feeds the Members tab.
         $community->load([
             'members',
             'creator',
@@ -159,6 +179,10 @@ class CommunityController extends Controller
             'description' => $validated['description'],
             'privacy' => $validated['privacy'],
         ];
+
+        if ($validated['privacy'] === 'private' && ! $community->join_token) {
+            $data['join_token'] = Str::upper(Str::random(8));
+        }
 
         if ($request->hasFile('profile_image')) {
             $data['image_url'] = $this->replaceImage($community->image_url, $request->file('profile_image'));

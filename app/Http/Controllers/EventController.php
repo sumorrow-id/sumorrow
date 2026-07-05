@@ -49,12 +49,17 @@ class EventController extends Controller
     }
 
     /**
-     * Delete an event. Allowed for its creator or the community owner.
+     * Delete an event. Allowed for its creator or the community owner —
+     * but only while they are still a member; leaving the community
+     * suspends the right until they rejoin.
      */
     public function destroy(Event $event): RedirectResponse
     {
+        $community = $event->community;
+
         abort_unless(
-            $event->user_id === Auth::id() || $event->community->isCreatedBy(Auth::user()),
+            $community->isMember(Auth::user())
+            && ($event->user_id === Auth::id() || $community->isCreatedBy(Auth::user())),
             403
         );
 

@@ -264,6 +264,8 @@
             @php
                 $isLiked = Auth::check() && $post->likes->contains('id', Auth::id());
                 $likeCount = $post->likes->count();
+                // Inside a community, only members may like posts.
+                $viewerCanInteract = Auth::check() && (! isset($feedCommunity) || ($canPostInCommunity ?? false));
             @endphp
 
             <div class="flex flex-wrap items-center justify-between text-gray-400 gap-y-3">
@@ -281,7 +283,7 @@
                             class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $post->comments()->count() }}</span>
                     </a>
 
-                    @auth
+                    @if ($viewerCanInteract)
                         <button type="button" data-post-id="{{ $post->id }}"
                             data-like-url="{{ route('community.posts.like', $post->id) }}"
                             data-liked="{{ $isLiked ? 'true' : 'false' }}" data-count="{{ $likeCount }}"
@@ -295,6 +297,17 @@
                             <span
                                 class="like-count text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
                         </button>
+                    @elseif (Auth::check())
+                        {{-- Logged in but not a member of this community: read-only count --}}
+                        <span class="flex items-center gap-1.5 sm:gap-2 opacity-60 cursor-not-allowed"
+                            title="{{ __('community.join_to_interact') }}">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                </path>
+                            </svg>
+                            <span class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
+                        </span>
                     @else
                         <button type="button"
                             class="flex items-center gap-1.5 sm:gap-2 hover:text-red-500 transition group"
@@ -306,7 +319,7 @@
                             </svg>
                             <span class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
                         </button>
-                    @endauth
+                    @endif
 
                 </div>
                 <div class="flex items-center gap-3 sm:gap-4">

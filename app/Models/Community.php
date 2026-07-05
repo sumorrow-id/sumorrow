@@ -17,6 +17,7 @@ class Community extends Model
         'description',
         'slug',
         'privacy',
+        'join_token',
         'image_url',
         'banner_url',
         'created_by',

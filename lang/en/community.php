@@ -123,4 +123,13 @@ return [
     'delete_event' => 'Delete Event',
     'confirm_delete_event' => 'Delete this event? This action cannot be undone.',
     'event_created_by' => 'Created by :name',
+    'join_to_interact' => 'Join this community to reply and like its posts.',
+    'join_token_label' => 'Join Token',
+    'join_token_hint' => 'Share this token with people you want to invite.',
+    'private_locked_title' => 'This community is private',
+    'private_locked_text' => 'Enter the join token from the community creator to join and view its content.',
+    'token_placeholder' => 'Enter join token',
+    'invalid_token' => 'The join token is incorrect.',
+    'copy_token' => 'Copy',
+    'token_copied' => 'Copied!',
 ];

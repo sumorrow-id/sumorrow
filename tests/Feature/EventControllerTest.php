@@ -157,6 +157,7 @@ class EventControllerTest extends TestCase
         $owner = User::factory()->create();
         $member = User::factory()->create();
         $community = $this->makeCommunity(['created_by' => $owner->id]);
+        $community->members()->attach($owner->id, ['role' => 'admin']);
         $community->members()->attach($member->id, ['role' => 'member']);
         $event = $this->makeEvent($community, $member);
 
@@ -164,6 +165,36 @@ class EventControllerTest extends TestCase
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('events', ['id' => $event->id]);
+    }
+
+    public function test_event_creator_who_left_the_community_cannot_delete_their_event(): void
+    {
+        $member = User::factory()->create();
+        $community = $this->makeCommunity();
+        $community->members()->attach($member->id, ['role' => 'member']);
+        $event = $this->makeEvent($community, $member);
+
+        $community->members()->detach($member->id);
+
+        $response = $this->actingAs($member)->delete(route('community.events.destroy', $event));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('events', ['id' => $event->id]);
+    }
+
+    public function test_community_owner_who_left_the_community_cannot_delete_events(): void
+    {
+        $owner = User::factory()->create();
+        $member = User::factory()->create();
+        $community = $this->makeCommunity(['created_by' => $owner->id]);
+        $community->members()->attach($member->id, ['role' => 'member']);
+        $event = $this->makeEvent($community, $member);
+
+        // Owner is not (or no longer) a member of their own community.
+        $response = $this->actingAs($owner)->delete(route('community.events.destroy', $event));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('events', ['id' => $event->id]);
     }
 
     public function test_other_member_cannot_delete_someone_elses_event(): void

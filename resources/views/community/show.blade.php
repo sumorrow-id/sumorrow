@@ -56,14 +56,6 @@
 
             {{-- Actions --}}
             <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-                <div class="flex -space-x-3 mr-1">
-                    @foreach ($community->members->take(3) as $member)
-                        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
-                            src="{{ $member->avatar_url ? asset($member->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
-                            alt="{{ $member->username }}">
-                    @endforeach
-                </div>
-
                 @if ($isCreator)
                     <button type="button" onclick="toggleEditCommunityModal(true)"
                         class="px-4 py-2 bg-[#094174] text-white text-xs sm:text-sm font-bold rounded-full hover:bg-[#105DA3] transition shadow-md cursor-pointer">
@@ -246,7 +238,7 @@
                                 <span class="text-xs text-gray-400 font-medium">
                                     {{ __('community.event_created_by', ['name' => $event->user->username ?? '—']) }}
                                 </span>
-                                @if (Auth::id() === $event->user_id || $isCreator)
+                                @if ($isMember && (Auth::id() === $event->user_id || $isCreator))
                                     <form method="POST" action="{{ route('community.events.destroy', $event) }}" class="confirm-submit-form"
                                         data-confirm-title="{{ __('community.delete_event') }}"
                                         data-confirm-message="{{ __('community.confirm_delete_event') }}"
@@ -294,6 +286,21 @@
                     <span class="font-semibold text-[#094174]">{{ __('community.privacy_'.$community->privacy) }}</span>
                 </div>
             </div>
+
+            {{-- Join token — visible only to the creator of a private community --}}
+            @if ($isCreator && $community->privacy === 'private' && $community->join_token)
+                <div class="pt-4 border-t border-gray-100">
+                    <span class="text-gray-400 block mb-1 text-xs">{{ __('community.join_token_label') }}</span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <code id="join-token-value" class="font-mono text-sm font-bold text-[#094174] bg-blue-50 px-3 py-1.5 rounded-lg tracking-widest">{{ $community->join_token }}</code>
+                        <button type="button" onclick="copyJoinToken(this)"
+                            class="text-xs font-bold text-gray-500 hover:text-[#094174] transition cursor-pointer">
+                            {{ __('community.copy_token') }}
+                        </button>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-1">{{ __('community.join_token_hint') }}</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -492,6 +499,14 @@
         if (!modal) return;
         modal.classList.toggle('hidden', !open);
         document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    function copyJoinToken(btn) {
+        navigator.clipboard.writeText(document.getElementById('join-token-value').textContent.trim()).then(function () {
+            const original = btn.textContent;
+            btn.textContent = {{ Illuminate\Support\Js::from(__('community.token_copied')) }};
+            setTimeout(function () { btn.textContent = original; }, 1500);
+        });
     }
 
     function previewEventImage(input) {

@@ -64,6 +64,12 @@
                         {{ __('community.leave_community_button') }}
                     </button>
                 </form>
+            @elseif ($community->privacy === 'private')
+                {{-- Private: joining needs a token, entered on the community's gate page --}}
+                <a href="{{ route('community.show', $community) }}"
+                    class="flex-1 py-2 px-4 text-center bg-[#094174] text-white font-bold text-sm rounded-lg hover:bg-[#105DA3] transition shadow-md">
+                    {{ __('community.join_community_button') }}
+                </a>
             @else
                 <form method="POST" action="{{ route('community.join', $community) }}" class="flex-1">
                     @csrf

@@ -123,4 +123,13 @@ return [
     'delete_event' => 'Hapus Acara',
     'confirm_delete_event' => 'Hapus acara ini? Tindakan ini tidak dapat dibatalkan.',
     'event_created_by' => 'Dibuat oleh :name',
+    'join_to_interact' => 'Gabung komunitas ini untuk membalas dan menyukai postingannya.',
+    'join_token_label' => 'Token Gabung',
+    'join_token_hint' => 'Bagikan token ini kepada orang yang ingin Anda undang.',
+    'private_locked_title' => 'Komunitas ini privat',
+    'private_locked_text' => 'Masukkan token gabung dari pembuat komunitas untuk bergabung dan melihat isinya.',
+    'token_placeholder' => 'Masukkan token gabung',
+    'invalid_token' => 'Token gabung salah.',
+    'copy_token' => 'Salin',
+    'token_copied' => 'Tersalin!',
 ];

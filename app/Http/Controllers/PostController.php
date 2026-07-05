@@ -218,6 +218,8 @@ class PostController extends Controller
      */
     public function storeComment(Request $request, Post $post)
     {
+        $this->ensureMemberOfPostCommunity($post);
+
         $request->validate([
             'body' => 'required|string|max:2000',
         ]);
@@ -282,11 +284,24 @@ class PostController extends Controller
      */
     public function toggleLike(Request $request, Post $post)
     {
+        $this->ensureMemberOfPostCommunity($post);
+
         $post->likes()->toggle(auth()->id());
 
         return response()->json([
             'liked' => $post->likes()->where('user_id', auth()->id())->exists(),
             'count' => $post->likes()->count(),
         ]);
+    }
+
+    /**
+     * Posts inside a community accept interactions (comments, likes)
+     * from that community's members only.
+     */
+    private function ensureMemberOfPostCommunity(Post $post): void
+    {
+        if ($post->community_id && ! $post->community->isMember(Auth::user())) {
+            abort(403);
+        }
     }
 }
