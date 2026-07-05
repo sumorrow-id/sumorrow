@@ -15,6 +15,7 @@ class Post extends Model
 
     protected $fillable = [
         'author_id',
+        'community_id',
         'mountain_id',
         'climbing_date',
         'duration_days',
@@ -39,6 +40,11 @@ class Post extends Model
     public function mountain(): BelongsTo
     {
         return $this->belongsTo(Mountain::class, 'mountain_id');
+    }
+
+    public function community(): BelongsTo
+    {
+        return $this->belongsTo(Community::class);
     }
 
     public function images(): HasMany

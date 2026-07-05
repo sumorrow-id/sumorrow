@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Community;
+use App\Models\Mountain;
 use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CommunityController extends Controller
@@ -34,8 +37,10 @@ class CommunityController extends Controller
         $activeTag = $request->query('tag');
 
         // Forum feed only: summit logs carry no category tags, so exclude
-        // tag-less posts — same convention as PostController::index.
+        // tag-less posts — same convention as PostController::index. Posts
+        // made inside a community stay on their community page.
         $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
+            ->whereNull('community_id')
             ->whereHas('tags')
             ->latest();
 
@@ -112,8 +117,76 @@ class CommunityController extends Controller
 
         $community->members()->attach(Auth::id(), ['role' => 'admin']);
 
-        return redirect()->route('community', ['tab' => 'community'])
+        return redirect()->route('community.show', $community)
             ->with('success', __('community.community_created', ['name' => $community->name]));
+    }
+
+    public function show(Community $community)
+    {
+        // Full member list feeds the Members tab; the header avatar stack
+        // takes the first few in the view.
+        $community->load([
+            'members',
+            'creator',
+            'events' => fn ($query) => $query->with('user')->orderBy('event_date'),
+        ]);
+
+        $posts = Post::where('community_id', $community->id)
+            ->with(['author', 'tags', 'images', 'likes'])
+            ->latest()
+            ->paginate(10);
+
+        $recommendedMountains = Mountain::with('images')->inRandomOrder()->limit(5)->get();
+
+        return view('community.show', compact('community', 'posts', 'recommendedMountains'));
+    }
+
+    public function update(Request $request, Community $community)
+    {
+        abort_unless($community->isCreatedBy(Auth::user()), 403);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:communities,name,'.$community->id,
+            'description' => 'required|string',
+            'privacy' => 'required|in:public,private',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:4096',
+        ]);
+
+        $data = [
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'],
+            'privacy' => $validated['privacy'],
+        ];
+
+        if ($request->hasFile('profile_image')) {
+            $data['image_url'] = $this->replaceImage($community->image_url, $request->file('profile_image'));
+        }
+
+        if ($request->hasFile('banner_image')) {
+            $data['banner_url'] = $this->replaceImage($community->banner_url, $request->file('banner_image'));
+        }
+
+        $community->update($data);
+
+        return redirect()->route('community.show', $community)
+            ->with('success', __('community.community_updated'));
+    }
+
+    public function destroy(Community $community)
+    {
+        abort_unless($community->isCreatedBy(Auth::user()), 403);
+
+        $this->deleteImage($community->image_url);
+        $this->deleteImage($community->banner_url);
+
+        // Memberships and community posts are removed by FK cascade.
+        // ponytail: image files of cascaded posts stay on disk; sweep them if storage matters.
+        $community->delete();
+
+        return redirect()->route('community', ['tab' => 'community'])
+            ->with('success', __('community.community_deleted'));
     }
 
     public function leave(Community $community)
@@ -124,5 +197,26 @@ class CommunityController extends Controller
 
         return redirect()->route('community', ['tab' => 'community'])
             ->with('info', __('community.left_community'));
+    }
+
+    /**
+     * Store a newly uploaded community image and delete the one it replaces.
+     */
+    private function replaceImage(?string $oldUrl, UploadedFile $file): string
+    {
+        $this->deleteImage($oldUrl);
+
+        return 'storage/'.$file->store('community', 'public');
+    }
+
+    /**
+     * Delete an uploaded community image; bundled defaults live outside
+     * storage/ so they are never touched.
+     */
+    private function deleteImage(?string $url): void
+    {
+        if ($url && str_starts_with($url, 'storage/')) {
+            Storage::disk('public')->delete(Str::after($url, 'storage/'));
+        }
     }
 }

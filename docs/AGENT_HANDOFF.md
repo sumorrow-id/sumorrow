@@ -11,6 +11,30 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-05 — branch: `main` (uncommitted) — My Community detail page
+
+By: Claude Code
+
+**What changed**
+
+- New community detail page `GET /community/{community}` (auth-only) at `resources/views/community/show.blade.php`: responsive header (banner + overlapping profile image with bundled defaults from `public/images/community/`), Forum / Members / About tabs, join/leave with confirm dialogs, flash feedback via the existing layout toasts.
+- Community CRUD completed: `PATCH /community/{community}` (edit name/description/privacy + upload profile/banner images to `storage/community/`) and `DELETE /community/{community}` — both creator-only (`403` otherwise); membership alone grants no edit/delete rights. Join/leave unchanged and open to any member.
+- Community-scoped forum posts: new nullable `posts.community_id` FK (cascade on community delete). The feed composer inside a community posts there (members only, enforced server-side); global forum feeds (`/community`, `/community/explore`) exclude community posts via `whereNull('community_id')`.
+- Migrations: `2026_07_05_000001_add_banner_url_to_communities_table`, `2026_07_05_000002_add_community_id_to_posts_table` — run `php artisan migrate` after pull.
+- Community cards now link to the detail page, show the community banner (default from `public/images/community/banner.jpg`) and an Owner badge; new EN + ID lang keys under `community.*`.
+- Destructive community actions (delete/leave community, delete event) use the app's existing global confirm system (`form.confirm-submit-form` + `<x-confirm-submit-modal />` handled by `ConfirmSubmit` in app.js). A short-lived duplicate `components/confirm-modal.blade.php` was removed in favour of it.
+- Mobile navbar (`navbar-light`): Community link now points to `/community` (was a dead `#`), and logged-in users get an avatar + Profile entry in the mobile menu. Avatar URL logic is computed once at the top of the component.
+- Community page mobile polish: My Community top bar stacks on small screens; create-community modal scrolls on short viewports; feed composer's tag pills + Post button stack on mobile; emoji picker popover is viewport-centered on mobile (was clipping off-screen); GIF popover capped to viewport width.
+- Community Events: new `events` table (`2026_07_05_000003_create_events_table`), `Event` model, `EventController`. Members create events (`POST /community/{community}/events`, named "event" error bag, optional image to `storage/events/`); the event creator or community owner deletes them (`DELETE /community/events/{event}`). Events tab on the detail page with create modal, empty state, and the shared confirm modal; `?tab=` query deep-links a tab. Tests in `tests/Feature/EventControllerTest.php`.
+- Skipped (from the `feature/mycommunity` reference branch): post saves/bookmarks and the `author_id → user_id` rename — separate features, add when requested.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/CommunityControllerTest.php` (21 tests: show, creator-only update/destroy, member-only community posting, feed scoping).
+- Manually: create a community from the My Community tab → lands on its detail page with default banner/profile; edit images via the Edit modal as creator; open the same community as another user → only Join/Leave visible, PATCH/DELETE return 403.
+
+---
+
 ## 2026-07-05 — branch: `main` (uncommitted)
 
 By: Claude Code
