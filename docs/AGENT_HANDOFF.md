@@ -21,10 +21,11 @@ By: Claude Code
 - `RegisterController` no longer sends the verification email manually — the `Registered` event's built-in listener handles it (avoids a double send now that the verified check is accurate).
 - New Sumorrow-branded verification email: `App\Notifications\VerifyEmailNotification` (extends the framework notification, queued, localized EN + ID via new `auth.verify_notification_*` lang keys).
 - Updated the stale `hasVerifiedEmail` note in CLAUDE.md.
+- Published Laravel mail templates to `resources/views/vendor/mail` and restyled them with Sumorrow branding: header shows `SUMORROW-LOGO-BLACK.png`, primary buttons/links/panels use navy `#094174`, body background `#f0f5fa`, footer hardcodes the Sumorrow name. Applies to all `MailMessage` notifications (verification + password reset). `.env.example` `APP_NAME` set to `Sumorrow`.
 
 **How to verify**
 
-- `php artisan test --compact` — 258 passing (5 new tests in `tests/Feature/Auth/EmailVerificationTest.php`: single email on register, signed-link verification, invalid-hash rejection, Google auto-verify, badge visibility on Edit Profile).
+- `php artisan test --compact` — 259 passing (6 new tests in `tests/Feature/Auth/EmailVerificationTest.php`: single email on register, signed-link verification, invalid-hash rejection, Google auto-verify, badge visibility on Edit Profile, branded mail render).
 
 ## 2026-07-04 — branch: `feat/summit-log` (uncommitted)
 

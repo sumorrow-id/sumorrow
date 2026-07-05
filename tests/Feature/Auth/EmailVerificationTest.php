@@ -74,6 +74,17 @@ class EmailVerificationTest extends TestCase
         $this->assertTrue($user->hasVerifiedEmail());
     }
 
+    public function test_verification_email_uses_sumorrow_branding(): void
+    {
+        $user = User::factory()->create(['email_verified_at' => null]);
+
+        $html = (string) (new VerifyEmailNotification)->toMail($user)->render();
+
+        $this->assertStringContainsString('SUMORROW-LOGO-BLACK.png', $html);
+        $this->assertStringContainsString('#094174', $html);
+        $this->assertStringContainsString(__('auth.verify_notification_action'), $html);
+    }
+
     public function test_edit_profile_shows_verified_badge_only_after_verification(): void
     {
         $unverified = User::factory()->create(['email_verified_at' => null]);
