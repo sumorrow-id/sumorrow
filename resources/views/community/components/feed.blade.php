@@ -1,3 +1,5 @@
+{{-- When included with a $feedCommunity, the composer posts into that
+     community (members only) instead of the global forum feed. --}}
 <div class="flex flex-col gap-6">
 
     @if (request('tag'))
@@ -20,10 +22,21 @@
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 
+    @if (isset($feedCommunity) && ! ($canPostInCommunity ?? false))
+        <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-4 md:p-5 flex items-center gap-3 text-sm text-gray-500">
+            <svg class="w-5 h-5 shrink-0 text-[#094174]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ __('community.join_to_post') }}
+        </div>
+    @else
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-4 md:p-5">
         <form id="post-composer-form" method="POST" action="{{ route('community.posts.store') }}"
             enctype="multipart/form-data" data-giphy-key="{{ env('GIPHY_API_KEY') }}">
             @csrf
+            @isset($feedCommunity)
+                <input type="hidden" name="community_id" value="{{ $feedCommunity->id }}">
+            @endisset
 
             {{-- ── Row 1: Avatar + text input + toolbar ── --}}
             <div class="flex items-center gap-3 mb-3">
@@ -43,7 +56,7 @@
                     <input type="hidden" name="gif_url" id="gif-url-hidden" value="{{ old('gif_url') }}">
 
                     {{-- ── Toolbar icons + popovers anchored here ── --}}
-                    <div class="relative flex items-center gap-3 text-gray-400 shrink-0">
+                    <div class="relative flex items-center gap-2 md:gap-3 pl-2 text-gray-400 shrink-0">
 
                         {{-- 📷 Image picker --}}
                         <button type="button" id="btn-image-picker" class="hover:text-[#094174] transition"
@@ -69,14 +82,15 @@
                         </button>
 
                         {{-- ── Emoji picker popover ─────────────────────────── --}}
+                        {{-- Fixed + viewport-centered on mobile so the wide picker never clips off-screen --}}
                         <div id="emoji-popover"
-                            class="hidden absolute right-0 top-full mt-2 z-[100] shadow-2xl rounded-2xl overflow-hidden border border-gray-200">
+                            class="hidden fixed sm:absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:left-auto sm:right-0 sm:top-full sm:translate-x-0 sm:translate-y-0 sm:mt-2 max-w-[calc(100vw-2rem)] z-[100] shadow-2xl rounded-2xl overflow-hidden border border-gray-200">
                             <emoji-picker id="emoji-picker-el" class="light"></emoji-picker>
                         </div>
 
                         {{-- ── GIF picker popover ───────────────────────────── --}}
                         <div id="gif-popover"
-                            class="hidden absolute right-0 top-full mt-2 z-[100] w-72 bg-white border border-gray-200 rounded-2xl shadow-2xl p-3">
+                            class="hidden absolute right-0 top-full mt-2 z-[100] w-72 max-w-[calc(100vw-3rem)] bg-white border border-gray-200 rounded-2xl shadow-2xl p-3">
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">{{ __('community.gif_search_label') }}</p>
 
                             {{-- Search box --}}
@@ -129,7 +143,7 @@
             @endif
 
             {{-- ── Category tag pills + Submit ─────────────────────────── --}}
-            <div class="flex items-center justify-between gap-4 mt-3 pl-1">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mt-3 pl-1">
                 <div class="flex flex-wrap gap-2 grow">
                     @foreach (['Hiking Stories', 'Tips and Trick', 'Gear & Equipment', 'Safety & Survival'] as $tag)
                         @php
@@ -158,7 +172,7 @@
                 </div>
 
                 <button id="post-submit-btn" type="submit" disabled
-                    class="shrink-0 bg-[#094174] hover:bg-[#105DA3] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="shrink-0 self-end sm:self-auto bg-[#094174] hover:bg-[#105DA3] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
                     {{ __('community.post_button') }}
                 </button>
             </div>
@@ -166,6 +180,7 @@
 
 
     </div>
+    @endif
 
 
     {{-- ================================================================
@@ -249,6 +264,8 @@
             @php
                 $isLiked = Auth::check() && $post->likes->contains('id', Auth::id());
                 $likeCount = $post->likes->count();
+                // Inside a community, only members may like posts.
+                $viewerCanInteract = Auth::check() && (! isset($feedCommunity) || ($canPostInCommunity ?? false));
             @endphp
 
             <div class="flex flex-wrap items-center justify-between text-gray-400 gap-y-3">
@@ -266,7 +283,7 @@
                             class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $post->comments()->count() }}</span>
                     </a>
 
-                    @auth
+                    @if ($viewerCanInteract)
                         <button type="button" data-post-id="{{ $post->id }}"
                             data-like-url="{{ route('community.posts.like', $post->id) }}"
                             data-liked="{{ $isLiked ? 'true' : 'false' }}" data-count="{{ $likeCount }}"
@@ -280,6 +297,17 @@
                             <span
                                 class="like-count text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
                         </button>
+                    @elseif (Auth::check())
+                        {{-- Logged in but not a member of this community: read-only count --}}
+                        <span class="flex items-center gap-1.5 sm:gap-2 opacity-60 cursor-not-allowed"
+                            title="{{ __('community.join_to_interact') }}">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                </path>
+                            </svg>
+                            <span class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
+                        </span>
                     @else
                         <button type="button"
                             class="flex items-center gap-1.5 sm:gap-2 hover:text-red-500 transition group"
@@ -291,7 +319,7 @@
                             </svg>
                             <span class="text-[10px] sm:text-xs md:text-sm font-medium">{{ $likeCount }}</span>
                         </button>
-                    @endauth
+                    @endif
 
                 </div>
                 <div class="flex items-center gap-3 sm:gap-4">

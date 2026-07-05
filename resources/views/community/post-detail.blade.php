@@ -3,15 +3,19 @@
 @section('content')
     <div class="w-[95%] sm:w-[90%] max-w-2xl mx-auto pt-32 pb-16">
 
-        {{-- Back to Feed Link --}}
-        <a href="{{ route('community.explore') }}"
+        @php
+            $viewerCanInteract = ! $post->community_id || (Auth::check() && $post->community->isMember(Auth::user()));
+        @endphp
+
+        {{-- Back Link — community posts return to their community page --}}
+        <a href="{{ $post->community_id ? route('community.show', $post->community_id) : route('community.explore') }}"
            class="inline-flex items-center gap-1.5 text-gray-500 font-semibold text-sm mb-6 transition-colors duration-200 hover:text-[#094174] group">
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
-            {{ __('community.back_to_feed') }}
+            {{ $post->community_id ? __('community.back_to_community') : __('community.back_to_feed') }}
         </a>
 
         {{-- ================================================================
@@ -104,6 +108,13 @@
          COMMENT SUBMISSION FORM
          ================================================================ --}}
         @auth
+            @if (! $viewerCanInteract)
+                <div class="bg-white rounded-3xl border border-gray-100 p-6 mb-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-center text-sm text-gray-500">
+                    <span>{{ __('community.join_to_interact') }}</span>
+                    <a href="{{ route('community.show', $post->community_id) }}"
+                        class="text-[#094174] font-bold hover:underline whitespace-nowrap">{{ __('community.view_community') }}</a>
+                </div>
+            @else
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-6">
                 <form method="POST" action="{{ route('community.posts.comments.store', $post->id) }}">
                     @csrf
@@ -131,6 +142,7 @@
                     </div>
                 </form>
             </div>
+            @endif
         @else
             <div class="bg-white rounded-3xl border border-gray-100 p-6 mb-6 text-center text-sm text-gray-500">
                 <a href="{{ route('showLogin') }}" class="text-[#094174] font-bold hover:underline">{{ __('common.log_in') }}</a> {{ __('community.login_to_reply_suffix') }}

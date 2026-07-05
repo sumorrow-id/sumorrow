@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GearController;
 use App\Http\Controllers\HomeController;
@@ -100,6 +101,13 @@ Route::middleware('redirect.admin')->group(function () {
         Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
         Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
         Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
+        // Community events (members create; event creator or community owner deletes)
+        Route::post('/community/{community}/events', [EventController::class, 'store'])->name('community.events.store');
+        Route::delete('/community/events/{event}', [EventController::class, 'destroy'])->name('community.events.destroy');
+        // Detail page — registered after the literal /community/* GET routes above so it never shadows them
+        Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');
+        Route::patch('/community/{community}', [CommunityController::class, 'update'])->name('community.update');
+        Route::delete('/community/{community}', [CommunityController::class, 'destroy'])->name('community.destroy');
 
         // Gear
         Route::post('/gears', [GearController::class, 'store'])->name('gears.store');

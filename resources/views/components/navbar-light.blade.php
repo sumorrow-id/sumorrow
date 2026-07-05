@@ -1,4 +1,13 @@
-<nav class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-350 rounded-2xl z-50 flex flex-col bg-white/85 border border-white/60 px-6 py-4 text-[#1a2b4c] backdrop-blur-xl shadow-lg shadow-gray-200/50 transition-all duration-300">
+@auth
+    @php
+        $navAvatar = Auth::user()->avatar_url;
+        $navAvatarSrc = $navAvatar
+            ? (str_contains($navAvatar, 'http') ? $navAvatar : asset('storage/' . $navAvatar))
+            : 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
+    @endphp
+@endauth
+
+<nav class="fixed top-6 left-0 right-0 mx-auto w-[95%] max-w-350 rounded-2xl z-50 flex flex-col bg-white/85 border border-white/60 px-4 sm:px-6 py-3 sm:py-4 text-[#1a2b4c] backdrop-blur-xl shadow-lg shadow-gray-200/50 transition-all duration-300">
     <div class="flex flex-row justify-between items-center w-full relative">
 
         <div class="hidden md:flex flex-1 text-l font-bold gap-2">
@@ -40,12 +49,7 @@
             @auth
                 <div class="relative group">
                     <button class="flex items-center focus:outline-none transition-transform hover:scale-105">
-                        @php
-                            $avatar = Auth::user()->avatar_url;
-                            $src = $avatar ? (str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) : null;
-                            $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
-                        @endphp
-                        <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="{{ __('common.avatar_alt') }}"
+                        <img src="{{ $navAvatarSrc }}" alt="{{ __('common.avatar_alt') }}"
                             class="h-11 w-11 rounded-full object-cover border-2 border-gray-200 group-hover:border-[#094174]/40 transition-colors shadow-sm">
                     </button>
                     <!-- Improved dropdown for light navbar -->
@@ -86,7 +90,7 @@
         <div class="flex flex-col gap-4 mt-6 pt-4 border-t border-gray-200/60 text-center pb-2">
             <a href="/" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_home') }}</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_explore') }}</a>
-            <a href="#" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_community') }}</a>
+            <a href="/community" class="font-semibold py-2 rounded-lg text-slate-600 hover:bg-[#094174]/10 hover:text-[#094174] transition">{{ __('common.nav_community') }}</a>
             <nav data-locale-switcher aria-label="{{ __('common.language_switcher') }}" class="inline-flex items-center justify-center gap-1 text-sm font-bold">
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
                     aria-label="{{ __('common.switch_to_english') }}"
@@ -108,8 +112,13 @@
             </nav>
             <div class="pt-4 border-t border-gray-200/60 flex flex-col gap-2">
                 @auth
-                    <p class="text-sm text-gray-500 mb-2">{{ __('common.logged_in_as', ['username' => Auth::user()->username]) }}</p>
-                    <form action="{{ route('logout') }}" method="POST" class="mt-2 confirm-submit-form" data-confirm-title="{{ __('common.confirm_logout_title') }}" data-confirm-message="{{ __('common.confirm_logout_message') }}" data-confirm-label="{{ __('common.confirm_logout_label') }}" data-confirm-variant="danger">
+                    <a href="{{ route('profile') }}" class="flex items-center justify-center gap-3 py-2 rounded-lg hover:bg-[#094174]/10 transition">
+                        <img src="{{ $navAvatarSrc }}" alt="{{ __('common.avatar_alt') }}"
+                            class="h-9 w-9 rounded-full object-cover border-2 border-gray-200 shrink-0">
+                        <span class="font-semibold text-slate-700 truncate max-w-[60%]">{{ Auth::user()->username }}</span>
+                        <span class="text-xs font-bold text-[#094174]">{{ __('common.profile') }} →</span>
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="confirm-submit-form" data-confirm-title="{{ __('common.confirm_logout_title') }}" data-confirm-message="{{ __('common.confirm_logout_message') }}" data-confirm-label="{{ __('common.confirm_logout_label') }}" data-confirm-variant="danger">
                         @csrf
                         <button type="submit" class="font-bold text-red-500 py-2 rounded-lg hover:bg-red-50 transition w-full">{{ __('common.log_out') }}</button>
                     </form>

@@ -44,7 +44,9 @@ class PostController extends Controller
         // Only real forum posts belong here. Summit logs (created from the
         // profile) carry no category tags, so exclude tag-less posts — same
         // convention ProfileController uses to split the two.
+        // Community posts stay on their community page, not the global feed.
         $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
+            ->whereNull('community_id')
             ->whereHas('tags');
 
         $postsQuery->latest();
@@ -155,6 +157,7 @@ class PostController extends Controller
             'images' => 'nullable|required_without_all:body,gif_url|array|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'gif_url' => 'nullable|url|max:2048',
+            'community_id' => 'nullable|integer|exists:communities,id',
         ], [
             'body.required_without_all' => __('community.validation_post_content'),
             'images.required_without_all' => __('community.validation_post_content'),
@@ -166,11 +169,19 @@ class PostController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        // Posting inside a community is members-only
+        $community = null;
+        if ($request->filled('community_id')) {
+            $community = Community::findOrFail($request->integer('community_id'));
+            abort_unless($community->isMember($user), 403);
+        }
+
         // Create the post
         $post = $user->posts()->create([
             'title' => '',
             'body' => $request->body ?? '',
             'gif_url' => $request->gif_url,
+            'community_id' => $community?->id,
         ]);
 
         // Attach category tags
@@ -190,8 +201,7 @@ class PostController extends Controller
             }
         }
 
-        return redirect()
-            ->route('community.explore')
+        return redirect($community ? route('community.show', $community) : route('community.explore'))
             ->with('success', __('community.post_published'));
     }
 
@@ -208,6 +218,8 @@ class PostController extends Controller
      */
     public function storeComment(Request $request, Post $post)
     {
+        $this->ensureMemberOfPostCommunity($post);
+
         $request->validate([
             'body' => 'required|string|max:2000',
         ]);
@@ -272,11 +284,24 @@ class PostController extends Controller
      */
     public function toggleLike(Request $request, Post $post)
     {
+        $this->ensureMemberOfPostCommunity($post);
+
         $post->likes()->toggle(auth()->id());
 
         return response()->json([
             'liked' => $post->likes()->where('user_id', auth()->id())->exists(),
             'count' => $post->likes()->count(),
         ]);
+    }
+
+    /**
+     * Posts inside a community accept interactions (comments, likes)
+     * from that community's members only.
+     */
+    private function ensureMemberOfPostCommunity(Post $post): void
+    {
+        if ($post->community_id && ! $post->community->isMember(Auth::user())) {
+            abort(403);
+        }
     }
 }

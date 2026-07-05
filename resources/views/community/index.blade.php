@@ -62,14 +62,14 @@
             <div id="content-community" class="hidden grid-cols-1 gap-6 md:gap-8">
                 
                 {{-- Top Bar: Title & Create Community Button --}}
-                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
                     <div>
                         <h2 class="text-2xl font-bold text-heading">{{ __('community.my_communities_heading') }}</h2>
                         <p class="text-gray-500 text-sm mt-1">{{ __('community.my_communities_subheading') }}</p>
                     </div>
 
                     @auth
-                        <button class="open-create-community-modal bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer">
+                        <button class="open-create-community-modal bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 cursor-pointer self-start sm:self-auto shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
@@ -78,7 +78,7 @@
                     @endauth
 
                     @guest
-                        <a href="{{ route('showLogin') }}" class="bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md flex items-center gap-2 inline-flex decoration-none">
+                        <a href="{{ route('showLogin') }}" class="bg-[#094174] text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-[#105DA3] transition-all shadow-md items-center gap-2 inline-flex decoration-none self-start sm:self-auto shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
@@ -127,9 +127,9 @@
 
 {{-- 3. Modal: Create Community (Pop-up Form) --}}
 <div id="modal-create-community" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-xs">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-bold text-[#001E3A]">{{ __('community.create_community') }}</h3>
+            <h3 class="text-xl sm:text-2xl font-bold text-[#001E3A]">{{ __('community.create_community') }}</h3>
             <button type="button" class="close-create-community-modal text-gray-400 hover:text-gray-600 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
