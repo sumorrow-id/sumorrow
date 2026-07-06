@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGearRequest;
+use App\Http\Requests\UpdateGearRequest;
 use App\Models\Gear;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class GearController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreGearRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'brand' => 'nullable|string|max:255',
-            'weight_grams' => 'required|numeric|min:0',
-            'category' => 'required|string|max:255',
-        ]);
+        $validated = $request->validated();
 
         $validated['user_id'] = Auth::id();
 
@@ -24,29 +21,16 @@ class GearController extends Controller
         return back()->with('success', __('gear.added_successfully'));
     }
 
-    public function update(Request $request, Gear $gear)
+    public function update(UpdateGearRequest $request, Gear $gear): RedirectResponse
     {
-        if ($gear->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'brand' => 'nullable|string|max:255',
-            'weight_grams' => 'required|numeric|min:0',
-            'category' => 'required|string|max:255',
-        ]);
-
-        $gear->update($validated);
+        $gear->update($request->validated());
 
         return back()->with('success', __('gear.updated_successfully'));
     }
 
-    public function destroy(Gear $gear)
+    public function destroy(Gear $gear): RedirectResponse
     {
-        if ($gear->user_id !== Auth::id()) {
-            abort(403);
-        }
+        abort_unless(Auth::user()->can('delete', $gear), 403);
 
         $gear->delete();
 

@@ -13,6 +13,13 @@ class Post extends Model
 {
     use HasFactory;
 
+    public const CATEGORY_TAGS = [
+        'Hiking Stories',
+        'Tips and Trick',
+        'Gear & Equipment',
+        'Safety & Survival',
+    ];
+
     protected $fillable = [
         'author_id',
         'community_id',

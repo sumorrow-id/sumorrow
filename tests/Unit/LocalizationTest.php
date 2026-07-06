@@ -101,6 +101,26 @@ class LocalizationTest extends TestCase
         $this->assertSame('kata sandi wajib diisi.', $errors->first('password'));
     }
 
+    public function test_standard_laravel_translation_keys_are_available(): void
+    {
+        $keys = [
+            'auth.failed',
+            'auth.password',
+            'auth.throttle',
+            'passwords.reset',
+            'passwords.sent',
+            'passwords.throttled',
+            'passwords.token',
+            'passwords.user',
+        ];
+
+        foreach (['en', 'id'] as $locale) {
+            foreach ($keys as $key) {
+                $this->assertNotSame($key, __($key, locale: $locale));
+            }
+        }
+    }
+
     public function test_password_reset_notification_keeps_the_selected_locale(): void
     {
         Notification::fake();

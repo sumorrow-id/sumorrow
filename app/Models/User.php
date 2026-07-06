@@ -53,11 +53,14 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
-        return $this->password_hash;
+        return (string) $this->password_hash;
     }
 
+    /**
+     * @param  string  $token
+     */
     public function sendPasswordResetNotification($token): void
     {
         $this->notify((new ResetPasswordNotification($token))->locale(app()->getLocale()));
@@ -88,7 +91,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PostReply::class, 'author_id');
     }
 
-    public function communities()
+    public function communities(): BelongsToMany
     {
         return $this->belongsToMany(Community::class);
     }
@@ -113,7 +116,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->followings()->where('following_id', $user->id)->exists();
     }
 
-    public function achievements() // BelongsToMany relationship
+    public function achievements(): BelongsToMany
     {
         return $this->belongsToMany(Achievement::class)->withPivot('unlocked_at');
     }

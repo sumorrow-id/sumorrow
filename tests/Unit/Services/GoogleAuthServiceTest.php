@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Models\User;
 use App\Services\GoogleAuthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Socialite\Two\User as SocialiteUser;
 use Tests\TestCase;
 
 class GoogleAuthServiceTest extends TestCase
@@ -19,22 +20,9 @@ class GoogleAuthServiceTest extends TestCase
         $this->service = new GoogleAuthService;
     }
 
-    private function createGoogleUserMock(string $id, string $name, string $email, string $avatar = 'https://example.com/avatar.jpg'): object
+    private function createGoogleUserMock(string $id, string $name, string $email, string $avatar = 'https://example.com/avatar.jpg'): SocialiteUser
     {
-        return new class($id, $name, $email, $avatar)
-        {
-            public function __construct(
-                public string $id,
-                public string $name,
-                public string $email,
-                private string $avatar,
-            ) {}
-
-            public function getAvatar(): string
-            {
-                return $this->avatar;
-            }
-        };
+        return (new SocialiteUser)->map(compact('id', 'name', 'email', 'avatar'));
     }
 
     // -------------------------------------------------------------------------

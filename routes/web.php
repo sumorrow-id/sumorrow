@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\MountainController as AdminMountainController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -36,7 +38,7 @@ Route::middleware('redirect.admin')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
     Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
-    Route::get('/community', [CommunityController::class, 'index'])->name('community');
+    Route::get('/community', [PostController::class, 'index'])->name('community');
     Route::middleware('throttle:weather')->group(function () {
         Route::get('/weather/{mountain}', [WeatherController::class, 'show'])->name('weather.show');
         Route::get('/weather/{mountain}/forecast', [WeatherController::class, 'forecast'])->name('weather.forecast');
@@ -170,19 +172,19 @@ Admin Routes
 --------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', AdminDashboardController::class)->name('admin.dashboard');
 
     // User management
-    Route::get('/user-updates', [AdminController::class, 'userUpdates'])->name('admin.user-updates');
-    Route::get('/user-updates/export', [AdminController::class, 'exportUsers'])->name('admin.users.export');
-    Route::patch('/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('admin.users.role');
-    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+    Route::get('/user-updates', [AdminUserController::class, 'index'])->name('admin.user-updates');
+    Route::get('/user-updates/export', [AdminUserController::class, 'export'])->name('admin.users.export');
+    Route::patch('/users/{user}/role', [AdminUserController::class, 'update'])->name('admin.users.role');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 
     // Mountain management
-    Route::get('/mountain-data', [AdminController::class, 'mountainData'])->name('admin.mountain-data');
-    Route::get('/mountains/create', [AdminController::class, 'createMountain'])->name('admin.mountains.create');
-    Route::post('/mountains', [AdminController::class, 'storeMountain'])->name('admin.mountains.store');
-    Route::get('/mountains/{mountain}/edit', [AdminController::class, 'editMountain'])->name('admin.mountains.edit');
-    Route::put('/mountains/{mountain}', [AdminController::class, 'updateMountain'])->name('admin.mountains.update');
-    Route::delete('/mountains/{mountain}', [AdminController::class, 'destroyMountain'])->name('admin.mountains.destroy');
+    Route::get('/mountain-data', [AdminMountainController::class, 'index'])->name('admin.mountain-data');
+    Route::get('/mountains/create', [AdminMountainController::class, 'create'])->name('admin.mountains.create');
+    Route::post('/mountains', [AdminMountainController::class, 'store'])->name('admin.mountains.store');
+    Route::get('/mountains/{mountain}/edit', [AdminMountainController::class, 'edit'])->name('admin.mountains.edit');
+    Route::put('/mountains/{mountain}', [AdminMountainController::class, 'update'])->name('admin.mountains.update');
+    Route::delete('/mountains/{mountain}', [AdminMountainController::class, 'destroy'])->name('admin.mountains.destroy');
 });

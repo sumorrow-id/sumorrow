@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JoinCommunityRequest;
+use App\Http\Requests\StoreCommunityRequest;
+use App\Http\Requests\UpdateCommunityRequest;
 use App\Models\Community;
 use App\Models\Mountain;
 use App\Models\Post;
-use App\Models\PostTag;
-use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CommunityController extends Controller
 {
@@ -86,7 +88,7 @@ class CommunityController extends Controller
         ));
     }
 
-    public function join(Request $request, Community $community)
+    public function join(JoinCommunityRequest $request, Community $community): RedirectResponse
     {
         $user = Auth::user();
 
@@ -97,8 +99,6 @@ class CommunityController extends Controller
 
         // Private communities are token-gated; the creator may always rejoin.
         if ($community->privacy === 'private' && ! $community->isCreatedBy($user)) {
-            $request->validate(['join_token' => 'required|string']);
-
             if (! hash_equals((string) $community->join_token, trim($request->join_token))) {
                 return back()
                     ->withErrors(['join_token' => __('community.invalid_token')])
@@ -114,14 +114,8 @@ class CommunityController extends Controller
             ->with('success', __('community.joined_community', ['name' => $community->name]));
     }
 
-    public function store(Request $request)
+    public function store(StoreCommunityRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:communities,name',
-            'description' => 'required|string',
-            'privacy' => 'required|in:public,private',
-        ]);
-
         $community = Community::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -138,7 +132,7 @@ class CommunityController extends Controller
             ->with('success', __('community.community_created', ['name' => $community->name]));
     }
 
-    public function show(Community $community)
+    public function show(Community $community): View
     {
         // Private communities hide their content behind a join-token gate;
         // the creator can always get back in.
@@ -164,17 +158,9 @@ class CommunityController extends Controller
         return view('community.show', compact('community', 'posts', 'recommendedMountains'));
     }
 
-    public function update(Request $request, Community $community)
+    public function update(UpdateCommunityRequest $request, Community $community): RedirectResponse
     {
-        abort_unless($community->isCreatedBy(Auth::user()), 403);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:communities,name,'.$community->id,
-            'description' => 'required|string',
-            'privacy' => 'required|in:public,private',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
-            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:4096',
-        ]);
+        $validated = $request->validated();
 
         $data = [
             'name' => $validated['name'],
@@ -201,9 +187,9 @@ class CommunityController extends Controller
             ->with('success', __('community.community_updated'));
     }
 
-    public function destroy(Community $community)
+    public function destroy(Community $community): RedirectResponse
     {
-        abort_unless($community->isCreatedBy(Auth::user()), 403);
+        abort_unless(Auth::user()->can('delete', $community), 403);
 
         $this->deleteImage($community->image_url);
         $this->deleteImage($community->banner_url);
@@ -216,7 +202,7 @@ class CommunityController extends Controller
             ->with('success', __('community.community_deleted'));
     }
 
-    public function leave(Community $community)
+    public function leave(Community $community): RedirectResponse
     {
         $user = Auth::user();
 

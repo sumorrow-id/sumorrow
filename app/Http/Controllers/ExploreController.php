@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMountainRatingRequest;
 use App\Models\Mountain;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\View\View;
 
 class ExploreController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = Mountain::with(['images', 'province']);
 
@@ -75,7 +78,7 @@ class ExploreController extends Controller
         return view('explore', compact('mountains'));
     }
 
-    public function show($id)
+    public function show(int $id): View
     {
         $mountain = Mountain::with(['images', 'province', 'basecamps', 'ratings.user'])->findOrFail($id);
 
@@ -92,13 +95,8 @@ class ExploreController extends Controller
         return view('explore.show', compact('mountain', 'nearbyMountains', 'weatherUrl', 'forecastUrl'));
     }
 
-    public function storeRating(Request $request, $id)
+    public function storeRating(StoreMountainRatingRequest $request, int $id): RedirectResponse
     {
-        $request->validate([
-            'score' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:1000',
-        ]);
-
         $mountain = Mountain::findOrFail($id);
 
         $mountain->ratings()->updateOrCreate(

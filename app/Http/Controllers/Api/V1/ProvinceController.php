@@ -7,10 +7,12 @@ use App\Http\Requests\Api\V1\IndexProvinceRequest;
 use App\Http\Resources\MountainResource;
 use App\Http\Resources\ProvinceResource;
 use App\Models\Province;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProvinceController extends Controller
 {
-    public function index(IndexProvinceRequest $request)
+    public function index(IndexProvinceRequest $request): AnonymousResourceCollection
     {
         $query = Province::query()->withCount('mountains')->orderBy('name');
 
@@ -23,14 +25,14 @@ class ProvinceController extends Controller
         );
     }
 
-    public function show(Province $province)
+    public function show(Province $province): JsonResource
     {
         $province->loadCount('mountains');
 
         return ProvinceResource::make($province);
     }
 
-    public function mountains(Province $province)
+    public function mountains(Province $province): AnonymousResourceCollection
     {
         $mountains = $province->mountains()
             ->with(['province', 'images'])

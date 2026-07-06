@@ -11,12 +11,18 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-06 — branch: `main` (uncommitted) — Locale switcher as flag dropdown
 ## 2026-07-06 — branch: `main` (uncommitted) — Forum sidebar scoping + guest avatar
 
 By: Claude Code
 
 **What changed**
 
+- Replaced the "EN | ID" text toggle with a shared `<x-locale-switcher>` component (`resources/views/components/locale-switcher.blade.php`): flag emoji (🇺🇸/🇮🇩) + hover dropdown, themed via `button-class`/`active-class`/`panel-class` props. Used in `navbar-light.blade.php` (desktop dropdown, mobile `inline` variant — the mobile menu's `overflow-hidden` wrapper would clip an absolute dropdown) and `layouts/admin.blade.php` (desktop dropdown, summit-blue theme).
+- Kept the `data-locale-switcher` attribute and existing aria-labels on the component root so `tests/Feature/LocaleMiddlewareTest.php` still passes unchanged.
+- No new dependencies; flags are Unicode emoji, no image assets.
+
+**Verify**: `php artisan test --filter=LocaleMiddlewareTest`, or visit `/home` and `/admin/dashboard` and hover the flag button.
 - Forum Leaders and Popular Tags (`CommunityController::index`, `PostController::index`) now count global forum posts only: posts with `community_id` set (My Community posts) are excluded via `whereNull('community_id')`.
 - Guest visitors on the forum composer (`resources/views/community/components/feed.blade.php`) now see `images/community/profile-blank.png` instead of the dummy mountain avatar; logged-in users without an avatar keep the existing fallback.
 - New `ForumPostSeeder` (registered in `DatabaseSeeder`): 3 demo users + 8 tagged global forum posts with likes and a topic-matched image each (bundled public assets), idempotent via `firstOrCreate`.

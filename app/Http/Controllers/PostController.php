@@ -2,30 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostCommentRequest;
+use App\Http\Requests\StorePostRequest;
 use App\Models\Community;
 use App\Models\Post;
 use App\Models\PostComment;
 use App\Models\PostTag;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    /**
-     * Allowed forum category tags.
-     * Defined as a constant so validation and the view dropdown
-     * always stay in sync from a single source of truth.
-     */
-    public const CATEGORY_TAGS = [
-        'Hiking Stories',
-        'Tips and Trick',
-        'Gear & Equipment',
-        'Safety & Survival',
-    ];
-
     // ====================================================================
     // INDEX — Explore feed
     // ====================================================================
@@ -34,7 +27,7 @@ class PostController extends Controller
      * Display the Explore feed.
      * Display the Explore feed.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $activeTag = $request->query('tag');
         $search = $request->query('search');
@@ -121,7 +114,7 @@ class PostController extends Controller
      *
      * Route: GET /community/posts/{post}
      */
-    public function show(Post $post)
+    public function show(Post $post): View
     {
         $post->load([
             'author',
@@ -150,25 +143,8 @@ class PostController extends Controller
      * Route:  POST /community/posts
      * Name:   community.posts.store
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request): RedirectResponse
     {
-        $request->validate([
-            // A post must have at least a body, images, OR a gif
-            'body' => 'nullable|required_without_all:images,gif_url|string|max:5000',
-            'category_tags' => 'required|array|min:1',
-            'category_tags.*' => ['string', 'in:'.implode(',', self::CATEGORY_TAGS)],
-            'images' => 'nullable|required_without_all:body,gif_url|array|max:10',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'gif_url' => 'nullable|url|max:2048',
-            'community_id' => 'nullable|integer|exists:communities,id',
-        ], [
-            'body.required_without_all' => __('community.validation_post_content'),
-            'images.required_without_all' => __('community.validation_post_content'),
-            'category_tags.required' => __('community.validation_category_tags'),
-            'images.*.image' => __('community.validation_image'),
-            'images.*.max' => __('community.validation_image_size'),
-        ]);
-
         /** @var User $user */
         $user = Auth::user();
 
@@ -219,13 +195,9 @@ class PostController extends Controller
      * Name:  community.posts.comments.store
      * Guard: auth middleware
      */
-    public function storeComment(Request $request, Post $post)
+    public function storeComment(StorePostCommentRequest $request, Post $post): RedirectResponse
     {
-        $this->ensureMemberOfPostCommunity($post);
-
-        $request->validate([
-            'body' => 'required|string|max:2000',
-        ]);
+        abort_unless($request->user()->can('interact', $post), 403);
 
         /** @var User $user */
         $user = Auth::user();
@@ -253,9 +225,9 @@ class PostController extends Controller
      * Route: DELETE /community/posts/{post}
      * Name:  community.posts.destroy
      */
-    public function destroy(Request $request, Post $post)
+    public function destroy(Request $request, Post $post): RedirectResponse
     {
-        abort_unless($post->author_id === Auth::id(), 403);
+        abort_unless($request->user()->can('delete', $post), 403);
 
         foreach ($post->images as $image) {
             if (! str_contains($image->image_url, 'http')) {
@@ -285,9 +257,9 @@ class PostController extends Controller
      * Route: POST /community/posts/{post}/like
      * Name:  community.posts.like
      */
-    public function toggleLike(Request $request, Post $post)
+    public function toggleLike(Request $request, Post $post): JsonResponse
     {
-        $this->ensureMemberOfPostCommunity($post);
+        abort_unless($request->user()->can('interact', $post), 403);
 
         $post->likes()->toggle(auth()->id());
 
@@ -295,16 +267,5 @@ class PostController extends Controller
             'liked' => $post->likes()->where('user_id', auth()->id())->exists(),
             'count' => $post->likes()->count(),
         ]);
-    }
-
-    /**
-     * Posts inside a community accept interactions (comments, likes)
-     * from that community's members only.
-     */
-    private function ensureMemberOfPostCommunity(Post $post): void
-    {
-        if ($post->community_id && ! $post->community->isMember(Auth::user())) {
-            abort(403);
-        }
     }
 }

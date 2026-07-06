@@ -11,10 +11,12 @@ use App\Http\Resources\MountainRatingResource;
 use App\Http\Resources\MountainResource;
 use App\Models\Mountain;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class MountainController extends Controller
 {
-    public function index(IndexMountainRequest $request)
+    public function index(IndexMountainRequest $request): AnonymousResourceCollection
     {
         $query = Mountain::query()->with(['province', 'images']);
 
@@ -45,7 +47,7 @@ class MountainController extends Controller
         );
     }
 
-    public function show(Mountain $mountain)
+    public function show(Mountain $mountain): JsonResource
     {
         $mountain->load(['province', 'images'])
             ->loadCount(['images', 'basecamps', 'ratings']);
@@ -53,21 +55,21 @@ class MountainController extends Controller
         return MountainDetailResource::make($mountain);
     }
 
-    public function images(Mountain $mountain)
+    public function images(Mountain $mountain): AnonymousResourceCollection
     {
         $images = $mountain->images()->orderBy('position')->get();
 
         return MountainImageResource::collection($images);
     }
 
-    public function basecamps(Mountain $mountain)
+    public function basecamps(Mountain $mountain): AnonymousResourceCollection
     {
         $basecamps = $mountain->basecamps()->orderBy('name')->get();
 
         return BasecampResource::collection($basecamps);
     }
 
-    public function ratings(Mountain $mountain)
+    public function ratings(Mountain $mountain): AnonymousResourceCollection
     {
         $ratings = $mountain->ratings()
             ->with('user')
