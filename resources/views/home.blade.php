@@ -27,7 +27,7 @@
 
                     <!-- SUMORROW text -->
                     <h1
-                        class="hidden sm:block relative z-10 text-[min(10vw,140px)] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
+                        class="relative z-10 text-[min(10vw,140px)] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
                         SUMORROW
                     </h1>
 
