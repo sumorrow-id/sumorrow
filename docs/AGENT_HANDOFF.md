@@ -11,6 +11,46 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-06 — branch: `main` — Audit fixes (bugs & security)
+
+By: Claude Code
+
+**What changed**
+
+- Closed an access-control gap on the public post-detail route for
+  private-community content (`PostController::show` now gates by membership).
+- Removed dead, uncallable controller code that duplicated the forum feed
+  (`CommunityController::index`).
+- Hardened the forgot-password flow against account enumeration (uniform
+  response) and added throttling; also throttled the community-join endpoint.
+- Regenerated the session after Google OAuth login (session-fixation guard).
+- Made community slug generation collision-safe and non-empty for non-latin
+  names.
+- Centralised post-body markdown rendering with raw HTML stripped
+  (`Post::renderedBody`), replacing three unsanitised `{!! Str::markdown !!}`
+  call sites.
+- Deleted a no-op console command plus its test that faked a pass via
+  `debug_backtrace` (feature was already removed).
+- Enforced email verification before posting: `verified` middleware now gates
+  the forum-post, summit-log, and comment routes. `UserFactory` defaults to
+  verified with a new `unverified()` state; unverified users are redirected to
+  `verification.notice`.
+- Extended the `verified` gate to the other create/interaction writes:
+  community create/join, event create, gear add, rating submit, and post like.
+  Leaving a community and editing/deleting one's own resources stay ungated.
+- Centralised avatar URL resolution in `User::avatarUrl(?string $fallback)`,
+  fixing uploaded avatars that 404'd when rendered with a bare `asset()`.
+  Replaced the scattered per-view path logic (navbar, profile, community,
+  admin, home cards) with calls to it, preserving each area's fallback image.
+- Made rating submission recompute `avg_rating` inside a transaction to narrow
+  a concurrent-write race.
+- Removed dead code: unused `VerificationController` (routes use closures),
+  the orphaned `PostReply` model plus `Post::replies`/`User::postReplies`
+  relations (comments live in `PostComment`), and unused `Post::scopeByTag`.
+  Note: `Community::getMemberCount` was kept — it is used by `community-card`.
+
+**Verify**: `php artisan test` — full suite green (298 passing).
+
 ## 2026-07-06 — branch: `main` (uncommitted) — Locale switcher as flag dropdown
 ## 2026-07-06 — branch: `main` (uncommitted) — Forum sidebar scoping + guest avatar
 

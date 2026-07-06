@@ -17,77 +17,6 @@ use Illuminate\View\View;
 
 class CommunityController extends Controller
 {
-    public function index(Request $request)
-    {
-        // ----------------------------------------------------------------
-        // 1. My Communities & Suggested Communities
-        // ----------------------------------------------------------------
-        $myCommunities = collect();
-        if (Auth::check()) {
-            $myCommunities = Auth::user()->communities()->withCount('members')->get();
-        }
-
-        $myCommunityIds = $myCommunities->pluck('id')->toArray();
-        $suggestedCommunities = Community::whereNotIn('id', $myCommunityIds)
-            ->withCount('members')
-            ->take(6)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 2. Main Feed (required by feed.blade.php component)
-        // ----------------------------------------------------------------
-        $activeTag = $request->query('tag');
-
-        // Forum feed only: summit logs carry no category tags, so exclude
-        // tag-less posts — same convention as PostController::index. Posts
-        // made inside a community stay on their community page.
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
-            ->whereNull('community_id')
-            ->whereHas('tags')
-            ->latest();
-
-        if ($activeTag) {
-            $postsQuery->whereHas('tags', function ($query) use ($activeTag) {
-                $query->where('keyword', strtolower(trim($activeTag)));
-            });
-        }
-
-        $posts = $postsQuery->paginate(10)->withQueryString();
-
-        // ----------------------------------------------------------------
-        // 3. Popular Tags (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        // Global forum only — tags on community posts don't count.
-        $popularTags = PostTag::select('keyword')
-            ->selectRaw('COUNT(DISTINCT post_id) as post_count')
-            ->whereHas('post', fn ($query) => $query->whereNull('community_id'))
-            ->groupBy('keyword')
-            ->orderByDesc('post_count')
-            ->limit(8)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 4. Forum Leaders (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        // Rank by global forum posts only — summit logs (tag-less posts)
-        // and posts made inside a community don't count.
-        $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
-            $query->whereNull('community_id')->whereHas('tags');
-        }])
-            ->orderByDesc('posts_count')
-            ->limit(5)
-            ->get();
-
-        return view('community.index', compact(
-            'myCommunities',
-            'suggestedCommunities',
-            'posts',
-            'popularTags',
-            'forumLeaders',
-            'activeTag'
-        ));
-    }
-
     public function join(JoinCommunityRequest $request, Community $community): RedirectResponse
     {
         $user = Auth::user();
@@ -118,7 +47,7 @@ class CommunityController extends Controller
     {
         $community = Community::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $this->uniqueSlug($request->name),
             'description' => $request->description,
             'privacy' => $request->privacy,
             'join_token' => $request->privacy === 'private' ? Str::upper(Str::random(8)) : null,
@@ -164,7 +93,7 @@ class CommunityController extends Controller
 
         $data = [
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => $this->uniqueSlug($validated['name'], $community->id),
             'description' => $validated['description'],
             'privacy' => $validated['privacy'],
         ];
@@ -210,6 +139,26 @@ class CommunityController extends Controller
 
         return redirect()->route('community', ['tab' => 'community'])
             ->with('info', __('community.left_community'));
+    }
+
+    /**
+     * Build a unique slug. Str::slug returns '' for names with no latin
+     * characters, and the slug column is unique — both would throw a 500 on
+     * insert, so fall back to a base and append a counter on collision.
+     */
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name) ?: 'community';
+        $slug = $base;
+        $suffix = 2;
+
+        while (Community::where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->exists()) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
     }
 
     /**

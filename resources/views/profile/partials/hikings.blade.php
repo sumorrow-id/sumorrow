@@ -41,7 +41,7 @@
                     @endif
 
                     <div class="mt-3 text-sm text-gray-600 line-clamp-2">
-                        {!! Str::markdown($post->body) !!}
+                        {!! $post->renderedBody() !!}
                     </div>
                 </div>
             </div>

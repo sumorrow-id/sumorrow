@@ -59,6 +59,34 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Resolve the avatar to a ready-to-use URL.
+     *
+     * `avatar_url` holds one of three shapes: a full external URL (Google /
+     * ui-avatars), a root-relative path, or a public-disk-relative path from
+     * an upload (e.g. "avatars/x.jpg"). Only the last needs the "storage/"
+     * prefix — rendering it with a bare asset() (as several views did) 404s.
+     * Centralise the resolution here so every caller renders the same URL.
+     *
+     * @param  string|null  $fallback  URL to use when no avatar is set; defaults
+     *                                 to a generated initials avatar.
+     */
+    public function avatarUrl(?string $fallback = null): string
+    {
+        $value = $this->avatar_url;
+
+        if ($value) {
+            if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/')) {
+                return $value;
+            }
+
+            return asset('storage/'.$value);
+        }
+
+        return $fallback
+            ?? 'https://ui-avatars.com/api/?name='.urlencode(mb_substr((string) $this->username, 0, 2)).'&background=random';
+    }
+
+    /**
      * @param  string  $token
      */
     public function sendPasswordResetNotification($token): void
@@ -84,11 +112,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'author_id');
-    }
-
-    public function postReplies(): HasMany
-    {
-        return $this->hasMany(PostReply::class, 'author_id');
     }
 
     public function communities(): BelongsToMany

@@ -65,4 +65,34 @@ class SecurityTest extends TestCase
         $this->getJson('/api/v1/mountains')->assertStatus(401);
         $this->getJson('/api/v1/mountains/1')->assertStatus(401);
     }
+
+    // -------------------------------------------------------------------------
+    // Email verification — posting requires a verified email
+    // -------------------------------------------------------------------------
+
+    public function test_unverified_user_cannot_publish_a_forum_post(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $response = $this->actingAs($user)->post('/community/posts', [
+            'body' => 'Trying to post before verifying my email',
+            'category_tags' => ['Hiking Stories'],
+        ]);
+
+        $response->assertRedirect(route('verification.notice'));
+        $this->assertDatabaseCount('posts', 0);
+    }
+
+    public function test_verified_user_can_publish_a_forum_post(): void
+    {
+        $user = User::factory()->create(); // verified by default
+
+        $response = $this->actingAs($user)->post('/community/posts', [
+            'body' => 'A perfectly valid forum post',
+            'category_tags' => ['Hiking Stories'],
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('posts', 1);
+    }
 }

@@ -84,7 +84,10 @@ class ForgotPasswordControllerTest extends TestCase
             'email' => 'nobody@example.com',
         ]);
 
-        $response->assertSessionHasErrors('email');
+        // Anti-enumeration: an unknown email gets the same generic success
+        // response as a known one, with no notification actually sent.
+        $response->assertSessionHasNoErrors();
+        $response->assertSessionHas('message');
         Notification::assertNothingSent();
     }
 

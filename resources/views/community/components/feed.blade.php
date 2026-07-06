@@ -40,7 +40,7 @@
 
             {{-- ── Row 1: Avatar + text input + toolbar ── --}}
             <div class="flex items-center gap-3 mb-3">
-                <img src="{{ asset(Auth::check() && Auth::user()->avatar_url ? Auth::user()->avatar_url : 'images/community/profile-blank.jpg') }}"
+                <img src="{{ Auth::check() ? Auth::user()->avatarUrl(asset('images/community/profile-blank.jpg')) : asset('images/community/profile-blank.jpg') }}"
                     class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="{{ __('community.avatar_alt') }}">
 
                 <div class="grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
@@ -191,7 +191,7 @@
             data-tag="{{ $post->tags->first()->keyword ?? '' }}">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/community/profile-blank.jpg') }}"
+                    <img src="{{ $post->author->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
                         class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
                     <div>
                         <div class="flex items-center gap-1">

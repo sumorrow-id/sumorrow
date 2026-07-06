@@ -53,6 +53,7 @@ class LoginController extends Controller
             $googleUser = $this->socialite->driver('google')->user();
             $user = $this->socialAuth->findOrCreateUser($googleUser);
             $this->auth->login($user, true);
+            request()->session()->regenerate();
 
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');

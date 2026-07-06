@@ -116,6 +116,18 @@ class PostController extends Controller
      */
     public function show(Post $post): View
     {
+        // Posts inside a private community are members-only, even though the
+        // route is otherwise public. IDs are sequential, so without this a
+        // guest could read private-community content by guessing the ID.
+        if ($post->community_id) {
+            $community = $post->community;
+            abort_unless(
+                $community->privacy === 'public'
+                    || (Auth::check() && ($community->isMember(Auth::user()) || $community->isCreatedBy(Auth::user()))),
+                403
+            );
+        }
+
         $post->load([
             'author',
             'tags',

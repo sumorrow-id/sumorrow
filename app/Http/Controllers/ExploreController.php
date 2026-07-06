@@ -7,6 +7,7 @@ use App\Models\Mountain;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
@@ -99,16 +100,21 @@ class ExploreController extends Controller
     {
         $mountain = Mountain::findOrFail($id);
 
-        $mountain->ratings()->updateOrCreate(
-            ['user_id' => auth()->id()],
-            [
-                'score' => $request->score,
-                'review' => $request->review,
-            ]
-        );
+        // Upsert the rating and recompute the average together so two
+        // concurrent submissions can't interleave and store a stale average.
+        // ponytail: a transaction narrows the window; a per-mountain lock would
+        // close it fully if contention ever matters.
+        DB::transaction(function () use ($mountain, $request) {
+            $mountain->ratings()->updateOrCreate(
+                ['user_id' => auth()->id()],
+                [
+                    'score' => $request->score,
+                    'review' => $request->review,
+                ]
+            );
 
-        $avgRating = $mountain->ratings()->avg('score');
-        $mountain->update(['avg_rating' => $avgRating]);
+            $mountain->update(['avg_rating' => $mountain->ratings()->avg('score')]);
+        });
 
         return back()->with('success', __('explore.review_submitted'));
     }

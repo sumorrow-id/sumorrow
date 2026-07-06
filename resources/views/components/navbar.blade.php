@@ -22,18 +22,7 @@
             @auth
                 <div class="relative group">
                     <button class="flex items-center focus:outline-none transition-transform hover:scale-105">
-                        @php
-                            $avatar = Auth::user()->avatar_url;
-                            $src = null;
-
-                            if ($avatar) {
-                                $src = str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar);
-                            }
-
-                            $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
-                        @endphp
-
-                        <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="{{ __('common.avatar_alt') }}"
+                        <img src="{{ Auth::user()->avatarUrl() }}" alt="{{ __('common.avatar_alt') }}"
                             class="h-11 w-11 rounded-full object-cover border-2 border-white/40 group-hover:border-white transition-colors shadow-sm">
                     </button>
 

@@ -1,9 +1,6 @@
 @auth
     @php
-        $navAvatar = Auth::user()->avatar_url;
-        $navAvatarSrc = $navAvatar
-            ? (str_contains($navAvatar, 'http') ? $navAvatar : asset('storage/' . $navAvatar))
-            : 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
+        $navAvatarSrc = Auth::user()->avatarUrl();
     @endphp
 @endauth
 

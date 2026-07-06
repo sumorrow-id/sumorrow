@@ -26,7 +26,7 @@
             {{-- Author Row --}}
             <div class="flex items-start justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/community/profile-blank.jpg') }}"
+                    <img src="{{ $post->author->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
                         class="w-11 h-11 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
                     <div>
                         <div class="flex items-center gap-1">
@@ -91,7 +91,7 @@
                 @foreach ($comments as $comment)
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <img src="{{ $comment->user->avatar_url ? asset($comment->user->avatar_url) : asset('images/community/profile-blank.jpg') }}"
+                            <img src="{{ $comment->user->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
                                 class="w-9 h-9 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
                             <div>
                                 <div class="font-bold text-[#1a2b4c] text-sm">{{ $comment->user->username }}</div>
@@ -120,7 +120,7 @@
                     @csrf
 
                     <div class="flex gap-4">
-                        <img src="{{ Auth::user()->avatar_url ? asset(Auth::user()->avatar_url) : asset('images/community/profile-blank.jpg') }}"
+                        <img src="{{ Auth::user()->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
                             class="w-10 h-10 rounded-full object-cover shrink-0" alt="{{ __('community.my_avatar_alt') }}">
 
                         <div class="grow flex flex-col">

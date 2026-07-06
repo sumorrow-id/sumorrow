@@ -168,7 +168,7 @@
                     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-2xl">
                         <div class="flex items-center gap-3 min-w-0">
                             @if ($member->avatar_url)
-                                <img src="{{ asset($member->avatar_url) }}" class="w-10 h-10 rounded-xl object-cover shrink-0" alt="{{ $member->username }}">
+                                <img src="{{ $member->avatarUrl() }}" class="w-10 h-10 rounded-xl object-cover shrink-0" alt="{{ $member->username }}">
                             @else
                                 <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center font-bold text-[#094174] text-sm shrink-0">
                                     {{ strtoupper(substr($member->username, 0, 2)) }}

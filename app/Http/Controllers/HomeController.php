@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mountain;
+use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
-use Illuminate\View\View;
-use App\Models\Post;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
@@ -106,7 +106,7 @@ class HomeController extends Controller
             ->map(fn (Post $post, int $i) => [
                 'url' => route('community.posts.show', $post),
                 'username' => $post->author->username,
-                'avatar' => asset($post->author->avatar_url ?: 'images/community/profile-blank.jpg'),
+                'avatar' => $post->author->avatarUrl(asset('images/community/profile-blank.jpg')),
                 'body' => Str::limit($post->body, 90),
                 'image' => $post->images->first() ? asset($post->images->first()->image_url) : $fallbackImage($i),
                 'likes' => number_format($post->likes_count),
