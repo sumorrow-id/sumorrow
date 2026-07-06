@@ -50,14 +50,14 @@
 
         <div class="flex flex-col gap-5">
             @forelse ($myCommunities->take(3) as $community)
-            <div class="flex items-center gap-4 cursor-pointer group pb-1">
-                <img src="{{ $community->image_url ?? asset('images/dummymountain/bromo.jpg') }}" alt="{{ __('community.community_image_alt') }}" class="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover shrink-0">
+            <a href="{{ route('community.show', $community) }}" class="flex items-center gap-4 group pb-1">
+                <img src="{{ $community->profileImageUrl() }}" alt="{{ __('community.community_image_alt') }}" class="w-12 h-12 md:w-14 md:h-14 rounded-xl object-cover shrink-0">
                 <div class="flex flex-col justify-center">
                     <span class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{{ __('community.privacy_'.$community->privacy) }}</span>
                     <span class="font-bold text-[#1a2b4c] text-sm md:text-base group-hover:text-[#094174] transition">{{ $community->name }}</span>
                     <span class="text-xs text-gray-400 mt-0.5">{{ __('community.members_count', ['count' => number_format($community->members_count)]) }}</span>
                 </div>
-            </div>
+            </a>
             @empty
             <p class="text-sm text-gray-400">{{ __('community.no_communities_joined') }}</p>
             @endforelse
