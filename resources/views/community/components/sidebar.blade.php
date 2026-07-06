@@ -30,7 +30,7 @@
             @foreach ($forumLeaders as $leader)
             <div class="flex items-center gap-4">
                 <div class="relative shrink-0">
-                    <img src="{{ $leader->avatar_url ? asset($leader->avatar_url) : asset('images/dummymountain/rinjani.png') }}" alt="{{ __('community.avatar_alt') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover">
+                    <img src="{{ asset($leader->avatar_url ?: 'images/community/profile-blank.jpg') }}" alt="{{ __('community.avatar_alt') }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover">
                 </div>
                 <div>
                     <div class="font-bold text-[#1a2b4c] text-sm md:text-base">{{ $leader->username }}</div>

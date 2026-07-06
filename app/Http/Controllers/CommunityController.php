@@ -55,8 +55,10 @@ class CommunityController extends Controller
         // ----------------------------------------------------------------
         // 3. Popular Tags (required by sidebar.blade.php component)
         // ----------------------------------------------------------------
+        // Global forum only — tags on community posts don't count.
         $popularTags = PostTag::select('keyword')
             ->selectRaw('COUNT(DISTINCT post_id) as post_count')
+            ->whereHas('post', fn ($query) => $query->whereNull('community_id'))
             ->groupBy('keyword')
             ->orderByDesc('post_count')
             ->limit(8)
@@ -65,9 +67,10 @@ class CommunityController extends Controller
         // ----------------------------------------------------------------
         // 4. Forum Leaders (required by sidebar.blade.php component)
         // ----------------------------------------------------------------
-        // Rank by forum posts only — summit logs (tag-less posts) don't count.
+        // Rank by global forum posts only — summit logs (tag-less posts)
+        // and posts made inside a community don't count.
         $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
-            $query->whereHas('tags');
+            $query->whereNull('community_id')->whereHas('tags');
         }])
             ->orderByDesc('posts_count')
             ->limit(5)
