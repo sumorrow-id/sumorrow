@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             MountainSeeder::class,
             GearAndAchievementSeeder::class,
             CommunitySeeder::class,
+            ForumPostSeeder::class,
         ]);
     }
 }
