@@ -9,49 +9,54 @@
         class="w-full overflow-hidden min-h-screen bg-gradient-to-b from-[#e8f0f6] to-[#f5f8fa] font-['Plus_Jakarta_Sans'] font-medium pb-16 sm:pb-24 text-[#001E3A]">
 
         <!-- Hero Section Container -->
-        <div class="w-[95%] max-w-350 mx-auto pt-28 sm:pt-36">
+        <div class="w-full sm:w-[95%] max-w-350 mx-auto pt-0 sm:pt-36">
 
-            <!-- Hero Box -->
-            <div
-                class="relative w-full h-[500px] sm:h-[700px] bg-gray-300 rounded-[2rem] shadow-xl flex items-center justify-center">
-                <!-- Two stacked layers crossfade between curated hero images -->
-                <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
-                    onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
-                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
-                <img id="hero-image-next" src="" alt="" aria-hidden="true"
-                    class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-[2rem] opacity-0 transition-opacity duration-[1200ms] ease-in-out">
-                <div class="absolute inset-0 bg-black/10 rounded-[2rem]"></div>
+            <!-- Hero Wrapper (box + search bar) -->
+            <div class="relative">
 
-                <!-- SUMORROW text -->
-                <h1
-                    class="relative z-10 text-[min(10vw,140px)] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
-                    SUMORROW
-                </h1>
+                <!-- Hero Box -->
+                <div
+                    class="relative w-full h-[500px] sm:h-[700px] bg-gray-300 rounded-none sm:rounded-[2rem] shadow-xl flex items-center justify-center">
+                    <!-- Two stacked layers crossfade between curated hero images -->
+                    <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
+                        onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-none sm:rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
+                    <img id="hero-image-next" src="" alt="" aria-hidden="true"
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-none sm:rounded-[2rem] opacity-0 transition-opacity duration-[1200ms] ease-in-out">
+                    <div class="absolute inset-0 bg-black/10 rounded-none sm:rounded-[2rem]"></div>
 
-                <!-- Temperature Widget (Top Right Puzzle Cutout) -->
-                <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
-                    data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
-                    class="absolute top-0 right-0 bg-[#c2dbec]/95 border-b-[12px] sm:border-b-[16px] border-l-[12px] sm:border-l-[16px] border-[#e8f0f6] rounded-bl-[3rem] rounded-tr-[2rem] w-40 h-32 sm:w-56 sm:h-40 flex flex-col items-center justify-center p-3 sm:p-4 shadow-md transition-transform duration-500 hover:scale-[1.03] origin-top-right">
-                    <div id="weather-content"
-                        class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
-                        <span id="weather-location"
-                            class="text-sm sm:text-base font-bold text-[#001E3A] line-clamp-1 leading-tight">{!! $weatherData[0]['loc'] ?? __('home.mountain_fallback') !!}</span>
-                        <div class="flex items-center justify-center gap-1 sm:gap-2 mt-1">
-                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-[#001E3A]" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
-                                <path d="M12 7v5" />
-                            </svg>
-                            <span id="weather-temp"
-                                class="text-3xl sm:text-4xl font-extrabold text-[#001E3A]">{!! $weatherData[0]['temp'] ?? '0&deg;' !!}</span>
+                    <!-- SUMORROW text -->
+                    <h1
+                        class="hidden sm:block relative z-10 text-[min(10vw,140px)] font-['Bricolage_Grotesque'] font-black text-white leading-none tracking-tight">
+                        SUMORROW
+                    </h1>
+
+                    <!-- Temperature Widget (Top Right Puzzle Cutout) -->
+                    <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
+                        data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
+                        class="absolute bottom-0 left-0 right-0 sm:bottom-auto sm:left-auto sm:top-0 sm:right-0 bg-[#c2dbec]/95 border-0 sm:border-b-[16px] sm:border-l-[16px] border-[#e8f0f6] rounded-none sm:rounded-bl-[3rem] sm:rounded-tr-[2rem] w-full h-20 sm:w-56 sm:h-40 flex flex-col items-center justify-center p-3 sm:p-4 shadow-md transition-transform duration-500 hover:scale-[1.03] origin-top-right">
+                        <div id="weather-content"
+                            class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
+                            <span id="weather-location"
+                                class="text-sm sm:text-base font-bold text-[#001E3A] line-clamp-1 leading-tight">{!! $weatherData[0]['loc'] ?? __('home.mountain_fallback') !!}</span>
+                            <div class="flex items-center justify-center gap-1 sm:gap-2 mt-1">
+                                <svg class="w-6 h-6 sm:w-8 sm:h-8 text-[#001E3A]" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+                                    <path d="M12 7v5" />
+                                </svg>
+                                <span id="weather-temp"
+                                    class="text-3xl sm:text-4xl font-extrabold text-[#001E3A]">{!! $weatherData[0]['temp'] ?? '0&deg;' !!}</span>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
 
                 <!-- Bottom Search Bar (Puzzle Cutout) -->
-                <div class="absolute -bottom-10 w-[95%] max-w-4xl left-1/2 -translate-x-1/2 z-20">
+                <div
+                    class="relative w-full mt-6 sm:mt-0 sm:mx-auto sm:absolute sm:-bottom-10 sm:w-[95%] max-w-4xl sm:left-1/2 sm:-translate-x-1/2 z-20">
                     <form action="{{ url('/explore') }}" method="GET"
-                        class="w-full bg-[#c2dbec] border-[12px] sm:border-[16px] border-[#e8f0f6] rounded-[2.5rem] sm:rounded-[3rem] p-3 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-sm">
+                        class="w-full bg-[#c2dbec] border-0 sm:border-[16px] border-[#e8f0f6] rounded-none sm:rounded-[3rem] p-4 sm:p-3 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-sm">
                         <!-- Search Input -->
                         <div class="w-full sm:flex-1 relative bg-white/70 rounded-[1.5rem] sm:ml-2">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none"
@@ -129,7 +134,7 @@
                 @endphp
                 @foreach ($features as $feature)
                     <div
-                        class="bg-[#c2dbec] rounded-3xl p-6 sm:p-8 flex flex-col hover:-translate-y-2 transition-transform duration-300 shadow-sm relative group overflow-hidden">
+                        class="bg-[#c2dbec] rounded-none sm:rounded-3xl p-6 sm:p-8 flex flex-col hover:-translate-y-2 transition-transform duration-300 shadow-sm relative group overflow-hidden">
                         <div
                             class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500">
                         </div>
@@ -161,7 +166,7 @@
                 </div>
 
                 <!-- Left Text -->
-                <div class="lg:col-span-4 z-10">
+                <div class="lg:col-span-4 z-10 ml-4 sm:ml-0">
                     <h2 class="text-4xl sm:text-5xl font-extrabold text-[#001E3A] mb-8 leading-tight">
                         {{ __('home.popular_mountains_heading_line1') }}<br>{{ __('home.popular_mountains_heading_line2') }}<br>{{ __('home.popular_mountains_heading_line3') }}
                     </h2>
@@ -180,7 +185,7 @@
                     <div id="mountain-carousel-container" class="relative w-full h-[330px] sm:h-[400px]">
                         @foreach ($popularMountains as $idx => $popMt)
                             <a href="{{ url('/explore/' . $popMt['id']) }}"
-                                class="mtn-card overflow-hidden group shadow-lg cursor-pointer block transition-all duration-700 ease-in-out absolute right-0 top-1/2 w-[160px] sm:w-[200px] h-[220px] sm:h-[260px] rounded-[2rem]"
+                                class="mtn-card overflow-hidden group shadow-lg cursor-pointer block transition-all duration-700 ease-in-out absolute right-0 top-1/2 w-[160px] sm:w-[200px] h-[220px] sm:h-[260px] rounded-none sm:rounded-[2rem]"
                                 data-index="{{ $idx }}">
                                 <img src="{{ $popMt['image'] }}"
                                     onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
@@ -229,7 +234,7 @@
 
             <!-- Community Section -->
             <div
-                class="w-full bg-[#c2dbec] rounded-[2rem] sm:rounded-[4rem] border border-[#094174]/20 p-6 sm:p-12 lg:p-16 flex flex-col lg:flex-row gap-8 lg:gap-12 mb-20 sm:mb-32 items-center relative overflow-hidden shadow-sm">
+                class="w-full bg-[#c2dbec] rounded-none sm:rounded-[4rem] border border-[#094174]/20 p-6 sm:p-12 lg:p-16 flex flex-col lg:flex-row gap-8 lg:gap-12 mb-20 sm:mb-32 items-center relative overflow-hidden shadow-sm">
 
                 <!-- Bg pattern -->
                 <div class="absolute inset-0 opacity-10 pointer-events-none"
@@ -242,7 +247,7 @@
                         {{ __('home.community_desc') }}
                     </p>
                     <a href="{{ url('/community') }}"
-                        class="inline-flex items-center gap-3 px-8 py-3 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 bg-transparent">
+                        class="hidden lg:inline-flex items-center gap-3 px-8 py-3 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 bg-transparent">
                         {{ __('home.join_now') }}
                         <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -303,7 +308,7 @@
                         @endfor
                     </div>
                     <!-- Navigation -->
-                    <div class="absolute right-0 -bottom-2 flex gap-3 z-20">
+                    <div class="hidden sm:flex absolute right-0 -bottom-2 gap-3 z-20">
                         <button type="button"
                             class="w-10 h-10 rounded-full bg-white text-[#094174] flex items-center justify-center shadow-md hover:bg-gray-100 transition"
                             onclick="document.getElementById('community-gallery').scrollBy({left:-320, behavior:'smooth'})">
@@ -322,19 +327,29 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Mobile-only: Join Now moved below the community cards -->
+                <a href="{{ url('/community') }}"
+                    class="lg:hidden z-10 w-full inline-flex items-center justify-center gap-3 px-8 py-3 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 bg-transparent">
+                    {{ __('home.join_now') }}
+                    <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
             </div>
 
             <!-- Choose Your Peak Section -->
             <div>
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
-                    <div>
+                    <div class="mx-4 px-2 sm:mx-0 sm:px-0">
                         <h2 class="text-4xl sm:text-5xl font-extrabold text-[#001E3A] mb-3">{{ __('home.choose_your_peak_heading') }}</h2>
                         <p class="text-[#001E3A]/60 font-semibold text-sm sm:text-base max-w-md">
                             {{ __('home.choose_your_peak_desc') }}
                         </p>
                     </div>
                     <a href="{{ url('/explore') }}"
-                        class="inline-flex items-center gap-2 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap">
+                        class="hidden sm:inline-flex items-center gap-2 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap">
                         {{ __('home.explore_more') }}
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -347,7 +362,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                     @foreach ($randomPeaks as $peak)
                         <a href="{{ url('/explore/' . $peak['id']) }}"
-                            class="bg-[#c2dbec] rounded-[2rem] p-5 shadow-sm relative group cursor-pointer transition-transform hover:-translate-y-2 flex flex-col h-full">
+                            class="bg-[#c2dbec] rounded-none sm:rounded-[2rem] p-5 shadow-sm relative group cursor-pointer transition-transform hover:-translate-y-2 flex flex-col h-full">
                             <!-- Top Info -->
                             <div class="flex justify-between items-start mb-4">
                                 <div>
@@ -394,6 +409,16 @@
                         </a>
                     @endforeach
                 </div>
+
+                <!-- Mobile-only: Explore More moved below the peak cards -->
+                <a href="{{ url('/explore') }}"
+                    class="sm:hidden mt-8 mx-4 flex items-center justify-center gap-2 px-6 py-3 border border-[#001E3A] text-[#001E3A] font-bold rounded-full hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap">
+                    {{ __('home.explore_more') }}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
             </div>
 
         </div>
