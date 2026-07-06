@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Achievement;
 use App\Models\User;
 use App\Services\AchievementService;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function index(AchievementService $achievementService)
+    public function index(AchievementService $achievementService): View
     {
         /** @var User $user */
         $user = Auth::user();
@@ -56,24 +58,17 @@ class ProfileController extends Controller
         return view('profile.profile', compact('forumPosts', 'hikingPosts', 'gears', 'allAchievements', 'userAchievements', 'user', 'lastReviews'));
     }
 
-    public function edit()
+    public function edit(): View
     {
         return view('profile.edit', [
             'user' => Auth::user(),
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request): RedirectResponse
     {
         /** @var User $user */
         $user = Auth::user();
-
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users,username,'.$user->id,
-            'bio' => 'nullable|string|max:500',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-        ]);
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar_url && ! str_contains($user->avatar_url, 'http')) {

@@ -21,7 +21,6 @@ return [
     'unknown_elevation' => 'Tidak diketahui',
     'explore_now' => 'Jelajahi Sekarang',
 
-    'mountain_name_alt' => 'Nama gunung',
     'view_on_map' => 'Lihat di peta',
     'indonesia' => 'Indonesia',
     'reviews_count' => ':count ulasan',

@@ -64,7 +64,7 @@
                     <form method="POST" action="{{ route('community.destroy', $community) }}" class="confirm-submit-form"
                         data-confirm-title="{{ __('community.delete_community') }}"
                         data-confirm-message="{{ __('community.confirm_delete_community') }}"
-                        data-confirm-label="{{ __('community.confirm_delete_button') }}"
+                        data-confirm-label="{{ __('common.delete') }}"
                         data-confirm-variant="danger">
                         @csrf
                         @method('DELETE')
@@ -242,7 +242,7 @@
                                     <form method="POST" action="{{ route('community.events.destroy', $event) }}" class="confirm-submit-form"
                                         data-confirm-title="{{ __('community.delete_event') }}"
                                         data-confirm-message="{{ __('community.confirm_delete_event') }}"
-                                        data-confirm-label="{{ __('community.confirm_delete_button') }}"
+                                        data-confirm-label="{{ __('common.delete') }}"
                                         data-confirm-variant="danger">
                                         @csrf
                                         @method('DELETE')
@@ -379,7 +379,7 @@
                     </button>
                     <button type="submit"
                         class="flex-1 px-4 py-2 bg-[#094174] text-white font-bold rounded-full hover:bg-[#105DA3] transition shadow-md cursor-pointer">
-                        {{ __('community.save_changes') }}
+                        {{ __('common.save_changes') }}
                     </button>
                 </div>
             </form>

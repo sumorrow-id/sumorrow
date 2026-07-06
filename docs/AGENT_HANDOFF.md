@@ -11,6 +11,18 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-06 — branch: `main` (uncommitted) — Locale switcher as flag dropdown
+
+By: Claude Code
+
+**What changed**
+
+- Replaced the "EN | ID" text toggle with a shared `<x-locale-switcher>` component (`resources/views/components/locale-switcher.blade.php`): flag emoji (🇺🇸/🇮🇩) + hover dropdown, themed via `button-class`/`active-class`/`panel-class` props. Used in `navbar-light.blade.php` (desktop dropdown, mobile `inline` variant — the mobile menu's `overflow-hidden` wrapper would clip an absolute dropdown) and `layouts/admin.blade.php` (desktop dropdown, summit-blue theme).
+- Kept the `data-locale-switcher` attribute and existing aria-labels on the component root so `tests/Feature/LocaleMiddlewareTest.php` still passes unchanged.
+- No new dependencies; flags are Unicode emoji, no image assets.
+
+**Verify**: `php artisan test --filter=LocaleMiddlewareTest`, or visit `/home` and `/admin/dashboard` and hover the flag button.
+
 ## 2026-07-05 — branch: `main` (uncommitted) — My Community detail page
 
 By: Claude Code

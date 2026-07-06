@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mountain;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $cached = Cache::remember('mountains.home.localized', now()->addDay(), function () {
             $mountains = Mountain::with(['province', 'images'])->get();
@@ -89,7 +91,7 @@ class HomeController extends Controller
         return view('home', compact('weatherData', 'popularMountains', 'randomPeaks', 'heroImages', 'communityImages'));
     }
 
-    public function redirectToHome()
+    public function redirectToHome(): RedirectResponse
     {
         return redirect()->route('home');
     }

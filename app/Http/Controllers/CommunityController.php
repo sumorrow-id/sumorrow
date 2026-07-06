@@ -2,88 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JoinCommunityRequest;
+use App\Http\Requests\StoreCommunityRequest;
+use App\Http\Requests\UpdateCommunityRequest;
 use App\Models\Community;
 use App\Models\Mountain;
 use App\Models\Post;
-use App\Models\PostTag;
-use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CommunityController extends Controller
 {
-    public function index(Request $request)
-    {
-        // ----------------------------------------------------------------
-        // 1. My Communities & Suggested Communities
-        // ----------------------------------------------------------------
-        $myCommunities = collect();
-        if (Auth::check()) {
-            $myCommunities = Auth::user()->communities()->withCount('members')->get();
-        }
-
-        $myCommunityIds = $myCommunities->pluck('id')->toArray();
-        $suggestedCommunities = Community::whereNotIn('id', $myCommunityIds)
-            ->withCount('members')
-            ->take(6)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 2. Main Feed (required by feed.blade.php component)
-        // ----------------------------------------------------------------
-        $activeTag = $request->query('tag');
-
-        // Forum feed only: summit logs carry no category tags, so exclude
-        // tag-less posts — same convention as PostController::index. Posts
-        // made inside a community stay on their community page.
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
-            ->whereNull('community_id')
-            ->whereHas('tags')
-            ->latest();
-
-        if ($activeTag) {
-            $postsQuery->whereHas('tags', function ($query) use ($activeTag) {
-                $query->where('keyword', strtolower(trim($activeTag)));
-            });
-        }
-
-        $posts = $postsQuery->paginate(10)->withQueryString();
-
-        // ----------------------------------------------------------------
-        // 3. Popular Tags (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        $popularTags = PostTag::select('keyword')
-            ->selectRaw('COUNT(DISTINCT post_id) as post_count')
-            ->groupBy('keyword')
-            ->orderByDesc('post_count')
-            ->limit(8)
-            ->get();
-
-        // ----------------------------------------------------------------
-        // 4. Forum Leaders (required by sidebar.blade.php component)
-        // ----------------------------------------------------------------
-        // Rank by forum posts only — summit logs (tag-less posts) don't count.
-        $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
-            $query->whereHas('tags');
-        }])
-            ->orderByDesc('posts_count')
-            ->limit(5)
-            ->get();
-
-        return view('community.index', compact(
-            'myCommunities',
-            'suggestedCommunities',
-            'posts',
-            'popularTags',
-            'forumLeaders',
-            'activeTag'
-        ));
-    }
-
-    public function join(Request $request, Community $community)
+    public function join(JoinCommunityRequest $request, Community $community): RedirectResponse
     {
         $user = Auth::user();
 
@@ -94,8 +28,6 @@ class CommunityController extends Controller
 
         // Private communities are token-gated; the creator may always rejoin.
         if ($community->privacy === 'private' && ! $community->isCreatedBy($user)) {
-            $request->validate(['join_token' => 'required|string']);
-
             if (! hash_equals((string) $community->join_token, trim($request->join_token))) {
                 return back()
                     ->withErrors(['join_token' => __('community.invalid_token')])
@@ -111,14 +43,8 @@ class CommunityController extends Controller
             ->with('success', __('community.joined_community', ['name' => $community->name]));
     }
 
-    public function store(Request $request)
+    public function store(StoreCommunityRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:communities,name',
-            'description' => 'required|string',
-            'privacy' => 'required|in:public,private',
-        ]);
-
         $community = Community::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -135,7 +61,7 @@ class CommunityController extends Controller
             ->with('success', __('community.community_created', ['name' => $community->name]));
     }
 
-    public function show(Community $community)
+    public function show(Community $community): View
     {
         // Private communities hide their content behind a join-token gate;
         // the creator can always get back in.
@@ -161,17 +87,9 @@ class CommunityController extends Controller
         return view('community.show', compact('community', 'posts', 'recommendedMountains'));
     }
 
-    public function update(Request $request, Community $community)
+    public function update(UpdateCommunityRequest $request, Community $community): RedirectResponse
     {
-        abort_unless($community->isCreatedBy(Auth::user()), 403);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:communities,name,'.$community->id,
-            'description' => 'required|string',
-            'privacy' => 'required|in:public,private',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
-            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:4096',
-        ]);
+        $validated = $request->validated();
 
         $data = [
             'name' => $validated['name'],
@@ -198,9 +116,9 @@ class CommunityController extends Controller
             ->with('success', __('community.community_updated'));
     }
 
-    public function destroy(Community $community)
+    public function destroy(Community $community): RedirectResponse
     {
-        abort_unless($community->isCreatedBy(Auth::user()), 403);
+        abort_unless(Auth::user()->can('delete', $community), 403);
 
         $this->deleteImage($community->image_url);
         $this->deleteImage($community->banner_url);
@@ -213,7 +131,7 @@ class CommunityController extends Controller
             ->with('success', __('community.community_deleted'));
     }
 
-    public function leave(Community $community)
+    public function leave(Community $community): RedirectResponse
     {
         $user = Auth::user();
 

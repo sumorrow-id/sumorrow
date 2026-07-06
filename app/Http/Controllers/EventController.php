@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventRequest;
 use App\Models\Community;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -18,17 +18,9 @@ class EventController extends Controller
      * Validation uses the named "event" error bag so the events modal on the
      * community page can be told apart from the edit-community modal.
      */
-    public function store(Request $request, Community $community): RedirectResponse
+    public function store(StoreEventRequest $request, Community $community): RedirectResponse
     {
-        abort_unless($community->isMember(Auth::user()), 403);
-
-        $validated = $request->validateWithBag('event', [
-            'title' => 'required|string|max:255',
-            'event_date' => 'required|date|after:now',
-            'location' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -55,13 +47,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event): RedirectResponse
     {
-        $community = $event->community;
-
-        abort_unless(
-            $community->isMember(Auth::user())
-            && ($event->user_id === Auth::id() || $community->isCreatedBy(Auth::user())),
-            403
-        );
+        abort_unless(Auth::user()->can('delete', $event), 403);
 
         if ($event->image_url) {
             Storage::disk('public')->delete(Str::after($event->image_url, 'storage/'));

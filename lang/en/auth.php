@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'failed' => 'These credentials do not match our records.',
+    'password' => 'The provided password is incorrect.',
+    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+
     // auth/login.blade.php
     'login_mountain_background_alt' => 'Mountain Background',
     'login_heading' => 'Sign In',

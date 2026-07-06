@@ -2,17 +2,12 @@
 
 namespace App\Services;
 
-use App\Contracts\SocialAuthInterface;
 use App\Models\User;
-use Override;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
 
-class GoogleAuthService implements SocialAuthInterface
+class GoogleAuthService
 {
-    /**
-     * @param  \Laravel\Socialite\Contracts\User  $socialUser
-     */
-    #[Override]
-    public function findOrCreateUser($socialUser): User
+    public function findOrCreateUser(SocialiteUser $socialUser): User
     {
         $user = User::query()->where('google_id', $socialUser->id)->orWhere('email', $socialUser->email)->first();
 

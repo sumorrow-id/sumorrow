@@ -21,7 +21,6 @@ return [
     'unknown_elevation' => 'Unknown',
     'explore_now' => 'Explore Now',
 
-    'mountain_name_alt' => 'Mountain name',
     'view_on_map' => 'View on map',
     'indonesia' => 'Indonesia',
     'reviews_count' => ':count reviews',

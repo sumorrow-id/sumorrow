@@ -2,36 +2,34 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Contracts\SocialAuthInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use App\Services\GoogleAuthService;
 use Exception;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class LoginController extends Controller
 {
     public function __construct(
-        protected SocialAuthInterface $socialAuth,
+        protected GoogleAuthService $socialAuth,
         protected AuthManager $auth,
         protected Hasher $hasher,
         protected SocialiteFactory $socialite,
     ) {}
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
         $remember = $request->has('remember');
         $user = User::query()->where('email', $request->email)->first();
 
@@ -49,7 +47,7 @@ class LoginController extends Controller
         return back()->withErrors(['email' => __('auth.invalid_credentials')])->onlyInput('email');
     }
 
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(): RedirectResponse
     {
         try {
             $googleUser = $this->socialite->driver('google')->user();
@@ -68,12 +66,12 @@ class LoginController extends Controller
         }
     }
 
-    public function redirectToGoogle()
+    public function redirectToGoogle(): RedirectResponse
     {
         return $this->socialite->driver('google')->redirect();
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         $this->auth->logout();
 

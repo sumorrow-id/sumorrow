@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProfilePostRequest;
 use App\Models\Mountain;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ProfilePostController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         /** @var User $user */
         $user = Auth::user();
@@ -26,14 +28,14 @@ class ProfilePostController extends Controller
         return view('profile.posts.index', compact('posts'));
     }
 
-    public function create()
+    public function create(): View
     {
         $mountains = Mountain::orderBy('name')->get();
 
         return view('profile.posts.create', compact('mountains'));
     }
 
-    public function show($id)
+    public function show(int $id): View
     {
         /** @var User $user */
         $user = Auth::user();
@@ -46,22 +48,12 @@ class ProfilePostController extends Controller
         return view('profile.posts.show', compact('post'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProfilePostRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-            'mountain_id' => 'nullable|exists:mountains,id',
-            'climbing_date' => 'nullable|date',
-            'duration_days' => 'nullable|integer|min:1',
-            'images' => 'nullable|array|max:12',
-            'images.*' => 'image|max:2048', // Enforce 2MB matching PHP default max file size
-        ]);
-
         /** @var User $user */
         $user = Auth::user();
 
-        $post = $user->posts()->create($request->only(
+        $post = $user->posts()->create($request->safe()->only(
             'title', 'body', 'mountain_id', 'climbing_date', 'duration_days'
         ));
 

@@ -13,8 +13,6 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
     use Queueable;
 
     /**
-     * Get the mail representation of the notification.
-     *
      * @param  User  $notifiable
      */
     public function toMail($notifiable): MailMessage
