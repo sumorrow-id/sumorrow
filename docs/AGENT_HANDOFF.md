@@ -21,6 +21,7 @@ By: Claude Code
 - Guest visitors on the forum composer (`resources/views/community/components/feed.blade.php`) now see `images/community/profile-blank.png` instead of the dummy mountain avatar; logged-in users without an avatar keep the existing fallback.
 - New `ForumPostSeeder` (registered in `DatabaseSeeder`): 3 demo users + 8 tagged global forum posts with likes and a topic-matched image each (bundled public assets), idempotent via `firstOrCreate`.
 - Default avatar unified: every avatar fallback in community views (feed composer, post cards, post detail, comments, sidebar leaders) and the home community cards now uses `images/community/profile-blank.jpg` instead of the rinjani mountain photo / initials.
+- Fixed broken My Community images in the forum sidebar: raw `image_url` (no `asset()`) with a nonexistent `bromo.jpg` fallback replaced by the existing `Community::profileImageUrl()` helper. Each My Community entry now links to its community detail page.
 - Home Community section (`home.blade.php` + `HomeController`) now shows the 8 latest global forum posts (author, body excerpt, likes/comments counts, link to post detail) instead of hardcoded "John Doe" cards; falls back to the old sample cards when the forum is empty. Posts without images borrow catalog mountain images.
 
 **How to verify**

@@ -51,6 +51,27 @@ class CommunityControllerTest extends TestCase
         $response->assertSee('Gunung Lovers');
     }
 
+    public function test_my_community_sidebar_uses_profile_image_with_bundled_fallback(): void
+    {
+        $user = User::factory()->create();
+
+        $withImage = $this->makeCommunity(['name' => 'Punya Gambar', 'slug' => 'punya-gambar', 'image_url' => 'storage/community/custom.jpg']);
+        $withoutImage = $this->makeCommunity(['name' => 'Tanpa Gambar', 'slug' => 'tanpa-gambar']);
+        $withImage->members()->attach($user->id, ['role' => 'member']);
+        $withoutImage->members()->attach($user->id, ['role' => 'member']);
+
+        $response = $this->actingAs($user)->get(route('community'));
+
+        $response->assertOk();
+        $response->assertSee('storage/community/custom.jpg');
+        $response->assertSee('images/community/profile.avif');
+        $response->assertDontSee('bromo.jpg');
+
+        // Each My Community entry links to its detail page.
+        $response->assertSee(route('community.show', $withImage));
+        $response->assertSee(route('community.show', $withoutImage));
+    }
+
     public function test_community_feed_excludes_summit_logs(): void
     {
         $user = User::factory()->create();
