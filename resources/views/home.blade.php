@@ -260,15 +260,14 @@
                     <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 hide-scrollbar"
                         id="community-gallery">
                         <!-- Community Card -->
-                        @for ($i = 0; $i < 8; $i++)
-                            <a href="{{ url('/community') }}"
+                        @foreach ($communityCards as $card)
+                            <a href="{{ $card['url'] }}"
                                 class="snap-start shrink-0 w-[260px] sm:w-[320px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 block hover:-translate-y-1 transition-transform">
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-[#001E3A] flex items-center justify-center text-white font-bold text-sm">
-                                            JD</div>
-                                        <span class="font-bold text-[#001E3A] text-sm flex-1">John Doe</span>
+                                        <img src="{{ $card['avatar'] }}" alt="{{ $card['username'] }}"
+                                            class="w-10 h-10 rounded-full object-cover shrink-0">
+                                        <span class="font-bold text-[#001E3A] text-sm flex-1">{{ $card['username'] }}</span>
                                     </div>
                                     <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path
@@ -276,12 +275,11 @@
                                     </svg>
                                 </div>
                                 <p class="text-xs sm:text-sm font-semibold text-[#001E3A] leading-relaxed mb-4">
-                                    {{ __('home.sample_post') }} <span
-                                        class="text-gray-400">{{ __('home.more') }}</span>
+                                    {{ $card['body'] }}
                                 </p>
                                 <div
                                     class="w-full h-40 sm:h-48 bg-gray-200 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
-                                    <img src="{{ $communityImages->get($i % max($communityImages->count(), 1), asset('images/placeholder.svg')) }}"
+                                    <img src="{{ $card['image'] }}"
                                         onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
                                         class="w-full h-full object-cover">
                                 </div>
@@ -291,13 +289,13 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                                             </path>
-                                        </svg> 1.7k</div>
+                                        </svg> {{ $card['likes'] }}</div>
                                     <div class="flex items-center gap-1"><svg class="w-4 h-4 sm:w-5 sm:h-5"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                                             </path>
-                                        </svg> 439</div>
+                                        </svg> {{ $card['comments'] }}</div>
                                     <div class="flex items-center gap-1 ml-auto"><svg class="w-4 h-4 sm:w-5 sm:h-5"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -305,7 +303,7 @@
                                         </svg></div>
                                 </div>
                             </a>
-                        @endfor
+                        @endforeach
                     </div>
                     <!-- Navigation -->
                     <div class="hidden sm:flex absolute right-0 -bottom-2 gap-3 z-20">

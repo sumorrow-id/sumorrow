@@ -12,6 +12,7 @@ Running log of work done by developers and AI agents, newest first.
 ---
 
 ## 2026-07-06 — branch: `main` (uncommitted) — Locale switcher as flag dropdown
+## 2026-07-06 — branch: `main` (uncommitted) — Forum sidebar scoping + guest avatar
 
 By: Claude Code
 
@@ -22,6 +23,19 @@ By: Claude Code
 - No new dependencies; flags are Unicode emoji, no image assets.
 
 **Verify**: `php artisan test --filter=LocaleMiddlewareTest`, or visit `/home` and `/admin/dashboard` and hover the flag button.
+- Forum Leaders and Popular Tags (`CommunityController::index`, `PostController::index`) now count global forum posts only: posts with `community_id` set (My Community posts) are excluded via `whereNull('community_id')`.
+- Guest visitors on the forum composer (`resources/views/community/components/feed.blade.php`) now see `images/community/profile-blank.png` instead of the dummy mountain avatar; logged-in users without an avatar keep the existing fallback.
+- New `ForumPostSeeder` (registered in `DatabaseSeeder`): 3 demo users + 8 tagged global forum posts with likes and a topic-matched image each (bundled public assets), idempotent via `firstOrCreate`.
+- Default avatar unified: every avatar fallback in community views (feed composer, post cards, post detail, comments, sidebar leaders) and the home community cards now uses `images/community/profile-blank.jpg` instead of the rinjani mountain photo / initials.
+- Fixed broken My Community images in the forum sidebar: raw `image_url` (no `asset()`) with a nonexistent `bromo.jpg` fallback replaced by the existing `Community::profileImageUrl()` helper. Each My Community entry now links to its community detail page.
+- Home Community section (`home.blade.php` + `HomeController`) now shows the 8 latest global forum posts (author, body excerpt, likes/comments counts, link to post detail) instead of hardcoded "John Doe" cards; falls back to the old sample cards when the forum is empty. Posts without images borrow catalog mountain images.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/PostControllerTest.php tests/Feature/CommunityControllerTest.php tests/Feature/HomeControllerTest.php tests/Feature/ForumPostSeederTest.php` (new tests: `test_forum_leaders_and_popular_tags_exclude_community_posts`, `test_guest_composer_shows_blank_profile_image`, `test_home_community_section_shows_global_forum_posts_only`, seeder idempotency test).
+- Manually: `php artisan db:seed --class=ForumPostSeeder`, then open `/home` — Community section shows the seeded posts; post inside a community and check the `/community` sidebar — the post must not raise contributions or tag counts.
+
+---
 
 ## 2026-07-05 — branch: `main` (uncommitted) — My Community detail page
 

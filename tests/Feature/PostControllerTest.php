@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Community;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -142,6 +143,47 @@ class PostControllerTest extends TestCase
         $response->assertOk();
         $leader = $response->viewData('forumLeaders')->firstWhere('id', $user->id);
         $this->assertSame(1, $leader->posts_count);
+    }
+
+    public function test_forum_leaders_and_popular_tags_exclude_community_posts()
+    {
+        $user = User::factory()->create();
+
+        $community = Community::create([
+            'name' => 'Pendaki Nusantara',
+            'slug' => 'pendaki-nusantara',
+            'description' => 'A community for Indonesian hikers.',
+            'privacy' => 'public',
+            'created_by' => $user->id,
+        ]);
+
+        $forumPost = $user->posts()->create(['title' => '', 'body' => 'global forum post']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        $communityPost = $user->posts()->create([
+            'title' => '',
+            'body' => 'community post',
+            'community_id' => $community->id,
+        ]);
+        $communityPost->tags()->create(['keyword' => 'gear-talk']);
+
+        $response = $this->actingAs($user)->get(route('community.explore'));
+
+        $response->assertOk();
+        $leader = $response->viewData('forumLeaders')->firstWhere('id', $user->id);
+        $this->assertSame(1, $leader->posts_count);
+
+        $tagKeywords = $response->viewData('popularTags')->pluck('keyword');
+        $this->assertTrue($tagKeywords->contains('hiking-stories'));
+        $this->assertFalse($tagKeywords->contains('gear-talk'));
+    }
+
+    public function test_guest_composer_shows_blank_profile_image()
+    {
+        $response = $this->get(route('community.explore'));
+
+        $response->assertOk();
+        $response->assertSee('images/community/profile-blank.jpg');
     }
 
     public function test_author_can_delete_own_post_and_image_files_are_removed()

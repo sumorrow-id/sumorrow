@@ -40,7 +40,7 @@
 
             {{-- ── Row 1: Avatar + text input + toolbar ── --}}
             <div class="flex items-center gap-3 mb-3">
-                <img src="{{ Auth::check() && Auth::user()->avatar_url ? asset(Auth::user()->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
+                <img src="{{ asset(Auth::check() && Auth::user()->avatar_url ? Auth::user()->avatar_url : 'images/community/profile-blank.jpg') }}"
                     class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shrink-0" alt="{{ __('community.avatar_alt') }}">
 
                 <div class="grow bg-[#F8F9FA] rounded-full flex items-center justify-between px-4 py-2.5 md:py-3">
@@ -58,7 +58,7 @@
                     {{-- ── Toolbar icons + popovers anchored here ── --}}
                     <div class="relative flex items-center gap-2 md:gap-3 pl-2 text-gray-400 shrink-0">
 
-                        {{-- 📷 Image picker --}}
+                        {{-- Image picker --}}
                         <button type="button" id="btn-image-picker" class="hover:text-[#094174] transition"
                             aria-label="{{ __('community.attach_images_aria') }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@
                             class="hover:text-[#094174] transition font-bold text-[10px] md:text-xs border-2 border-current rounded-sm px-1 py-0.5"
                             style="line-height:1;" aria-label="{{ __('community.insert_gif_aria') }}">GIF</button>
 
-                        {{-- 😊 Emoji picker trigger --}}
+                        {{-- Emoji picker trigger --}}
                         <button type="button" id="btn-emoji-toggle" class="hover:text-[#094174] transition"
                             aria-label="{{ __('community.insert_emoji_aria') }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +191,7 @@
             data-tag="{{ $post->tags->first()->keyword ?? '' }}">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/dummymountain/rinjani.png') }}"
+                    <img src="{{ $post->author->avatar_url ? asset($post->author->avatar_url) : asset('images/community/profile-blank.jpg') }}"
                         class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
                     <div>
                         <div class="flex items-center gap-1">

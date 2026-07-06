@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
+use App\Models\Post;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -88,7 +90,44 @@ class HomeController extends Controller
         // pointed at a hardcoded external stock photo).
         $communityImages = $allMountains->take(8)->map(fn ($m) => $this->resolveImageUrl($m))->values();
 
-        return view('home', compact('weatherData', 'popularMountains', 'randomPeaks', 'heroImages', 'communityImages'));
+        // Community showcase: latest global forum posts (same scope as the
+        // forum feed — tagged, not inside a community). Posts without an
+        // uploaded image borrow a catalog image so every card has a photo.
+        $fallbackImage = fn (int $i) => $communityImages->get($i % max($communityImages->count(), 1), asset('images/placeholder.svg'));
+
+        $communityCards = Post::with(['author', 'images'])
+            ->withCount(['likes', 'comments'])
+            ->whereNull('community_id')
+            ->whereHas('tags')
+            ->latest()
+            ->take(8)
+            ->get()
+            ->values()
+            ->map(fn (Post $post, int $i) => [
+                'url' => route('community.posts.show', $post),
+                'username' => $post->author->username,
+                'avatar' => asset($post->author->avatar_url ?: 'images/community/profile-blank.jpg'),
+                'body' => Str::limit($post->body, 90),
+                'image' => $post->images->first() ? asset($post->images->first()->image_url) : $fallbackImage($i),
+                'likes' => number_format($post->likes_count),
+                'comments' => number_format($post->comments_count),
+            ]);
+
+        // Empty forum (fresh install) — keep the section alive with the
+        // sample cards it used to hardcode in the view.
+        if ($communityCards->isEmpty()) {
+            $communityCards = collect(range(0, 7))->map(fn (int $i) => [
+                'url' => url('/community'),
+                'username' => 'John Doe',
+                'avatar' => asset('images/community/profile-blank.jpg'),
+                'body' => __('home.sample_post'),
+                'image' => $fallbackImage($i),
+                'likes' => '1.7k',
+                'comments' => '439',
+            ]);
+        }
+
+        return view('home', compact('weatherData', 'popularMountains', 'randomPeaks', 'heroImages', 'communityImages', 'communityCards'));
     }
 
     public function redirectToHome(): RedirectResponse

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AchievementSeeder::class,
             GearSeeder::class,
             CommunitySeeder::class,
+            ForumPostSeeder::class,
         ]);
     }
 }
