@@ -41,11 +41,7 @@
                 <div class="flex-shrink-0">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">{{ __('profile.profile_photo') }}</label>
                     <div class="relative w-32 h-32 rounded-full overflow-hidden bg-gray-100 group border-4 border-white shadow-md">
-                        @php
-                            $avatar = $user->avatar_url;
-                            $avatarSrc = $avatar ? (str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) : 'https://ui-avatars.com/api/?name=' . urlencode(substr($user->username, 0, 2)) . '&background=random';
-                        @endphp
-                        <img src="{{ $avatarSrc }}" id="avatar-preview" alt="{{ __('profile.avatar_preview_alt') }}" class="w-full h-full object-cover">
+                        <img src="{{ $user->avatarUrl() }}" id="avatar-preview" alt="{{ __('profile.avatar_preview_alt') }}" class="w-full h-full object-cover">
                         <label for="avatar-upload" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
                         </label>

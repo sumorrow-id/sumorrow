@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -59,11 +59,6 @@ class Post extends Model
         return $this->hasMany(PostImage::class);
     }
 
-    public function replies(): HasMany
-    {
-        return $this->hasMany(PostReply::class);
-    }
-
     public function tags(): HasMany
     {
         return $this->hasMany(PostTag::class);
@@ -80,14 +75,15 @@ class Post extends Model
     }
 
     /**
-     * Scope to filter posts by a tag keyword.
-     *
-     * Usage: Post::byTag('hiking-stories')->latest()->paginate(10)
+     * Render the post body markdown to HTML with raw HTML stripped, so a
+     * user-authored body can't inject <script> or unsafe links. Callers use
+     * {!! !!}, so the sanitising must happen here, not in the view.
      */
-    public function scopeByTag(Builder $query, string $keyword): Builder
+    public function renderedBody(): string
     {
-        return $query->whereHas('tags', function (Builder $sub) use ($keyword) {
-            $sub->where('keyword', strtolower(trim($keyword)));
-        });
+        return Str::markdown($this->body ?? '', [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
     }
 }

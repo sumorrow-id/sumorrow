@@ -83,7 +83,7 @@ Route::middleware('redirect.admin')->group(function () {
 
         // Forgot / Reset Password
         Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
-        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
         Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
         Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
     });
@@ -99,40 +99,41 @@ Route::middleware('redirect.admin')->group(function () {
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-        // MyCommunity
-        Route::post('/community/{community}/join', [CommunityController::class, 'join'])->name('community.join');
-        Route::post('/community/create', [CommunityController::class, 'store'])->name('community.store');
+        // MyCommunity — creating/joining requires a verified email; leaving does not.
+        Route::post('/community/{community}/join', [CommunityController::class, 'join'])->middleware(['throttle:10,1', 'verified'])->name('community.join');
+        Route::post('/community/create', [CommunityController::class, 'store'])->middleware('verified')->name('community.store');
         Route::post('/community/{community}/leave', [CommunityController::class, 'leave'])->name('community.leave');
         // Community events (members create; event creator or community owner deletes)
-        Route::post('/community/{community}/events', [EventController::class, 'store'])->name('community.events.store');
+        Route::post('/community/{community}/events', [EventController::class, 'store'])->middleware('verified')->name('community.events.store');
         Route::delete('/community/events/{event}', [EventController::class, 'destroy'])->name('community.events.destroy');
         // Detail page — registered after the literal /community/* GET routes above so it never shadows them
         Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');
         Route::patch('/community/{community}', [CommunityController::class, 'update'])->name('community.update');
         Route::delete('/community/{community}', [CommunityController::class, 'destroy'])->name('community.destroy');
 
-        // Gear
-        Route::post('/gears', [GearController::class, 'store'])->name('gears.store');
+        // Gear — adding gear requires a verified email.
+        Route::post('/gears', [GearController::class, 'store'])->middleware('verified')->name('gears.store');
         Route::put('/gears/{gear}', [GearController::class, 'update'])->name('gears.update');
         Route::delete('/gears/{gear}', [GearController::class, 'destroy'])->name('gears.destroy');
 
-        // Explore / Mountain
-        Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->name('explore.ratings.store');
+        // Explore / Mountain — submitting a review requires a verified email.
+        Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->middleware('verified')->name('explore.ratings.store');
 
         // Posts (Profile)
         Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
         Route::get('/profile/posts/create', [ProfilePostController::class, 'create'])->name('profile.posts.create');
-        Route::post('/profile/posts', [ProfilePostController::class, 'store'])->name('profile.posts.store');
+        Route::post('/profile/posts', [ProfilePostController::class, 'store'])->middleware('verified')->name('profile.posts.store');
         Route::get('/profile/posts/{post}', [ProfilePostController::class, 'show'])->name('profile.posts.show');
 
-        // Community Forum — Store a new quick post from the Explore feed composer
-        Route::post('/community/posts', [PostController::class, 'store'])->name('community.posts.store');
+        // Community Forum — Store a new quick post from the Explore feed composer.
+        // Posting content requires a verified email.
+        Route::post('/community/posts', [PostController::class, 'store'])->middleware('verified')->name('community.posts.store');
 
         // Community Forum — Store a comment on a specific post
-        Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->name('community.posts.comments.store');
+        Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->middleware('verified')->name('community.posts.comments.store');
 
         // Community Forum — Toggle like on a post
-        Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->name('community.posts.like');
+        Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->middleware('verified')->name('community.posts.like');
 
         // Delete an own post (forum post or summit log)
         Route::delete('/community/posts/{post}', [PostController::class, 'destroy'])->name('community.posts.destroy');

@@ -40,8 +40,8 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <img src="{{ $post->author->avatar_url ? (str_contains($post->author->avatar_url, 'http') ? $post->author->avatar_url : asset('storage/' . $post->author->avatar_url)) : 'https://ui-avatars.com/api/?name=' . urlencode(substr($post->author->username, 0, 2)) }}" 
-                     alt="{{ $post->author->username }}" 
+                <img src="{{ $post->author->avatarUrl() }}"
+                     alt="{{ $post->author->username }}"
                      class="w-10 h-10 rounded-full object-cover bg-gray-200">
                 <div>
                     <p class="font-bold text-[#0F172A] text-sm">{{ $post->author->username }}</p>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="prose max-w-none text-gray-700 leading-relaxed mb-10">
-            {!! Str::markdown($post->body) !!}
+            {!! $post->renderedBody() !!}
         </div>
 
         @if ($post->images->count() > 0)

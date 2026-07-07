@@ -57,7 +57,7 @@
                         <td class="px-8 py-4">
                             <div class="flex items-center gap-3">
                                 @if($user->avatar_url)
-                                    <img src="{{ $user->avatar_url }}" alt="{{ __('common.avatar_alt') }}" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-9 h-9 rounded-full border border-morning-mist">
+                                    <img src="{{ $user->avatarUrl() }}" alt="{{ __('common.avatar_alt') }}" onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'" class="w-9 h-9 rounded-full border border-morning-mist">
                                 @else
                                     <div class="w-9 h-9 rounded-full bg-summit-blue flex items-center justify-center text-white text-xs font-bold">
                                         {{ strtoupper(substr($user->username, 0, 1)) }}

@@ -41,12 +41,7 @@
                 <div class="absolute -top-16 md:-top-20 left-4 md:left-8 z-20">
                     <div
                         class="w-28 h-28 md:w-44 md:h-44 rounded-full border-4 md:border-[6px] border-[#E7E7E7] overflow-hidden bg-gray-200">
-                        @php
-                            $avatar = Auth::user()->avatar_url;
-                            $src = $avatar ? (str_contains($avatar, 'http') ? $avatar : asset('storage/' . $avatar)) : null;
-                            $defaultAvatar = 'https://ui-avatars.com/api/?name=' . urlencode(substr(Auth::user()->username, 0, 2)) . '&background=random';
-                        @endphp
-                        <img src="{{ $avatar ? $src : $defaultAvatar }}" alt="{{ Auth::user()->username }}"
+                        <img src="{{ Auth::user()->avatarUrl() }}" alt="{{ Auth::user()->username }}"
                             class="w-full h-full object-cover">
                     </div>
                 </div>
