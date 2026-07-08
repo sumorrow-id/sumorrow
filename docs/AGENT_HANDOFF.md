@@ -11,6 +11,23 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-08 — branch: `main` — README rewrite
+
+By: Claude Code
+
+**What changed**
+
+- Rewrote `README.md` for GitHub: features, tech stack, setup steps
+  (prereqs, `composer run setup`, `.env` API keys, seeding), common
+  commands, API overview, project-structure highlights, docs index,
+  and contributing notes. Docs-only, no code changes.
+
+**How to verify**
+
+- Read `README.md`; check the doc links resolve.
+
+---
+
 ## 2026-07-06 — branch: `main` — Audit fixes (bugs & security)
 
 By: Claude Code
