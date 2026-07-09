@@ -68,3 +68,12 @@ jobs:
           slot-name: 'Production'
           package: .
           
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install & build frontend assets
+        run: |
+          npm install
+          npm run build
