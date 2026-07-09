@@ -2,10 +2,10 @@
 
 return [
     'hero_image_alt' => 'Latar Belakang Gunung',
-    'search_placeholder' => 'Cari puncak impian Anda berikutnya...',
+    'search_placeholder' => 'Cari Gunung',
     'elevation_filter_label' => 'Filter Ketinggian',
     'all_elevations' => 'Semua Ketinggian',
-    'explore_now' => 'Jelajahi Sekarang',
+    'explore_now' => 'Jelajahi Ekspedisi',
     'mountain_fallback' => 'Gunung',
     'sample_post' => 'Setiap puncak dimulai dari satu langkah. Bagikan perjalanan Anda bersama komunitas Sumorrow.',
 

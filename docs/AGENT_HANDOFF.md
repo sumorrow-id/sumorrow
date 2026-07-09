@@ -11,6 +11,29 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Home desktop search bar restyle (mockup match)
+
+By: Claude Code
+
+**What changed**
+
+- `home.blade.php`: search form restyled from the blue puzzle-cutout block
+  to a white rounded card — gray pill search input, hairline divider,
+  "Elevation Filter" label with the dashed value chip inline beside it,
+  light-blue slider track below, solid navy pill submit button.
+- `resources/css/app.css`: range-slider thumb enlarged to 20px, lighter
+  blue (#3f8fd9) with a soft shadow.
+- Copy per mockup: `home.search_placeholder` → "Find Mountain"/"Cari
+  Gunung"; `home.explore_now` → "Explore Expeditions"/"Jelajahi Ekspedisi"
+  (keys used only by this form).
+
+**How to verify**
+
+- `/home` at desktop width — verified against the provided mockup via
+  headless-Edge screenshot. HomeControllerTest: 9 passed.
+
+---
+
 ## 2026-07-09 — branch: `main` — Home hero: mobile search removed, unified weather chip
 
 By: Claude Code

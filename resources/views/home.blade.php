@@ -56,36 +56,36 @@
                 <div
                     class="hidden sm:block relative sm:absolute sm:-bottom-10 sm:w-[95%] max-w-4xl sm:left-1/2 sm:-translate-x-1/2 z-20">
                     <form action="{{ url('/explore') }}" method="GET"
-                        class="w-full bg-[#c2dbec] border-0 sm:border-[16px] border-[#e8f0f6] rounded-[2rem] sm:rounded-[3rem] p-4 sm:p-3 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-xl sm:shadow-sm">
+                        class="w-full bg-white rounded-2xl sm:rounded-3xl p-4 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-xl">
                         <!-- Search Input -->
-                        <div class="w-full sm:flex-1 relative bg-white/70 rounded-[1.5rem] sm:ml-2">
+                        <div class="w-full sm:flex-1 relative bg-gray-200/60 rounded-full sm:ml-2">
                             <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                             <input type="text" name="search" placeholder="{{ __('home.search_placeholder') }}"
-                                class="w-full bg-transparent py-3 pl-12 pr-4 text-sm font-bold text-[#001E3A] placeholder-[#001E3A]/60 focus:outline-none rounded-[1.5rem]">
+                                class="w-full bg-transparent py-3.5 pl-12 pr-4 text-sm font-semibold text-[#001E3A] placeholder-gray-400 focus:outline-none rounded-full">
                         </div>
 
                         <!-- Divider -->
-                        <div class="hidden sm:block w-[2px] h-10 bg-[#001E3A]/20"></div>
+                        <div class="hidden sm:block w-px h-12 bg-gray-200"></div>
 
                         <!-- Filter Slider -->
                         <div class="w-full sm:w-1/3 flex flex-col pt-1 sm:pt-0 relative">
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs font-bold text-[#001E3A]">{{ __('home.elevation_filter_label') }}</label>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <label class="text-[10px] font-bold text-[#001E3A] tracking-wide">{{ __('home.elevation_filter_label') }}</label>
                                 <span id="elevation-value"
-                                    class="text-[10px] font-bold text-white bg-gray-500 px-1.5 py-0.5 rounded uppercase shadow-sm">{{ __('home.all_elevations') }}</span>
+                                    class="text-[11px] font-bold text-[#094174] border border-dashed border-[#094174]/40 rounded-md px-1.5 py-0.5">{{ __('home.all_elevations') }}</span>
                             </div>
                             <input type="range" name="elevation" id="elevation-slider" min="0" max="5000"
                                 step="100" value="0"
-                                class="w-full h-1.5 bg-white rounded-lg appearance-none cursor-pointer range-slider outline-none focus:ring-2 focus:ring-[#094174] slider-thumb">
+                                class="w-full h-2 bg-blue-200 rounded-full appearance-none cursor-pointer range-slider outline-none focus:ring-2 focus:ring-[#094174] slider-thumb">
                         </div>
 
-                        <!-- Explore Now Button -->
+                        <!-- Explore Button -->
                         <button type="submit"
-                            class="w-full sm:w-auto mt-2 sm:mt-0 px-6 py-2 border border-[#001E3A] text-[#001E3A] font-bold rounded-[1.5rem] hover:bg-[#001E3A] hover:text-white transition duration-300 whitespace-nowrap bg-transparent mr-2 text-sm">
+                            class="w-full sm:w-auto mt-2 sm:mt-0 px-7 py-3 bg-[#094174] hover:bg-[#105DA3] text-white font-bold rounded-full transition duration-300 whitespace-nowrap text-sm shadow-md">
                             {{ __('home.explore_now') }}
                         </button>
                     </form>

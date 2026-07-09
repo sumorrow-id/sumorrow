@@ -2,10 +2,10 @@
 
 return [
     'hero_image_alt' => 'Mountain Background',
-    'search_placeholder' => 'Search For Your Next Summit....',
+    'search_placeholder' => 'Find Mountain',
     'elevation_filter_label' => 'Elevation Filter',
     'all_elevations' => 'All Elevations',
-    'explore_now' => 'Explore Now',
+    'explore_now' => 'Explore Expeditions',
     'mountain_fallback' => 'Mountain',
     'sample_post' => 'Every summit starts with one step. Share your journey with the Sumorrow community.',
 
