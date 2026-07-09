@@ -262,6 +262,9 @@ class PostControllerTest extends TestCase
         // The destroy URL equals the show URL, so match the form action attribute specifically
         $response->assertSee('action="'.route('community.posts.destroy', $ownPost->id).'"', false);
         $response->assertDontSee('action="'.route('community.posts.destroy', $otherPost->id).'"', false);
+        // Delete goes through the styled confirmation modal, not the native confirm()
+        $response->assertSee('confirm-submit-form', false);
+        $response->assertSee('data-confirm-message', false);
     }
 
     public function test_composer_repopulates_body_from_old_input()
