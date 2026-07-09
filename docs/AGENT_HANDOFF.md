@@ -11,6 +11,66 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Home page mobile redesign
+
+By: Claude Code
+
+**What changed** (all in `home.blade.php`, mobile breakpoint only — desktop
+unchanged)
+
+- Hero gets rounded bottom corners; SUMORROW wordmark scaled up on phones
+  (`clamp(3rem,13vw,140px)`).
+- Weather widget: full-width strip at the hero's bottom → compact frosted
+  glass chip floating top-right (below the fixed navbar, `top-28`); reverts
+  to the desktop puzzle-cutout from `sm` up. JS untouched (same element ids).
+- Search bar now floats over the hero's bottom edge (`-mt-14`, rounded,
+  shadow) — the mobile counterpart of the desktop cutout overlap.
+- All sections get a consistent `px-4` gutter on mobile and cards are
+  rounded again (feature, community shell, peak cards) instead of
+  edge-to-edge `rounded-none`; removed the ad-hoc `mx-4 px-2` hacks.
+- About heading left-aligned on phones with forced `<br>`s active only from
+  `sm` up; tagline indent reduced on mobile.
+
+**How to verify**
+
+- `npm run build` (done); browse `/home` under 640 px — verified via
+  headless-Edge screenshots at 500 px (Edge clamps window width ≥ ~500, so
+  375 px shots crop misleadingly).
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` —
+  9 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Mobile UI/UX audit & fixes
+
+By: Claude Code
+
+**What changed**
+
+- Audited every Blade page at mobile widths; most pages were already
+  responsive, so only targeted fixes were applied:
+  - `components/navbar.blade.php` — mobile menu Community link pointed to
+    `#`; now `/community`.
+  - `components/footer.blade.php` — removed stray `""` in five class
+    attributes (invalid HTML) and wired Home/Explore/Community links to
+    their real routes (were `#`).
+  - `explore.blade.php` — "Apply Filters" button is now visible (full-width)
+    inside the mobile filter drawer instead of desktop-only; previously
+    filters only applied via the non-obvious close-drawer auto-submit.
+  - `profile/partials/hikings.blade.php` — tab header stacks on small
+    screens so the title and action buttons no longer collide.
+  - `lang/en/home.php` — hero tagline typo "Tommorow" → "Tomorrow".
+
+**How to verify**
+
+- `npm run build` (done), then browse `/`, `/explore`, `/community`,
+  `/profile` at ~375 px width.
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php
+  tests/Feature/HomeControllerTest.php tests/Feature/ProfileControllerTest.php
+  tests/Feature/CommunityControllerTest.php` — 54 passed.
+
+---
+
 ## 2026-07-08 — branch: `main` — README rewrite
 
 By: Claude Code

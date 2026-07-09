@@ -22,7 +22,7 @@ return [
     'about_heading_line2' => 'The Ultimate Guide to Your',
     'about_heading_line3' => 'Dream Summit',
 
-    'tagline_line1' => 'Summit Tommorow,',
+    'tagline_line1' => 'Summit Tomorrow,',
     'tagline_line2' => 'Start Today.',
 
     'popular_mountains_heading_line1' => 'Check Out',
