@@ -8,22 +8,19 @@
     <div
         class="w-full overflow-hidden min-h-screen bg-gradient-to-b from-[#e8f0f6] to-[#f5f8fa] font-['Plus_Jakarta_Sans'] font-medium pb-16 sm:pb-24 text-[#001E3A]">
 
-        <!-- Hero Section Container -->
-        <div class="w-full sm:w-[95%] max-w-350 mx-auto pt-0 sm:pt-36">
-
-            <!-- Hero Wrapper (box + search bar) -->
-            <div class="relative">
+        <!-- Hero Wrapper (box + search bar) — full-bleed on every breakpoint -->
+        <div class="relative">
 
                 <!-- Hero Box -->
                 <div
-                    class="relative w-full h-[500px] sm:h-[700px] bg-gray-300 rounded-b-[2.5rem] sm:rounded-[2rem] shadow-xl flex items-center justify-center">
+                    class="relative w-full h-[500px] sm:h-screen bg-gray-300 rounded-b-[2.5rem] sm:rounded-none shadow-xl flex items-center justify-center">
                     <!-- Two stacked layers crossfade between curated hero images -->
                     <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
                         onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
-                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-[2rem] opacity-100 transition-opacity duration-[1200ms] ease-in-out">
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-none opacity-100 transition-opacity duration-[1200ms] ease-in-out">
                     <img id="hero-image-next" src="" alt="" aria-hidden="true"
-                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-[2rem] opacity-0 transition-opacity duration-[1200ms] ease-in-out">
-                    <div class="absolute inset-0 bg-black/10 rounded-b-[2.5rem] sm:rounded-[2rem]"></div>
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-none opacity-0 transition-opacity duration-[1200ms] ease-in-out">
+                    <div class="absolute inset-0 bg-black/10 rounded-b-[2.5rem] sm:rounded-none"></div>
 
                     <!-- SUMORROW text -->
                     <h1
@@ -34,7 +31,7 @@
                     <!-- Temperature Widget — frosted glass chip on every breakpoint -->
                     <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
                         data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
-                        class="absolute top-28 right-4 sm:top-6 sm:right-6 bg-[#001E3A]/35 backdrop-blur-md border border-white/25 rounded-2xl flex flex-col items-center justify-center px-4 py-2.5 sm:px-6 sm:py-4 shadow-lg transition-transform duration-500 hover:scale-[1.03] origin-top-right">
+                        class="absolute top-28 right-4 sm:right-8 bg-[#001E3A]/35 backdrop-blur-md border border-white/25 rounded-2xl flex flex-col items-center justify-center px-4 py-2.5 sm:px-6 sm:py-4 shadow-lg transition-transform duration-500 hover:scale-[1.03] origin-top-right">
                         <div id="weather-content"
                             class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
                             <span id="weather-location"
@@ -90,7 +87,10 @@
                         </button>
                     </form>
                 </div>
-            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="w-full sm:w-[95%] max-w-350 mx-auto">
 
             <!-- About Us Section -->
             <div class="mt-16 sm:mt-32 mb-20 sm:mb-32 px-4 sm:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">

@@ -11,6 +11,30 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Home desktop hero made full screen
+
+By: Claude Code
+
+**What changed** (`home.blade.php`)
+
+- Hero wrapper moved out of the `sm:w-[95%]` container so it spans the full
+  viewport width; a new "Content Container" div (95% / max-w-350) now wraps
+  everything from About down. Desktop hero height `sm:h-[700px]` →
+  `sm:h-screen`; all corners square on desktop (`sm:rounded-none`) so the
+  photo covers the viewport edge-to-edge (mobile keeps its rounded bottom).
+  Weather chip stays `top-28` on desktop too since
+  the fixed navbar now floats over the hero; search card still overlaps the
+  hero's bottom edge (peeks above the fold as a scroll cue). Mobile is
+  visually unchanged.
+
+**How to verify**
+
+- `/home` at desktop width: hero fills the viewport, navbar floats over the
+  photo, chip below navbar, search card at the fold. Verified via
+  headless-Edge screenshot at 1440×900. HomeControllerTest: 9 passed.
+
+---
+
 ## 2026-07-09 — branch: `main` — Home desktop search bar restyle (mockup match)
 
 By: Claude Code
