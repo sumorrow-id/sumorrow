@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Azure App Service terminates TLS at its front end; without this the
+        // app sees plain HTTP and renders http:// asset URLs (mixed content).
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'redirect.admin' => RedirectIfAdmin::class,
