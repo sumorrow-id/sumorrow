@@ -55,11 +55,11 @@
         </div>
 
         <!-- Main Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            <div class="flex flex-col lg:flex-row gap-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+            <div class="flex flex-col lg:flex-row gap-10 lg:gap-14">
 
                 <!-- Left Column: Details -->
-                <div class="w-full lg:w-2/3 space-y-12">
+                <div class="w-full lg:w-2/3 space-y-14 md:space-y-16">
 
                     <!-- About Section -->
                     <section>
@@ -107,6 +107,29 @@
                             </div>
                         </div>
                     </section>
+
+                    <!-- Official Basecamps -->
+                    @if ($mountain->basecamps->count() > 0)
+                        <section>
+                            <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.official_basecamps') }}</h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                @foreach ($mountain->basecamps as $basecamp)
+                                    <div
+                                        class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
+                                        <div class="bg-[#2A9D8F]/10 p-2.5 rounded-lg text-[#2A9D8F] shrink-0">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900 break-words min-w-0">{{ $basecamp->name }}</h4>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </section>
+                    @endif
 
                     <!-- Weather Forecasting (OpenWeatherMap) -->
                     @php
@@ -249,100 +272,10 @@
                         </div>
                     </section>
 
-                    <!-- FAQ Section -->
-                    <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.faq_heading') }}</h2>
-                        <div class="space-y-3">
-                            <!-- FAQ 1 -->
-                            <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
-                                <input type="checkbox" id="faq1" class="peer hidden">
-                                <label for="faq1"
-                                    class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>{{ __('explore.faq_permit_question', ['name' => $mountain->name]) }}</span>
-                                    <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </label>
-                                <div
-                                    class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
-                                    <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        {{ __('explore.faq_permit_answer') }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 2 -->
-                            <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
-                                <input type="checkbox" id="faq2" class="peer hidden">
-                                <label for="faq2"
-                                    class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>{{ __('explore.faq_best_time_question') }}</span>
-                                    <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </label>
-                                <div
-                                    class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
-                                    <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        {{ __('explore.faq_best_time_answer') }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 3 -->
-                            <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
-                                <input type="checkbox" id="faq3" class="peer hidden">
-                                <label for="faq3"
-                                    class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
-                                    <span>{{ __('explore.faq_beginner_question', ['name' => $mountain->name]) }}</span>
-                                    <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </label>
-                                <div
-                                    class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
-                                    <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
-                                        {{ __('explore.faq_beginner_answer', ['difficulty' => $difficultyLabel]) }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
                 </div>
 
-                <!-- Right Column: Sidebar (Nearby Mountains & Basecamps) -->
+                <!-- Right Column: Sidebar (Nearby Mountains) -->
                 <div class="w-full lg:w-1/3 space-y-8">
-
-                    @if ($mountain->basecamps->count() > 0)
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">{{ __('explore.official_basecamps') }}</h3>
-                            <ul class="space-y-4">
-                                @foreach ($mountain->basecamps as $basecamp)
-                                    <li
-                                        class="flex items-center gap-3 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
-                                        <div class="bg-[#2A9D8F]/10 p-2 rounded-lg text-[#2A9D8F]">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">{{ $basecamp->name }}</h4>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
 
                     @if ($nearbyMountains->count() > 0)
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -394,6 +327,72 @@
 
                 </div>
             </div>
+
+            <!-- FAQ Section — full width, last before the footer -->
+            <section class="mt-14 md:mt-20">
+                <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.faq_heading') }}</h2>
+                <div class="space-y-3">
+                    <!-- FAQ 1 -->
+                    <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
+                        <input type="checkbox" id="faq1" class="peer hidden">
+                        <label for="faq1"
+                            class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
+                            <span>{{ __('explore.faq_permit_question', ['name' => $mountain->name]) }}</span>
+                            <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </label>
+                        <div
+                            class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
+                            <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
+                                {{ __('explore.faq_permit_answer') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
+                        <input type="checkbox" id="faq2" class="peer hidden">
+                        <label for="faq2"
+                            class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
+                            <span>{{ __('explore.faq_best_time_question') }}</span>
+                            <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </label>
+                        <div
+                            class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
+                            <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
+                                {{ __('explore.faq_best_time_answer') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="bg-white border text-left border-gray-200 rounded-lg overflow-hidden group">
+                        <input type="checkbox" id="faq3" class="peer hidden">
+                        <label for="faq3"
+                            class="flex justify-between items-center p-4 cursor-pointer font-semibold text-gray-800 hover:bg-gray-50">
+                            <span>{{ __('explore.faq_beginner_question', ['name' => $mountain->name]) }}</span>
+                            <svg class="w-5 h-5 transition-transform duration-300 peer-checked:rotate-180"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </label>
+                        <div
+                            class="max-h-0 peer-checked:max-h-40 overflow-hidden transition-all duration-300 bg-gray-50">
+                            <p class="p-4 text-gray-600 text-sm border-t border-gray-100">
+                                {{ __('explore.faq_beginner_answer', ['difficulty' => $difficultyLabel]) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 

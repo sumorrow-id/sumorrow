@@ -11,6 +11,29 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Mountain detail layout reorder
+
+By: Claude Code
+
+**What changed** (`explore/show.blade.php`)
+
+- "Official Basecamps" moved from the right sidebar into the main column,
+  directly after "Critical Information", restyled as a 2-col card grid.
+- FAQ moved out of the left column to the very bottom of the page (full
+  container width, last section before the footer).
+- Breathing room: container `py-10 md:py-16`, column gap `gap-10 lg:gap-14`,
+  left-column section spacing `space-y-14 md:space-y-16`, FAQ `mt-14 md:mt-20`.
+- Sidebar now holds only Nearby Mountains + community CTA.
+
+**How to verify**
+
+- Browse `/explore/6` (has basecamps): section order should be About →
+  Critical Info → Basecamps → Weather → Location → Reviews, FAQ last.
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php` —
+  10 passed.
+
+---
+
 ## 2026-07-09 — branch: `main` — Home page mobile redesign
 
 By: Claude Code
