@@ -11,6 +11,25 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `fix/enable-ssl-verify` — Harden Google auth HTTP client
+
+By: Claude Code
+
+**What changed**
+
+- `config/services.php`: removed a non-default HTTP-client option on the
+  `google` service so the client uses its secure defaults. No behavior change
+  for normal operation; Socialite reads the same credentials/redirect envs.
+
+**How to verify**
+
+- `php artisan test --compact tests/Unit/Services/GoogleAuthServiceTest.php`
+  (4 passed), and Google login on production still completes once
+  `GOOGLE_REDIRECT_URI` is registered on both the Azure and Google Console
+  sides.
+
+---
+
 ## 2026-07-09 — branch: `fix/https-behind-proxy` — HTTPS asset URLs on Azure
 
 By: Claude Code
