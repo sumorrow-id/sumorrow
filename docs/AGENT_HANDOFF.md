@@ -11,6 +11,27 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Home hero: mobile search removed, unified weather chip
+
+By: Claude Code
+
+**What changed** (`home.blade.php`)
+
+- Search bar + elevation filter hidden on mobile (`hidden sm:block` on the
+  wrapper); still shown from `sm` up, overlapping the hero as before.
+- Weather widget now uses the frosted-glass chip style on every breakpoint;
+  the desktop puzzle-cutout (solid #c2dbec block with 16px notch borders)
+  is gone. Positioned `top-28 right-4` on mobile (clears the floating
+  navbar), `top-6 right-6` from `sm` up. JS ids unchanged.
+
+**How to verify**
+
+- `npm run build` (done); check `/home` at mobile and desktop widths —
+  verified via headless-Edge screenshots.
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` — 9 passed.
+
+---
+
 ## 2026-07-09 — branch: `main` — Mountain detail layout reorder
 
 By: Claude Code

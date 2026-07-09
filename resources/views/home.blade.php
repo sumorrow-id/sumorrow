@@ -31,30 +31,30 @@
                         SUMORROW
                     </h1>
 
-                    <!-- Temperature Widget — frosted chip on mobile, puzzle cutout from sm up -->
+                    <!-- Temperature Widget — frosted glass chip on every breakpoint -->
                     <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
                         data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
-                        class="absolute top-28 right-4 sm:top-0 sm:right-0 bg-[#001E3A]/35 sm:bg-[#c2dbec]/95 backdrop-blur-md sm:backdrop-blur-none border border-white/25 sm:border-0 sm:border-b-[16px] sm:border-l-[16px] sm:border-[#e8f0f6] rounded-2xl sm:rounded-none sm:rounded-bl-[3rem] sm:rounded-tr-[2rem] sm:w-56 sm:h-40 flex flex-col items-center justify-center px-4 py-2.5 sm:p-4 shadow-lg sm:shadow-md transition-transform duration-500 hover:scale-[1.03] origin-top-right">
+                        class="absolute top-28 right-4 sm:top-6 sm:right-6 bg-[#001E3A]/35 backdrop-blur-md border border-white/25 rounded-2xl flex flex-col items-center justify-center px-4 py-2.5 sm:px-6 sm:py-4 shadow-lg transition-transform duration-500 hover:scale-[1.03] origin-top-right">
                         <div id="weather-content"
                             class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
                             <span id="weather-location"
-                                class="text-xs sm:text-base font-bold text-white sm:text-[#001E3A] line-clamp-1 leading-tight max-w-36 sm:max-w-none">{!! $weatherData[0]['loc'] ?? __('home.mountain_fallback') !!}</span>
+                                class="text-xs sm:text-base font-bold text-white line-clamp-1 leading-tight max-w-36 sm:max-w-56">{!! $weatherData[0]['loc'] ?? __('home.mountain_fallback') !!}</span>
                             <div class="flex items-center justify-center gap-1 sm:gap-2 mt-1">
-                                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white sm:text-[#001E3A]" fill="none" stroke="currentColor"
+                                <svg class="w-5 h-5 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
                                     <path d="M12 7v5" />
                                 </svg>
                                 <span id="weather-temp"
-                                    class="text-2xl sm:text-4xl font-extrabold text-white sm:text-[#001E3A]">{!! $weatherData[0]['temp'] ?? '0&deg;' !!}</span>
+                                    class="text-2xl sm:text-4xl font-extrabold text-white">{!! $weatherData[0]['temp'] ?? '0&deg;' !!}</span>
                             </div>
                         </div>
                     </a>
                 </div>
 
-                <!-- Bottom Search Bar (Puzzle Cutout) — floats over the hero's bottom edge on mobile -->
+                <!-- Bottom Search Bar (Puzzle Cutout) — hidden on mobile, floats over the hero's bottom edge from sm up -->
                 <div
-                    class="relative w-[92%] mx-auto -mt-14 sm:mt-0 sm:absolute sm:-bottom-10 sm:w-[95%] max-w-4xl sm:left-1/2 sm:-translate-x-1/2 z-20">
+                    class="hidden sm:block relative sm:absolute sm:-bottom-10 sm:w-[95%] max-w-4xl sm:left-1/2 sm:-translate-x-1/2 z-20">
                     <form action="{{ url('/explore') }}" method="GET"
                         class="w-full bg-[#c2dbec] border-0 sm:border-[16px] border-[#e8f0f6] rounded-[2rem] sm:rounded-[3rem] p-4 sm:p-3 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 shadow-xl sm:shadow-sm">
                         <!-- Search Input -->
