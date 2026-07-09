@@ -11,6 +11,37 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `fix/deploy` — Azure deploy pipeline fixed
+
+By: Claude Code
+
+**What changed**
+
+- `.github/workflows/main_sumorrow.yml`: frontend build (`npm ci && npm run
+  build`) moved into the **build** job before the artifact upload (it had been
+  added after the deploy step, so built assets never reached Azure); composer
+  now runs with `--no-dev --optimize-autoloader`; checkout uses `lfs: true` so
+  mountain images deploy as real files, not LFS pointers; `node_modules`
+  excluded from the artifact; removed the pointless composer.json existence
+  check.
+- `startup.sh` (new): App Service startup script — applies the `default` nginx
+  config (docroot → `public/`), runs `migrate --force`, `storage:link`, and
+  config/route/view cache. Portal Startup Command must be set to
+  `bash /home/site/wwwroot/startup.sh`.
+- Still manual (portal): App Settings for APP_KEY/DB/Google/OpenWeatherMap,
+  `QUEUE_CONNECTION=sync` (queued mail notifications have no worker), real
+  SMTP mailer, PHP 8.4 stack, and Google OAuth redirect URI for the prod
+  domain.
+
+**How to verify**
+
+- Merge to `main`, watch the "Build and deploy" workflow: build job must show
+  the Vite build; deploy job must pass Azure login (secrets were recreated via
+  Deployment Center). Then open the site root — Blade pages should render with
+  styles and mountain images.
+
+---
+
 ## 2026-07-09 — branch: `main` — Home desktop hero made full screen
 
 By: Claude Code
