@@ -9,27 +9,27 @@
 
         <div class="items-center md:items-start text-center md:text-left">
             <h3 class="font-bold text-[#1a2b4c] mb-6">{{ __('common.footer_navigation') }}</h3>
-            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
-                <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_home') }}</a>
-                <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_explore') }}</a>
-                <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_community') }}</a>
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left">
+                <a href="{{ url('/') }}" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_home') }}</a>
+                <a href="{{ url('/explore') }}" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_explore') }}</a>
+                <a href="{{ url('/community') }}" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.nav_community') }}</a>
             </div>
         </div>
 
-        <div class="items-center md:items-start text-center md:text-left"">
+        <div class="items-center md:items-start text-center md:text-left">
             <h3 class="font-bold text-[#1a2b4c] mb-6">{{ __('common.footer_legal') }}</h3>
 
-            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left">
                 <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_privacy_policy') }}</a>
                 <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_terms_of_service') }}</a>
                 <a href="/api/docs" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_api_documentation') }}</a>
             </div>
         </div>
 
-        <div class="items-center md:items-start text-center md:text-left"">
+        <div class="items-center md:items-start text-center md:text-left">
             <h3 class="font-bold text-[#1a2b4c] mb-6">{{ __('common.footer_contact') }}</h3>
 
-            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left"">
+            <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left">
                 <a href="mailto:himilsquad@gmail.com" class="flex items-center gap-3 group w-fit">
                     <img src="{{ asset('images/socialmedia/email.png') }}" alt="{{ __('common.footer_email_icon_alt') }}"
                         class="w-5 h-5 object-contain" />

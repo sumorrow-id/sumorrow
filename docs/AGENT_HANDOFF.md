@@ -11,6 +11,157 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `main` — Home desktop hero made full screen
+
+By: Claude Code
+
+**What changed** (`home.blade.php`)
+
+- Hero wrapper moved out of the `sm:w-[95%]` container so it spans the full
+  viewport width; a new "Content Container" div (95% / max-w-350) now wraps
+  everything from About down. Desktop hero height `sm:h-[700px]` →
+  `sm:h-screen`; all corners square on desktop (`sm:rounded-none`) so the
+  photo covers the viewport edge-to-edge (mobile keeps its rounded bottom).
+  Weather chip stays `top-28` on desktop too since
+  the fixed navbar now floats over the hero; search card still overlaps the
+  hero's bottom edge (peeks above the fold as a scroll cue). Mobile is
+  visually unchanged.
+
+**How to verify**
+
+- `/home` at desktop width: hero fills the viewport, navbar floats over the
+  photo, chip below navbar, search card at the fold. Verified via
+  headless-Edge screenshot at 1440×900. HomeControllerTest: 9 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Home desktop search bar restyle (mockup match)
+
+By: Claude Code
+
+**What changed**
+
+- `home.blade.php`: search form restyled from the blue puzzle-cutout block
+  to a white rounded card — gray pill search input, hairline divider,
+  "Elevation Filter" label with the dashed value chip inline beside it,
+  light-blue slider track below, solid navy pill submit button.
+- `resources/css/app.css`: range-slider thumb enlarged to 20px, lighter
+  blue (#3f8fd9) with a soft shadow.
+- Copy per mockup: `home.search_placeholder` → "Find Mountain"/"Cari
+  Gunung"; `home.explore_now` → "Explore Expeditions"/"Jelajahi Ekspedisi"
+  (keys used only by this form).
+
+**How to verify**
+
+- `/home` at desktop width — verified against the provided mockup via
+  headless-Edge screenshot. HomeControllerTest: 9 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Home hero: mobile search removed, unified weather chip
+
+By: Claude Code
+
+**What changed** (`home.blade.php`)
+
+- Search bar + elevation filter hidden on mobile (`hidden sm:block` on the
+  wrapper); still shown from `sm` up, overlapping the hero as before.
+- Weather widget now uses the frosted-glass chip style on every breakpoint;
+  the desktop puzzle-cutout (solid #c2dbec block with 16px notch borders)
+  is gone. Positioned `top-28 right-4` on mobile (clears the floating
+  navbar), `top-6 right-6` from `sm` up. JS ids unchanged.
+
+**How to verify**
+
+- `npm run build` (done); check `/home` at mobile and desktop widths —
+  verified via headless-Edge screenshots.
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` — 9 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Mountain detail layout reorder
+
+By: Claude Code
+
+**What changed** (`explore/show.blade.php`)
+
+- "Official Basecamps" moved from the right sidebar into the main column,
+  directly after "Critical Information", restyled as a 2-col card grid.
+- FAQ moved out of the left column to the very bottom of the page (full
+  container width, last section before the footer).
+- Breathing room: container `py-10 md:py-16`, column gap `gap-10 lg:gap-14`,
+  left-column section spacing `space-y-14 md:space-y-16`, FAQ `mt-14 md:mt-20`.
+- Sidebar now holds only Nearby Mountains + community CTA.
+
+**How to verify**
+
+- Browse `/explore/6` (has basecamps): section order should be About →
+  Critical Info → Basecamps → Weather → Location → Reviews, FAQ last.
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php` —
+  10 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Home page mobile redesign
+
+By: Claude Code
+
+**What changed** (all in `home.blade.php`, mobile breakpoint only — desktop
+unchanged)
+
+- Hero gets rounded bottom corners; SUMORROW wordmark scaled up on phones
+  (`clamp(3rem,13vw,140px)`).
+- Weather widget: full-width strip at the hero's bottom → compact frosted
+  glass chip floating top-right (below the fixed navbar, `top-28`); reverts
+  to the desktop puzzle-cutout from `sm` up. JS untouched (same element ids).
+- Search bar now floats over the hero's bottom edge (`-mt-14`, rounded,
+  shadow) — the mobile counterpart of the desktop cutout overlap.
+- All sections get a consistent `px-4` gutter on mobile and cards are
+  rounded again (feature, community shell, peak cards) instead of
+  edge-to-edge `rounded-none`; removed the ad-hoc `mx-4 px-2` hacks.
+- About heading left-aligned on phones with forced `<br>`s active only from
+  `sm` up; tagline indent reduced on mobile.
+
+**How to verify**
+
+- `npm run build` (done); browse `/home` under 640 px — verified via
+  headless-Edge screenshots at 500 px (Edge clamps window width ≥ ~500, so
+  375 px shots crop misleadingly).
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` —
+  9 passed.
+
+---
+
+## 2026-07-09 — branch: `main` — Mobile UI/UX audit & fixes
+
+By: Claude Code
+
+**What changed**
+
+- Audited every Blade page at mobile widths; most pages were already
+  responsive, so only targeted fixes were applied:
+  - `components/navbar.blade.php` — mobile menu Community link pointed to
+    `#`; now `/community`.
+  - `components/footer.blade.php` — removed stray `""` in five class
+    attributes (invalid HTML) and wired Home/Explore/Community links to
+    their real routes (were `#`).
+  - `explore.blade.php` — "Apply Filters" button is now visible (full-width)
+    inside the mobile filter drawer instead of desktop-only; previously
+    filters only applied via the non-obvious close-drawer auto-submit.
+  - `profile/partials/hikings.blade.php` — tab header stacks on small
+    screens so the title and action buttons no longer collide.
+  - `lang/en/home.php` — hero tagline typo "Tommorow" → "Tomorrow".
+
+**How to verify**
+
+- `npm run build` (done), then browse `/`, `/explore`, `/community`,
+  `/profile` at ~375 px width.
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php
+  tests/Feature/HomeControllerTest.php tests/Feature/ProfileControllerTest.php
+  tests/Feature/CommunityControllerTest.php` — 54 passed.
+
+---
+
 ## 2026-07-08 — branch: `main` — README rewrite
 
 By: Claude Code

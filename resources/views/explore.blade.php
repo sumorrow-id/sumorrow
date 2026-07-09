@@ -57,9 +57,9 @@
                     </div>
                 </div>
 
-                <div class="pt-4 hidden lg:block">
+                <div class="pt-6 lg:pt-4">
                     <button type="submit"
-                        class="bg-[#094174] text-white font-bold text-sm py-2 px-6 rounded-full w-fit hover:bg-[#105DA3] transition shadow-md">
+                        class="bg-[#094174] text-white font-bold text-sm py-3 lg:py-2 px-6 rounded-full w-full lg:w-fit hover:bg-[#105DA3] transition shadow-md">
                         {{ __('explore.apply_filters') }}
                     </button>
                 </div>

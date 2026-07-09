@@ -71,7 +71,7 @@
         <div class="flex flex-col gap-4 mt-6 pt-4 border-t border-white/20 text-center pb-2">
             <a href="/" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_home') }}</a>
             <a href="/explore" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_explore') }}</a>
-            <a href="#" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_community') }}</a>
+            <a href="/community" class="font-semibold py-2 rounded-lg hover:bg-white/10 transition">{{ __('common.nav_community') }}</a>
 
             <div class="pt-4 border-t border-white/10">
                 @auth
