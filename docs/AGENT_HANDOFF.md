@@ -11,6 +11,28 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `fix/https-behind-proxy` — HTTPS asset URLs on Azure
+
+By: Claude Code
+
+**What changed**
+
+- `bootstrap/app.php`: `$middleware->trustProxies(at: '*')`. Azure App
+  Service terminates TLS at its front end and forwards plain HTTP; without
+  trusting `X-Forwarded-Proto`, Laravel rendered `http://` Vite asset URLs on
+  an `https://` page and the browser blocked them (mixed content → unstyled
+  site).
+- `tests/Feature/TrustProxiesTest.php`: asserts a request with
+  `X-Forwarded-Proto: https` is seen as secure and generates https URLs.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/TrustProxiesTest.php` (passes).
+- After deploy: view source of the prod `/home` page — Vite `<link>`/`<script>`
+  URLs must start with `https://`, and the page renders styled.
+
+---
+
 ## 2026-07-09 — branch: `fix/deploy` — Azure deploy pipeline fixed
 
 By: Claude Code
