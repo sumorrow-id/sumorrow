@@ -11,6 +11,28 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-09 — branch: `feat/delete-confirmation-modal` — Styled confirm modal for all post deletes
+
+By: Claude Code
+
+**What changed**
+
+- `community/components/feed.blade.php` and `profile/partials/posts.blade.php`:
+  the last two post-delete forms still using the native `onsubmit="return
+  confirm(...)"` now use the existing `confirm-submit-form` modal pattern
+  (`<x-confirm-submit-modal />` + `ConfirmSubmit.js`, already in
+  `layouts/app`). Every forum/community/profile delete now goes through the
+  same styled danger modal. No new components or JS.
+
+**How to verify**
+
+- `php artisan test --compact --filter="test_feed_shows_delete_button_only_on_own_posts|test_profile_post_delete_uses_confirmation_modal"` (2 passed).
+- In the browser: delete a post from the community feed, from a community
+  page, and from the profile tabs — all should show the styled modal, not the
+  browser confirm dialog.
+
+---
+
 ## 2026-07-09 — branch: `fix/enable-ssl-verify` — Harden Google auth HTTP client
 
 By: Claude Code

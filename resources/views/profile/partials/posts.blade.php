@@ -49,7 +49,11 @@
                         class="text-sm font-bold text-[#2A5C9A] hover:underline">{{ __('profile.view_post') }}</a>
 
                     <form method="POST" action="{{ route('community.posts.destroy', $post->id) }}"
-                        onsubmit="return confirm({{ Illuminate\Support\Js::from(__('community.confirm_delete_post')) }})">
+                        class="confirm-submit-form"
+                        data-confirm-title="{{ __('community.delete_post') }}"
+                        data-confirm-message="{{ __('community.confirm_delete_post') }}"
+                        data-confirm-label="{{ __('common.delete') }}"
+                        data-confirm-variant="danger">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
