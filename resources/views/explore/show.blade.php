@@ -108,9 +108,9 @@
                         </div>
                     </section>
 
-                    <!-- Official Basecamps -->
+                    <!-- Official Basecamps (mobile/tablet — shown in the right sidebar on desktop) -->
                     @if ($mountain->basecamps->count() > 0)
-                        <section>
+                        <section class="lg:hidden">
                             <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.official_basecamps') }}</h2>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 @foreach ($mountain->basecamps as $basecamp)
@@ -274,8 +274,31 @@
 
                 </div>
 
-                <!-- Right Column: Sidebar (Nearby Mountains) -->
+                <!-- Right Column: Sidebar (Official Basecamps + Nearby Mountains) -->
                 <div class="w-full lg:w-1/3 space-y-8">
+
+                    <!-- Official Basecamps (desktop only) -->
+                    @if ($mountain->basecamps->count() > 0)
+                        <div class="hidden lg:block bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                            <h3 class="font-bold text-[#001E3A] text-xl mb-4">{{ __('explore.official_basecamps') }}</h3>
+                            <div class="space-y-3">
+                                @foreach ($mountain->basecamps as $basecamp)
+                                    <div
+                                        class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#2A9D8F]">
+                                        <div class="bg-[#2A9D8F]/10 p-2.5 rounded-lg text-[#2A9D8F] shrink-0">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900 break-words min-w-0">{{ $basecamp->name }}</h4>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     @if ($nearbyMountains->count() > 0)
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

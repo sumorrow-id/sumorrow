@@ -132,7 +132,8 @@ class ExploreControllerTest extends TestCase
         $province = $this->makeProvince('Jawa Tengah');
 
         $this->makeMountain($province, ['name' => 'Merbabu', 'description' => 'Green mountain in Central Java']);
-        $this->makeMountain($province, ['name' => 'Lawu',    'description' => 'Mountain on the border of Central and East Java']);
+        // Description mentions the search term — search must match on name only.
+        $this->makeMountain($province, ['name' => 'Lawu',    'description' => 'Often compared to Merbabu by hikers']);
 
         $response = $this->get('/explore?search=Merbabu');
 
