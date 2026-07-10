@@ -13,14 +13,14 @@
 
                 <!-- Hero Box -->
                 <div
-                    class="relative w-full h-[500px] sm:h-screen bg-gray-300 rounded-b-[2.5rem] sm:rounded-none shadow-xl flex items-center justify-center">
+                    class="relative w-full h-[40svh] sm:h-[80vh] bg-gray-300 shadow-xl flex items-center justify-center">
                     <!-- Two stacked layers crossfade between curated hero images -->
                     <img id="hero-image" src="{{ $heroImage }}" alt="{{ __('home.hero_image_alt') }}"
                         onerror="this.onerror=null;this.src='{{ asset('images/placeholder.svg') }}'"
-                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-none opacity-100 transition-opacity duration-[1200ms] ease-in-out">
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 opacity-100 transition-opacity duration-[1200ms] ease-in-out">
                     <img id="hero-image-next" src="" alt="" aria-hidden="true"
-                        class="absolute inset-0 w-full h-full object-cover brightness-75 rounded-b-[2.5rem] sm:rounded-none opacity-0 transition-opacity duration-[1200ms] ease-in-out">
-                    <div class="absolute inset-0 bg-black/10 rounded-b-[2.5rem] sm:rounded-none"></div>
+                        class="absolute inset-0 w-full h-full object-cover brightness-75 opacity-0 transition-opacity duration-[1200ms] ease-in-out">
+                    <div class="absolute inset-0 bg-black/10"></div>
 
                     <!-- SUMORROW text -->
                     <h1
@@ -31,7 +31,7 @@
                     <!-- Temperature Widget — frosted glass chip on every breakpoint -->
                     <a href="{{ $weatherData[0]['url'] ?? '#' }}" id="weather-widget"
                         data-weather="{{ json_encode($weatherData) }}" data-hero-images="{{ json_encode($heroImages) }}"
-                        class="absolute top-28 right-4 sm:right-8 bg-[#001E3A]/35 backdrop-blur-md border border-white/25 rounded-2xl flex flex-col items-center justify-center px-4 py-2.5 sm:px-6 sm:py-4 shadow-lg transition-transform duration-500 hover:scale-[1.03] origin-top-right">
+                        class="absolute top-1/2 left-1/2 mt-16 -translate-x-1/2 sm:top-36 sm:left-auto sm:right-8 sm:mt-0 sm:translate-x-0 sm:w-[340px] sm:h-[120px] bg-[#001E3A]/35 backdrop-blur-md border border-white/25 rounded-2xl flex flex-col items-center justify-center px-4 py-2.5 sm:px-6 sm:py-4 shadow-lg transition-transform duration-500 hover:scale-[1.03] origin-top-right">
                         <div id="weather-content"
                             class="flex flex-col items-center justify-center text-center transition-opacity duration-500 opacity-100 w-full">
                             <span id="weather-location"
