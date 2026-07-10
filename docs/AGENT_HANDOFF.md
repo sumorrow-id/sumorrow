@@ -11,6 +11,31 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-10 — branch: `feat/delete-confirmation-modal` — Basecamps to desktop sidebar; name-only search
+
+By: Claude Code
+
+**What changed**
+
+- `explore/show.blade.php`: on desktop (`lg:`), Official Basecamps now renders
+  as a card in the right sidebar above Nearby Mountains; the original in-flow
+  section is kept for mobile/tablet (`lg:hidden` / `hidden lg:block` pair).
+- `ExploreController::index()`: explore search now matches mountain **name
+  only** (dropped the `description` LIKE clause).
+- `ExploreControllerTest::test_explore_search_filters_results` updated so the
+  non-matching mountain's description contains the search term, proving
+  name-only matching.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php` (10 passed).
+- In the browser at desktop width: open a mountain detail page — basecamps
+  card appears top-right above Nearby Mountains; at mobile width it stays in
+  the main column. On `/explore`, searching a word that only appears in a
+  description returns no results.
+
+---
+
 ## 2026-07-09 — branch: `feat/delete-confirmation-modal` — Styled confirm modal for all post deletes
 
 By: Claude Code

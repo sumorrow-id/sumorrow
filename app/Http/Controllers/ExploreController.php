@@ -18,11 +18,7 @@ class ExploreController extends Controller
         $query = Mountain::with(['images', 'province']);
 
         if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function (Builder $q) use ($searchTerm) {
-                $q->where('name', 'like', '%'.$searchTerm.'%')
-                    ->orWhere('description', 'like', '%'.$searchTerm.'%');
-            });
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('elevation')) {
