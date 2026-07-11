@@ -11,6 +11,35 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-11 — branch: `main` — Custom error pages (4xx/5xx, incl. 413 oversized upload)
+
+By: Claude Code
+
+**What changed**
+
+- New `resources/views/errors/`: shared `page.blade.php` (extends `layouts.app`,
+  reads `$exception->getStatusCode()`, message from `lang/*/errors.php`), plus
+  one-liner `@include` views for 401/402/403/404/419/429/500/503 and `4xx`/`5xx`
+  fallbacks. Explicit per-status files are required because the framework ships
+  vendor views for those codes that would otherwise win over the `4xx` fallback.
+- New `lang/en/errors.php` + `lang/id/errors.php` (per-status title/message,
+  `default` fallback, `back_home`). 413 has an upload-specific message —
+  `PostTooLargeException` (upload > `post_max_size`) maps to 413 automatically.
+- `tests/Feature/ErrorPageTest.php`: 404 page, 413 page, unmapped-status
+  fallback, and API 404 still returns the JSON envelope.
+- Note: a 413 rejected by the web server itself (nginx `client_max_body_size`)
+  never reaches PHP; the deployment's nginx config must allow at least
+  `post_max_size` for Laravel to render this page.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/ErrorPageTest.php` (4 passed).
+- In the browser, visit any nonexistent URL, or upload an image larger than
+  `post_max_size` on a post form — styled Sumorrow error page with navbar/footer
+  appears instead of the server default.
+
+---
+
 ## 2026-07-10 — branch: `feat/delete-confirmation-modal` — Basecamps to desktop sidebar; name-only search
 
 By: Claude Code
