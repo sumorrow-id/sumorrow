@@ -146,7 +146,10 @@
             </header>
 
             <!-- Main Page Content -->
-            <main class="flex-1 overflow-y-auto w-full p-4 sm:p-6 lg:p-8">
+            <!-- "relative" keeps absolutely-positioned descendants (e.g. sr-only labels)
+     anchored inside this scroll container; without it they escape the
+     overflow clip and stretch the document below the viewport. -->
+<main class="relative flex-1 overflow-y-auto w-full p-4 sm:p-6 lg:p-8">
                 <div class="max-w-7xl mx-auto">
                     @if (session('success'))
                         <div x-data="{ show: true }" x-show="show" class="mb-6 flex items-start justify-between gap-4 px-5 py-4 rounded-2xl bg-glacial-teal/10 border border-glacial-teal/30 text-sm font-semibold text-deep-midnight">

@@ -11,6 +11,29 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-15 — branch: `fix/admin-user-updates-overflow` — Admin pages no longer scroll past the viewport
+
+By: Claude Code
+
+**What changed**
+
+- `layouts/admin.blade.php`: added `relative` to `<main>`. The `sr-only`
+  labels inside the user table (Tailwind `sr-only` = `position: absolute`)
+  had no positioned ancestor, so they escaped the layout's overflow clipping
+  and stretched the document ~400px below the viewport — the page could
+  scroll down into blank space. Anchoring them to the scroll container fixes
+  every admin page at once.
+
+**How to verify**
+
+- Log in as admin, open `/admin/user-updates` with 12+ users: the window
+  itself must not scroll (no blank strip below the app frame); only the
+  content area scrolls. Verified headless via Playwright:
+  `document.documentElement.scrollHeight` dropped from 1314 to 900 at a
+  900px viewport.
+
+---
+
 ## 2026-07-15 — branch: `main` — Env-driven admin bootstrap (AdminSeeder)
 
 By: Claude Code
