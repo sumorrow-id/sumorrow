@@ -12,6 +12,7 @@ Running log of work done by developers and AI agents, newest first.
 ---
 
 ## 2026-07-15 — branch: `fix/admin-user-updates-overflow` — Admin pages no longer scroll past the viewport
+## 2026-07-15 — branch: `fix/startup-config-cache-order` — Fix stale config cache at boot
 
 By: Claude Code
 
@@ -31,6 +32,17 @@ By: Claude Code
   content area scrolls. Verified headless via Playwright:
   `document.documentElement.scrollHeight` dropped from 1314 to 900 at a
   900px viewport.
+- `startup.sh`: `config:cache` now runs **before** migrate/seed instead of
+  after. `bootstrap/cache/config.php` persists across App Service restarts,
+  so the seeder (and migrate) previously read env values from the *previous*
+  boot — an app-setting change (e.g. `ADMIN_EMAILS`) only took effect on the
+  second restart after it was set.
+
+**How to verify**
+
+- Set/change an app setting in Azure, let the app restart once, and confirm
+  the AdminSeeder promotion applied immediately (`role` = admin on first
+  restart, not the second).
 
 ---
 
