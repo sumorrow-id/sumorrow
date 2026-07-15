@@ -10,6 +10,7 @@ cd /home/site/wwwroot
 
 # ponytail: migrate on every boot; idempotent, cheap for this schema size
 php artisan migrate --force || true
+php artisan db:seed --class=AdminSeeder --force || true
 php artisan storage:link || true
 
 php artisan config:cache

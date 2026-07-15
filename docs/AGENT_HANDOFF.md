@@ -11,6 +11,31 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-15 — branch: `main` — Env-driven admin bootstrap (AdminSeeder)
+
+By: Claude Code
+
+**What changed**
+
+- New `database/seeders/AdminSeeder.php`: promotes every email in the
+  `ADMIN_EMAILS` env var (comma-separated) to admin, creating the account
+  first if missing (null password; owner claims it via Google login, which
+  matches by email). Idempotent, never demotes. Read via
+  `config('auth.admin_emails')` so it works under `config:cache`.
+- Wired into `DatabaseSeeder` and `startup.sh` (runs on every Azure boot,
+  right after `migrate --force`). `.env.example` documents `ADMIN_EMAILS`.
+- To bootstrap an admin on Azure: set the `ADMIN_EMAILS` App Setting —
+  saving it restarts the app, which runs the seeder. No DB access needed.
+- Also promoted the first local admin via tinker (one-off, no code).
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/AdminSeederTest.php` (4 passed).
+- Locally: set `ADMIN_EMAILS` in `.env`, run `php artisan db:seed --class=AdminSeeder`,
+  check the user's role.
+
+---
+
 ## 2026-07-11 — branch: `main` — Custom error pages (4xx/5xx, incl. 413 oversized upload)
 
 By: Claude Code

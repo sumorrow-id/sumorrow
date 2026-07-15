@@ -114,4 +114,17 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Bootstrap Admin Emails
+    |--------------------------------------------------------------------------
+    |
+    | Comma-separated emails promoted to the admin role by AdminSeeder on
+    | every deploy (see startup.sh). Read via config so it works with a
+    | cached configuration; set ADMIN_EMAILS in the environment.
+    |
+    */
+
+    'admin_emails' => env('ADMIN_EMAILS', ''),
+
 ];
