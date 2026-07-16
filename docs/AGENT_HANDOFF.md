@@ -11,6 +11,34 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-16 — branch: `fix/admin-panel` — Fix Azure deploy (take 2): regenerate lockfile with CI's npm
+
+By: Claude Code
+
+**What changed**
+
+- `package-lock.json`: deleted and regenerated **from scratch with npm 10**
+  (`npx npm@10 install`) — the npm that ships with Node 22 used by the
+  deploy workflow. The previous fix (below) was written incrementally by
+  npm 11 on Windows and satisfied npm 11's `npm ci` check but not npm 10's:
+  the two compute optional platform-specific subtrees
+  (`@rolldown/binding-*`, `@napi-rs/wasm-runtime` → `@emnapi/*`)
+  differently, so CI run #17 still failed with
+  "Missing: @emnapi/core@1.11.2 from lock file".
+- `main_sumorrow.yml`: added `cache: 'npm'` to setup-node (install speed,
+  no behavior change).
+- Lesson for future lockfile changes on this repo: after touching
+  package.json, regenerate the lock from scratch with CI's npm major
+  (`rm package-lock.json && npx npm@10 install`) or upgrade the workflow's
+  Node so local and CI match.
+
+**How to verify**
+
+- Verified locally from scratch (clean worktree, no node_modules):
+  `npx npm@10 ci` passes, `npm ci` (npm 11) passes, `npm run build` passes.
+- After merge to `main`, the deploy workflow's "Build frontend assets"
+  step must go green and the deploy job must run.
+
 ## 2026-07-16 — branch: `fix/admin-panel` — Fix Azure deploy: lockfile out of sync
 
 By: Claude Code

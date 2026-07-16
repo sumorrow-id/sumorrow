@@ -29,6 +29,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
 
       - name: Install PHP dependencies
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress --no-dev --optimize-autoloader
