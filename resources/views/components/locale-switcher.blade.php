@@ -36,20 +36,23 @@
         <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
     </button>
 
-    <div class="absolute right-0 mt-2 w-36 rounded-xl border shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 origin-top-right z-50 overflow-hidden {{ $panelClass }}">
-        @foreach ($locales as $code)
-            <a href="{{ request()->fullUrlWithQuery(['lang' => $code]) }}"
-                aria-label="{{ __('common.switch_to_' . ($code === 'en' ? 'english' : 'indonesian')) }}"
-                @if (app()->isLocale($code)) aria-current="page" @endif
-                @class([
-                    'flex items-center gap-2 px-3 py-2 text-xs font-bold transition-colors',
-                    $activeClass => app()->isLocale($code),
-                    $buttonClass => ! app()->isLocale($code),
-                ])>
-                <x-flag-icon :code="$code" />
-                <span class="uppercase">{{ $code }}</span>
-            </a>
-        @endforeach
+    {{-- pt-* instead of mt-*: padding stays hoverable, so the menu survives the cursor crossing the gap --}}
+    <div class="absolute right-0 top-full pt-2 w-36 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 origin-top-right z-50">
+        <div class="rounded-xl border shadow-2xl overflow-hidden {{ $panelClass }}">
+            @foreach ($locales as $code)
+                <a href="{{ request()->fullUrlWithQuery(['lang' => $code]) }}"
+                    aria-label="{{ __('common.switch_to_' . ($code === 'en' ? 'english' : 'indonesian')) }}"
+                    @if (app()->isLocale($code)) aria-current="page" @endif
+                    @class([
+                        'flex items-center gap-2 px-3 py-2 text-xs font-bold transition-colors',
+                        $activeClass => app()->isLocale($code),
+                        $buttonClass => ! app()->isLocale($code),
+                    ])>
+                    <x-flag-icon :code="$code" />
+                    <span class="uppercase">{{ $code }}</span>
+                </a>
+            @endforeach
+        </div>
     </div>
 </div>
 @endif
