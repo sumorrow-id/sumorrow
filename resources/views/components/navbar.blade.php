@@ -26,8 +26,10 @@
                             class="h-11 w-11 rounded-full object-cover border-2 border-white/40 group-hover:border-white transition-colors shadow-sm">
                     </button>
 
+                    {{-- pt-3 instead of mt-3: padding stays hoverable, so the menu survives the cursor crossing the gap --}}
                     <div
-                        class="absolute right-0 mt-3 w-56 bg-[#1A1A1A]/95 border border-white/20 rounded-xl shadow-2xl invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-lg transform origin-top-right group-hover:scale-100 scale-95 z-50 overflow-hidden">
+                        class="absolute right-0 top-full pt-3 w-56 invisible group-hover:visible opacity-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:scale-100 transition-all duration-300 transform origin-top-right group-hover:scale-100 scale-95 z-50">
+                    <div class="bg-[#1A1A1A]/95 border border-white/20 rounded-xl shadow-2xl backdrop-blur-lg overflow-hidden">
                         <div class="px-4 py-3 border-b border-white/10 bg-white/5">
                             <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->username }}</p>
                             <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
@@ -47,6 +49,7 @@
                                 </button>
                             </form>
                         </div>
+                    </div>
                     </div>
                 </div>
             @else

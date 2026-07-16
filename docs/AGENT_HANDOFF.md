@@ -11,6 +11,31 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-16 — branch: `main` — Hover dropdowns no longer close while moving into them
+
+By: Claude Code
+
+**What changed**
+
+- `components/locale-switcher.blade.php`, `components/navbar.blade.php`,
+  `components/navbar-light.blade.php`: the dropdown panels were offset from
+  their trigger with `mt-2`/`mt-3`. Margins are not hoverable, so crossing
+  that gap dropped `group-hover` and the menu vanished before you could
+  click a language / menu item. The gap is now `pt-*` padding on the
+  positioned wrapper (padding is part of the element, so hover survives),
+  with the visual panel styles moved to an inner div. Also added
+  `group-focus-within:*` so the menus open via keyboard focus.
+
+**How to verify**
+
+- On any admin page (or any page with a navbar), hover the language
+  switcher or avatar, then move the cursor straight down into the menu —
+  it must stay open until you leave it. Verified headless (Playwright +
+  Edge) against the rendered component: panel stays visible across the
+  button → gap → menu-item path and closes on mouse-leave.
+- `npm run build` must be run (new Tailwind utilities: `top-full`,
+  `group-focus-within:*`).
+
 ## 2026-07-15 — branch: `fix/admin-user-updates-overflow` — Admin pages no longer scroll past the viewport
 ## 2026-07-15 — branch: `fix/startup-config-cache-order` — Fix stale config cache at boot
 
