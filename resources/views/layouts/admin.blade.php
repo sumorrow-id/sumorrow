@@ -117,7 +117,10 @@
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
             <!-- Top Header -->
-            <header class="bg-white/80 backdrop-blur border-b border-morning-mist/60 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0">
+            <!-- "relative z-10" lifts the header (and its dropdowns) above <main>, which is
+                 position:relative and later in DOM order, so it would otherwise paint on top
+                 of the header's own stacking context (created by backdrop-blur). -->
+            <header class="relative z-10 bg-white/80 backdrop-blur border-b border-morning-mist/60 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0">
                 <div class="flex items-center gap-4">
                     <!-- Hamburger Menu Button -->
                     <button @click="sidebarOpen = true" class="lg:hidden p-2 -ml-2 text-blue-bird hover:text-deep-midnight hover:bg-morning-mist/30 rounded-lg" aria-label="{{ __('admin.open_menu') }}">

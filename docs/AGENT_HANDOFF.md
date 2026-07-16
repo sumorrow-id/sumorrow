@@ -11,6 +11,31 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-16 — branch: `main` — Admin header dropdown no longer paints behind page cards
+
+By: Claude Code
+
+**What changed**
+
+- `layouts/admin.blade.php`: added `relative z-10` to the `<header>`. Its
+  `backdrop-blur` creates a stacking context, and `<main>` (made
+  `position: relative` by the 2026-07-15 overflow fix) is a later sibling,
+  so main's content painted **on top of** the header's dropdown — the
+  language menu was visible but covered by (and unclickable through) the
+  stat cards on dashboard/user-updates/mountain-data. `z-10` keeps the
+  header below the mobile sidebar overlay (`z-20`/`z-30`) and the confirm
+  modal (`z-200`).
+
+**How to verify**
+
+- Log in as admin, hover the language switcher on `/admin/dashboard`,
+  `/admin/user-updates`, `/admin/mountain-data`: the menu must render on
+  top of the cards and both items must be clickable (clicking ID switches
+  the locale). Verified with Playwright + Edge against the live app:
+  `document.elementFromPoint` at every menu-item center resolves to the
+  link itself on all three pages, and clicking ID lands on a page with
+  `<html lang="id">`.
+
 ## 2026-07-16 — branch: `main` — Hover dropdowns no longer close while moving into them
 
 By: Claude Code
