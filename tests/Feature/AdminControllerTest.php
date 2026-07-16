@@ -6,6 +6,8 @@ use App\Models\Mountain;
 use App\Models\Province;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminControllerTest extends TestCase
@@ -34,7 +36,7 @@ class AdminControllerTest extends TestCase
             'elevation_masl' => 3000,
             'length_km' => 10.0,
             'elevation_gain_m' => 1500,
-            'coordinates' => '7.45S 110.44E',
+            'coordinates' => '7 deg 27\' 0" S, 110 deg 26\' 24" E',
             'description' => 'A test mountain description.',
             'is_active' => true,
             'difficulty' => 'moderate',
@@ -53,11 +55,23 @@ class AdminControllerTest extends TestCase
             'elevation_masl' => 2500,
             'length_km' => 8.5,
             'elevation_gain_m' => 1200,
-            'coordinates' => '7.10S 110.20E',
+            'coordinates' => '7 deg 6\' 0" S, 110 deg 12\' 0" E',
             'description' => 'A brand new mountain.',
             'difficulty' => 'moderate',
             'is_active' => '1',
         ], $overrides);
+    }
+
+    /**
+     * A real 1x1 GIF upload — UploadedFile::fake()->image() needs the GD
+     * extension, which not every dev machine or CI runner has enabled.
+     */
+    private function fakeImageUpload(string $name = 'cover.gif'): UploadedFile
+    {
+        $path = tempnam(sys_get_temp_dir(), 'img');
+        file_put_contents($path, base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'));
+
+        return new UploadedFile($path, $name, 'image/gif', null, true);
     }
 
     // -------------------------------------------------------------------------
@@ -464,6 +478,85 @@ class AdminControllerTest extends TestCase
 
         $response->assertSessionHasErrors(['name', 'difficulty', 'elevation_masl']);
         $this->assertDatabaseCount('mountains', 0);
+    }
+
+    public function test_mountain_creation_rejects_non_dms_coordinates(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+
+        foreach (['7.45S 110.44E', '-7.45, 110.44', 'Semarang', '8 deg 16\' 0" S'] as $invalid) {
+            $response = $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+                'coordinates' => $invalid,
+            ]));
+
+            $response->assertSessionHasErrors(['coordinates']);
+        }
+
+        $this->assertDatabaseCount('mountains', 0);
+    }
+
+    public function test_mountain_creation_accepts_dms_coordinates_parseable_by_weather(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+
+        $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+            'coordinates' => '8 deg 16\' 0" S, 115 deg 25\' 30.5" E',
+        ]));
+
+        $this->assertDatabaseHas('mountains', ['coordinates' => '8 deg 16\' 0" S, 115 deg 25\' 30.5" E']);
+    }
+
+    public function test_admin_can_create_mountain_with_cover_image(): void
+    {
+        Storage::fake('public');
+        $admin = $this->admin();
+        $province = $this->province();
+
+        $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+            'image' => $this->fakeImageUpload(),
+        ]));
+
+        $mountain = Mountain::where('name', 'Gunung Baru')->firstOrFail();
+        $image = $mountain->images()->firstOrFail();
+        $this->assertTrue($image->is_cover);
+        $this->assertSame(1, $image->position);
+        Storage::disk('public')->assertExists($image->getRawOriginal('image_url'));
+    }
+
+    public function test_mountain_creation_rejects_non_image_file(): void
+    {
+        Storage::fake('public');
+        $admin = $this->admin();
+        $province = $this->province();
+
+        $response = $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+            'image' => UploadedFile::fake()->create('document.pdf', 100, 'application/pdf'),
+        ]));
+
+        $response->assertSessionHasErrors(['image']);
+        $this->assertDatabaseCount('mountains', 0);
+    }
+
+    public function test_updating_cover_image_replaces_the_old_file(): void
+    {
+        Storage::fake('public');
+        $admin = $this->admin();
+        $province = $this->province();
+        $mountain = $this->mountain($province);
+        $oldPath = $this->fakeImageUpload('old.gif')->store('mountains', 'public');
+        $mountain->images()->create(['image_url' => $oldPath, 'position' => 1, 'is_cover' => true]);
+
+        $this->actingAs($admin)->put(route('admin.mountains.update', $mountain), $this->validMountainPayload($province, [
+            'image' => $this->fakeImageUpload('new.gif'),
+        ]));
+
+        $this->assertSame(1, $mountain->images()->count());
+        $newPath = $mountain->images()->first()->getRawOriginal('image_url');
+        $this->assertNotSame($oldPath, $newPath);
+        Storage::disk('public')->assertExists($newPath);
+        Storage::disk('public')->assertMissing($oldPath);
     }
 
     public function test_creating_open_mountain_clears_closed_since(): void

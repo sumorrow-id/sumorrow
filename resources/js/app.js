@@ -225,4 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmForms
         );
     }
+
+    // Admin mountain form: map pin-picker (dynamic import keeps Leaflet out of the main bundle)
+    const coordinatesMap = document.getElementById('coordinates-map');
+    const coordinatesInput = document.getElementById('coordinates');
+
+    if (coordinatesMap && coordinatesInput) {
+        import('./features/CoordinatesPicker').then(({ CoordinatesPicker }) => {
+            new CoordinatesPicker(coordinatesMap, coordinatesInput);
+        });
+    }
 });
