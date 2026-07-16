@@ -11,6 +11,29 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-16 — branch: `fix/admin-panel` — Fix Azure deploy: lockfile out of sync
+
+By: Claude Code
+
+**What changed**
+
+- `package-lock.json`: regenerated from a clean checkout. The lockfile
+  committed with the leaflet change was written by `npm install` against an
+  existing `node_modules` and ended up missing transitive entries
+  (`@emnapi/core@1.11.1`, `@emnapi/runtime@1.11.1` under
+  `@rolldown/binding-wasm32-wasi`), so `npm ci` in the deploy workflow
+  (`main_sumorrow.yml`, "Build frontend assets" step) failed with
+  "package.json and package-lock.json are in sync" — run #16 failed,
+  deploy job skipped. Run #15 (pre-leaflet) was green.
+
+**How to verify**
+
+- Reproduced and verified locally in a clean worktree of the failing
+  commit: `npm ci` failed with the same error; after regenerating the
+  lockfile, `npm ci` + `npm run build` both pass from scratch.
+- After pushing, workflow run #17+ on `main` should go green through
+  "Build frontend assets" and reach the deploy job.
+
 ## 2026-07-16 — branch: `main` — Admin mountain form: cover image upload
 
 By: Claude Code
