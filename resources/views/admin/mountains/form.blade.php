@@ -33,9 +33,28 @@
 
             <div>
                 <label for="coordinates" class="block text-xs font-bold text-lithic-blue uppercase tracking-widest mb-2">{{ __('admin.field_coordinates') }}</label>
-                <input type="text" id="coordinates" name="coordinates" value="{{ old('coordinates', $mountain?->coordinates) }}" placeholder="7.45S 110.44E" required
+                <input type="text" id="coordinates" name="coordinates" value="{{ old('coordinates', $mountain?->coordinates) }}" placeholder="{{ __('admin.field_coordinates_placeholder') }}" required
                        class="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-summit-blue {{ $errors->has('coordinates') ? 'border-red-400' : 'border-morning-mist' }}">
                 @error('coordinates')<p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="md:col-span-2">
+                {{-- "isolate z-0" keeps Leaflet's internal z-indexes (up to 1000) inside this box
+                     so the map never paints over the admin header or its dropdowns. --}}
+                <div id="coordinates-map" class="isolate z-0 h-72 w-full rounded-xl border border-morning-mist"></div>
+                <p class="mt-1.5 text-xs text-lithic-blue">{{ __('admin.coordinates_map_hint') }}</p>
+            </div>
+
+            <div class="md:col-span-2">
+                <label for="image" class="block text-xs font-bold text-lithic-blue uppercase tracking-widest mb-2">{{ __('admin.field_cover_image') }}</label>
+                @php($cover = $mountain?->images->firstWhere('is_cover', true) ?? $mountain?->images->first())
+                @if ($cover)
+                    <img src="{{ $cover->image_url }}" alt="{{ $mountain->name }}" class="h-40 w-full object-cover rounded-xl border border-morning-mist mb-3">
+                @endif
+                <input type="file" id="image" name="image" accept="image/*"
+                       class="w-full border rounded-xl px-4 py-2.5 text-sm text-lithic-blue file:mr-4 file:rounded-lg file:border-0 file:bg-summit-blue/10 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-summit-blue hover:file:bg-summit-blue/20 file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-summit-blue {{ $errors->has('image') ? 'border-red-400' : 'border-morning-mist' }}">
+                <p class="mt-1.5 text-xs text-lithic-blue">{{ $cover ? __('admin.field_cover_image_replace_hint') : __('admin.field_cover_image_hint') }}</p>
+                @error('image')<p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>@enderror
             </div>
 
             <div class="md:col-span-2">

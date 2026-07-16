@@ -14,7 +14,7 @@
 </header>
 
 <section class="bg-white rounded-3xl border border-morning-mist/70 shadow-sm p-8">
-    <form method="POST" action="{{ route('admin.mountains.store') }}">
+    <form method="POST" action="{{ route('admin.mountains.store') }}" enctype="multipart/form-data">
         @csrf
         @include('admin.mountains.form')
     </form>

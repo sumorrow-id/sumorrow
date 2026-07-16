@@ -11,6 +11,69 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-16 — branch: `main` — Admin mountain form: cover image upload
+
+By: Claude Code
+
+**What changed**
+
+- `StoreMountainRequest` (+ Update via inheritance): optional `image` field —
+  `nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:4096`, same rules as
+  the community/event uploads.
+- `Admin\MountainController`: `saveCoverImage()` stores the upload on the
+  `public` disk under `mountains/` (the path shape `MountainImage`'s
+  accessor already resolves) and upserts the `is_cover` row; replacing a
+  cover deletes the old locally-stored file (http/absolute URLs are left
+  alone). Store and update both use it.
+- `admin/mountains/form.blade.php`: "Cover Image" file input in the
+  Identity section; edit mode shows the current cover thumbnail. Both form
+  tags gained `enctype="multipart/form-data"`. New lang keys
+  `field_cover_image`, `field_cover_image_hint`,
+  `field_cover_image_replace_hint` (en + id).
+- Tests use a real inline 1x1 GIF instead of `UploadedFile::fake()->image()`
+  because the GD extension isn't available on every machine.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/AdminControllerTest.php`
+  (46 pass: upload on create, replace on update deletes the old file,
+  non-image rejected).
+- In the browser: create a mountain with an image → its edit page shows the
+  cover served from `/storage/mountains/...` (requires `php artisan
+  storage:link`). Verified end-to-end with Playwright + Edge, including a
+  200 response for the stored image URL.
+
+## 2026-07-16 — branch: `main` — Mountain coordinates: DMS validation + map pin-picker
+
+By: Claude Code
+
+**What changed**
+
+- `StoreMountainRequest`: `coordinates` now validated against a DMS regex
+  (`COORDINATES_PATTERN`, e.g. `8 deg 16' 0" S, 115 deg 25' 0" E`) — the only
+  format `WeatherController::parseCoordinates()` understands; anything else
+  silently fell back to default coordinates (wrong weather, no error).
+  `UpdateMountainRequest` now just extends it (rules were identical).
+- `admin/mountains/form.blade.php`: fixed the misleading placeholder
+  (`7.45S 110.44E`, a format the parser can't read) and added a Leaflet/OSM
+  map under the field — click or drag the pin to auto-fill the input in DMS;
+  on edit, the pin initializes from the stored value. New npm dependency:
+  `leaflet` (lazy-loaded chunk via dynamic import, only on this form).
+  New module: `resources/js/features/CoordinatesPicker.js`. New lang keys:
+  `field_coordinates_placeholder`, `coordinates_format_error`,
+  `coordinates_map_hint` (en + id).
+- `AdminControllerTest`: payloads switched to DMS; new tests for rejected
+  non-DMS formats and accepted DMS with decimal seconds.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/AdminControllerTest.php` (43 pass).
+- In the browser: `/admin/mountains/create` → click the map → the
+  coordinates input fills with DMS; submitting stores the mountain.
+  Submitting a value like `7.45S 110.44E` is rejected with a helpful error.
+  Verified end-to-end with Playwright + Edge (click, drag, submit, edit-page
+  pin). Requires `npm run build` (new leaflet chunk).
+
 ## 2026-07-16 — branch: `main` — Admin header dropdown no longer paints behind page cards
 
 By: Claude Code
