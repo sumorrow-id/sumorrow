@@ -11,6 +11,46 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-22 — branch: `main` — VM deploy: restore `storage:link`, fail fast on error
+
+By: Claude Code
+
+**What changed**
+
+- `deploy_vm.yml`: added `set -e` at the top of the SSH script — previously
+  a failed step (e.g. `git lfs pull` hitting a network/quota error,
+  `composer install` failing) did not stop the script, so it could still
+  reload nginx/php-fpm into a half-deployed state.
+- `deploy_vm.yml`: added `php artisan storage:link` after `migrate --force`.
+  The old App Service `startup.sh` ran this on every deploy; the new VM
+  workflow (`setup/vm-cicd`, 2026-07-16) dropped it. Without the
+  `public/storage` symlink, every file under `storage/app/public`
+  (mountain photos, avatars, post images) 404s regardless of whether Git
+  LFS pulled the real bytes — this is the most likely cause of the
+  reported "gambar gunung belum ke-load" symptom on the VM.
+- Not a code bug, but found while investigating: three mountains in
+  `database/data/mountains_seeder.json` (Amasing, Helatoba Tarutung,
+  Hutapanjang) reference `mountains/*.jpg` files that have never existed
+  in the repo (confirmed via `git log --all`, not an LFS pull gap). The UI
+  already falls back to `default-mountain.jpg` via `onerror` in
+  `explore.blade.php`, so this shows the wrong image, not a broken icon —
+  needs real photos added to `storage/app/public/mountains/` and the
+  seeder re-run, not a code change.
+- Also flagged for the user to verify manually (not fixable from the repo):
+  whether a queue worker runs on the VM. The old Azure docs note
+  `QUEUE_CONNECTION=sync` was required in App Settings because queued mail
+  notifications (`VerifyEmailNotification`, `ResetPasswordNotification`)
+  have no worker; unclear if the VM's `.env` carries this forward.
+
+**How to verify**
+
+- After merge/push to `main`, watch the "Deploy to Azure VM" workflow run
+  green, then check `ls -la /var/www/sumorrow/public/storage` on the VM —
+  should be a symlink to `../storage/app/public`. Open a mountain page and
+  confirm a previously-broken image now loads.
+
+---
+
 ## 2026-07-16 — branch: `fix/admin-panel` — Fix Azure deploy (take 2): regenerate lockfile with CI's npm
 
 By: Claude Code
