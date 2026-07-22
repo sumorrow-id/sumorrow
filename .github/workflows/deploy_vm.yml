@@ -15,6 +15,7 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
+            set -e
             cd /var/www/sumorrow
             git pull origin main
             git lfs pull
@@ -22,6 +23,7 @@ jobs:
             npm install
             npm run build
             php artisan migrate --force
+            php artisan storage:link
             php artisan config:cache
             sudo systemctl reload nginx
             sudo systemctl restart php8.4-fpm
