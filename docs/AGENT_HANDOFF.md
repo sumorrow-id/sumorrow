@@ -11,12 +11,30 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-23 — branch: `main` — VM deploy: stop `rsync --delete` wiping `.env` & runtime files
 ## 2026-07-23 — branch: `main` — Auth emails: send synchronously (fix "verification email never arrives")
 
 By: Claude Code
 
 **What changed**
 
+- `deploy_vm.yml`: added `--exclude` patterns to the rsync step
+  (`--exclude=/.env --exclude=/storage --exclude=/public/storage`).
+- Root cause of "`.env` di VM selalu hilang tiap deploy": the deploy rsyncs
+  the runner's checkout to `/var/www/sumorrow` with `--delete`, which forces
+  the VM tree to exactly match the source. `.env` is gitignored (so it is
+  never in the checkout), so `--delete` treated it as extraneous and removed
+  it on every deploy. Same mechanism silently wiped `storage/` (user uploads,
+  sessions, logs) and the `public/storage` symlink. rsync does **not** delete
+  excluded paths, so the excludes preserve them across deploys. (This is not
+  a Git history / `git clean` issue — the current workflow runs no git
+  commands on the VM.)
+
+**How to verify**
+
+- After merge, run a deploy and confirm `ls -la /var/www/sumorrow/.env` still
+  exists (no manual recreate needed) and previously-uploaded images under
+  `storage/app/public` survive.
 - `VerifyEmailNotification` and `ResetPasswordNotification`: dropped
   `implements ShouldQueue`. Both are now sent inline during the request.
 - Root cause of the reported bug: registration correctly dispatches the

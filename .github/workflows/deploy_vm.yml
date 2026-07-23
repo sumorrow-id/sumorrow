@@ -31,7 +31,11 @@ jobs:
       - name: Rsync ke VM
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avz --delete
+          # --delete forces the VM tree to match the runner checkout, which would
+          # wipe files that only live on the server. Exclude runtime state so it
+          # survives every deploy: .env (gitignored → absent from the checkout),
+          # user uploads + sessions + logs under storage/, and the public/storage symlink.
+          switches: -avz --delete --exclude=/.env --exclude=/storage --exclude=/public/storage
           path: ./
           remote_path: /var/www/sumorrow
           remote_host: ${{ secrets.VM_HOST }}
