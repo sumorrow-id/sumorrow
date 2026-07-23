@@ -3,7 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use App\Notifications\ResetPasswordNotification;
 use App\Notifications\VerifyEmailNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
@@ -37,6 +39,13 @@ class EmailVerificationTest extends TestCase
 
         $this->assertFalse($user->hasVerifiedEmail());
         Notification::assertSentToTimes($user, VerifyEmailNotification::class, 1);
+    }
+
+    public function test_auth_emails_are_not_queued_so_they_send_without_a_worker(): void
+    {
+        // The VM deploy runs no queue worker; queueing these silently drops the mail.
+        $this->assertNotInstanceOf(ShouldQueue::class, new VerifyEmailNotification);
+        $this->assertNotInstanceOf(ShouldQueue::class, new ResetPasswordNotification('token'));
     }
 
     public function test_user_can_verify_email_via_signed_link(): void
