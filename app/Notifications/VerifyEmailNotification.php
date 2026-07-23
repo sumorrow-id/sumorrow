@@ -5,10 +5,12 @@ namespace App\Notifications;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
+// ponytail: sent synchronously (not ShouldQueue) so it never depends on a
+// running queue worker — the VM deploy runs none, so queued auth mail silently
+// never sends. Fine at this app's volume; revisit only if request latency bites.
+class VerifyEmailNotification extends VerifyEmail
 {
     use Queueable;
 

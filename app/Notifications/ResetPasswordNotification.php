@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification implements ShouldQueue
+// ponytail: sent synchronously (see VerifyEmailNotification) — same latent bug,
+// no queue worker on the VM means a queued reset email would never send.
+class ResetPasswordNotification extends Notification
 {
     use Queueable;
 

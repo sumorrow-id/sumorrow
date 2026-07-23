@@ -11,6 +11,32 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-23 — branch: `main` — Auth emails: send synchronously (fix "verification email never arrives")
+
+By: Claude Code
+
+**What changed**
+
+- `VerifyEmailNotification` and `ResetPasswordNotification`: dropped
+  `implements ShouldQueue`. Both are now sent inline during the request.
+- Root cause of the reported bug: registration correctly dispatches the
+  verification notification (proven by the existing `Notification::fake`
+  test), and SMTP itself works. But the notifications were queued, and the
+  VM deploy (`deploy_vm.yml`) starts **no** queue worker. With any non-`sync`
+  `QUEUE_CONNECTION` (the `.env.example` default is `database`), the job just
+  sat in the `jobs` table and the email never sent. Local worked only because
+  local `.env` uses `QUEUE_CONNECTION=sync`.
+- Added guard test `test_auth_emails_are_not_queued_so_they_send_without_a_worker`
+  in `EmailVerificationTest` so nobody re-adds `ShouldQueue` unnoticed.
+
+**How to verify**
+
+- `php artisan test --filter=EmailVerificationTest` (7 pass).
+- Register a new account and confirm the verification email arrives without any
+  `queue:work` running. No infra/queue-worker change needed.
+
+---
+
 ## 2026-07-22 — branch: `main` — VM deploy: restore `storage:link`, fail fast on error
 
 By: Claude Code
