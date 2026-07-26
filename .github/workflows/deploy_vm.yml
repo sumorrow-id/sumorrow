@@ -31,11 +31,24 @@ jobs:
       - name: Rsync ke VM
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          # --delete forces the VM tree to match the runner checkout, which would
-          # wipe files that only live on the server. Exclude runtime state so it
-          # survives every deploy: .env (gitignored → absent from the checkout),
-          # user uploads + sessions + logs under storage/, and the public/storage symlink.
-          switches: -avz --delete --exclude=/.env --exclude=/storage --exclude=/public/storage
+          # -a implies -t/-p/-o/-g, so rsync tries to set times/perms on
+          # server-managed paths (e.g. bootstrap/cache owned by www-data) and
+          # fails with "Operation not permitted" (exit 23). Use -rlvz and skip
+          # attribute preservation instead. --delete forces the VM tree to match
+          # the checkout, so exclude runtime state that only lives on the server
+          # (.env, storage/, public/storage symlink, bootstrap/cache) plus repo
+          # and build cruft the app never needs at runtime.
+          switches: >-
+            -rlvz --delete
+            --omit-dir-times
+            --no-perms --no-owner --no-group
+            --exclude=/.env
+            --exclude=/storage
+            --exclude=/public/storage
+            --exclude=/bootstrap/cache
+            --exclude=/.git
+            --exclude=/.github
+            --exclude=/node_modules
           path: ./
           remote_path: /var/www/sumorrow
           remote_host: ${{ secrets.VM_HOST }}
