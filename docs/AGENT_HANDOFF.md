@@ -11,6 +11,28 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-26 — branch: `main` — Fix VM deploy rsync exit 23 (can't set times on bootstrap/cache)
+
+By: Claude Code
+
+**What changed**
+
+- `deploy_vm.yml` rsync switches: `-avz` → `-rlvz` plus
+  `--omit-dir-times --no-perms --no-owner --no-group`, and added excludes
+  `/bootstrap/cache`, `/.git`, `/.github`, `/node_modules`.
+- Root cause: `-a` implies `-t/-p/-o/-g`; rsync tried to set times/perms on
+  `bootstrap/cache` (owned by `www-data`), got "Operation not permitted", and
+  exited 23. `-rlvz` drops attribute preservation; excluding `bootstrap/cache`
+  also stops `--delete` from wiping the cache that the VM's `config:cache`
+  step writes. Excluding `node_modules`/`.git`/`.github` trims deploy size
+  (build already happens on the runner; only `public/build` is needed).
+- Trade-off: without `-t`, incremental deploys retransfer a bit more.
+
+**How to verify**
+
+- Push to `main` and confirm the "Rsync ke VM" step succeeds (no exit 23) and
+  the app still serves compiled assets from `public/build`.
+
 ## 2026-07-26 — branch: `main` — Natural Indonesian home dummy; drop forum seeder
 
 By: Claude Code
