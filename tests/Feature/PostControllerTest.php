@@ -145,6 +145,23 @@ class PostControllerTest extends TestCase
         $this->assertSame(1, $leader->posts_count);
     }
 
+    public function test_forum_leaders_excludes_users_with_zero_contributions()
+    {
+        $contributor = User::factory()->create(['username' => 'activehiker']);
+        $forumPost = $contributor->posts()->create(['title' => '', 'body' => 'tagged forum post']);
+        $forumPost->tags()->create(['keyword' => 'hiking-stories']);
+
+        // A user with no forum contributions must not appear on the board.
+        $idle = User::factory()->create(['username' => 'lurker']);
+
+        $response = $this->get(route('community.explore'));
+
+        $response->assertOk();
+        $leaderIds = $response->viewData('forumLeaders')->pluck('id');
+        $this->assertTrue($leaderIds->contains($contributor->id));
+        $this->assertFalse($leaderIds->contains($idle->id));
+    }
+
     public function test_forum_leaders_and_popular_tags_exclude_community_posts()
     {
         $user = User::factory()->create();

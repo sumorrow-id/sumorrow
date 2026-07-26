@@ -81,68 +81,62 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:ml-7">
-                    @foreach ($mountains as $mountain)
-                        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full p-4">
-                            @php
-                                $imageUrl = $mountain->images->first()?->image_url;
-                                $finalImage = !empty($imageUrl) ? $imageUrl : asset('images/default-mountain.jpg');
-                            @endphp
-                            <img src="{{ $finalImage }}" alt="{{ $mountain->name }}"
-                                onerror="this.onerror=null;this.src='{{ asset('images/default-mountain.jpg') }}'"
-                                class="w-full h-56 object-cover rounded-2xl" />
-
-                            <div class="pt-5 pb-2 px-2 flex flex-col grow">
-                                <h3 class="font-bold text-xl text-[#1a2b4c] mb-1">
-                                    {{ $mountain->name }}
-                                </h3>
-
-                                <div class="flex flex-wrap items-center gap-3 mb-3">
-                                    <div class="flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                        <span class="text-xs font-bold text-[#094174]">
-                                            {{ number_format($mountain->avg_rating ?? 0, 1) }}
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <img src="{{ asset('images/explore/mountainelevation.png') }}" alt="{{ __('explore.elevation_alt') }}"
-                                            class="h-4 w-4 object-contain" />
-                                        <span class="text-xs font-bold text-[#094174]">{{ $mountain->elevation_masl }}
-                                            mdpl</span>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#094174]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                        </svg>
-                                        <span class="text-xs font-bold text-[#094174] capitalize">{{ $mountain->difficulty && \Illuminate\Support\Facades\Lang::has('explore.difficulty_' . $mountain->difficulty) ? __('explore.difficulty_' . $mountain->difficulty) : $mountain->difficulty }}</span>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#094174]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        <span class="text-xs font-bold text-[#094174]">{{ optional($mountain->province)->name ?? __('explore.unknown_region') }}</span>
-                                    </div>
-                                </div>
-
-                                <p class="text-xs text-gray-500 mb-6 line-clamp-3 leading-relaxed mt-auto">
-                                    {{ $mountain->description }}</p>
-
-                                <a href="{{ route('explore.show', $mountain->id) }}"
-                                    class="block w-full text-center bg-[#094174] hover:bg-[#105DA3] text-white font-bold py-2.5 rounded-full text-sm transition shadow-md mt-auto">
-                                    {{ __('explore.explore_now') }}
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-                @if ($mountains->hasPages())
-                    <div class="explore-pagination mt-10 lg:ml-7">
-                        {{ $mountains->appends(request()->query())->links() }}
-                    </div>
+                {{-- Keep the visitor's location across filter submits (GET form drops params not backed by fields). --}}
+                @if ($hasLocation)
+                    <input type="hidden" name="lat" value="{{ request('lat') }}">
+                    <input type="hidden" name="lng" value="{{ request('lng') }}">
                 @endif
+
+                {{-- Nearby Mountains — page-1 highlight only (Others is paginated). --}}
+                @if ($otherMountains->onFirstPage())
+                    @if ($hasLocation)
+                        <section class="mb-12 lg:ml-7">
+                            <h2 class="font-bold text-2xl text-[#001E3A] mb-1">{{ __('explore.nearby_mountains') }}</h2>
+                            <p class="text-sm text-gray-500 mb-6">{{ __('explore.nearby_within_radius', ['radius' => $radiusKm]) }}</p>
+                            @if ($nearbyMountains->isNotEmpty())
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    @foreach ($nearbyMountains as $mountain)
+                                        @include('explore.partials.mountain-card', ['mountain' => $mountain, 'showDistance' => true])
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-sm text-gray-500 bg-white rounded-2xl border border-gray-100 p-6">
+                                    {{ __('explore.no_nearby_within_radius', ['radius' => $radiusKm]) }}
+                                </p>
+                            @endif
+                        </section>
+                    @else
+                        <div class="mb-12 lg:ml-7">
+                            <button type="button" id="enable-location-btn"
+                                class="flex items-center gap-2 bg-white border border-[#094174]/30 text-[#094174] font-bold text-sm px-5 py-3 rounded-full hover:bg-[#094174] hover:text-white transition shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {{ __('explore.enable_location') }}
+                            </button>
+                        </div>
+                    @endif
+                @endif
+
+                {{-- Others --}}
+                <section class="lg:ml-7">
+                    @if ($hasLocation)
+                        <h2 class="font-bold text-2xl text-[#001E3A] mb-6">{{ __('explore.others') }}</h2>
+                    @endif
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @forelse ($otherMountains as $mountain)
+                            @include('explore.partials.mountain-card', ['mountain' => $mountain, 'showDistance' => false])
+                        @empty
+                            <p class="text-sm text-gray-500 col-span-full">{{ __('explore.no_mountains_found') }}</p>
+                        @endforelse
+                    </div>
+                    @if ($otherMountains->hasPages())
+                        <div class="explore-pagination mt-10">
+                            {{ $otherMountains->links() }}
+                        </div>
+                    @endif
+                </section>
             </div>
         </form>
     </div>
