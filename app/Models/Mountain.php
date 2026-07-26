@@ -60,4 +60,55 @@ class Mountain extends Model
     {
         return $this->belongsTo(Province::class);
     }
+
+    /**
+     * Parse the stored DMS coordinate string ("8 deg 16' 0\" S, 115 deg 25' 0\" E")
+     * into decimal degrees, or null when it isn't parseable. Same DMS grammar as
+     * the admin coordinate picker and WeatherController.
+     *
+     * @return array{lat: float, lng: float}|null
+     */
+    public function coordinatesToDecimal(): ?array
+    {
+        $parts = explode(',', (string) $this->coordinates);
+        if (count($parts) < 2) {
+            return null;
+        }
+
+        $dmsToDecimal = function (string $dms): ?float {
+            if (preg_match('/(\d+)\s*deg\s*(\d+)\s*\'\s*(\d+(?:\.\d+)?)\s*"\s*([NSEW])/i', trim($dms), $m)) {
+                $decimal = (float) $m[1] + (float) $m[2] / 60 + (float) $m[3] / 3600;
+
+                return in_array(strtoupper($m[4]), ['S', 'W'], true) ? -$decimal : $decimal;
+            }
+
+            return null;
+        };
+
+        $lat = $dmsToDecimal($parts[0]);
+        $lng = $dmsToDecimal($parts[1]);
+
+        return ($lat === null || $lng === null) ? null : ['lat' => $lat, 'lng' => $lng];
+    }
+
+    /**
+     * Great-circle (haversine) distance in kilometres from the given point to
+     * this mountain, or null when the mountain has no parseable coordinates.
+     */
+    public function distanceKmFrom(float $latitude, float $longitude): ?float
+    {
+        $coordinates = $this->coordinatesToDecimal();
+        if ($coordinates === null) {
+            return null;
+        }
+
+        $earthRadiusKm = 6371.0;
+        $latDelta = deg2rad($coordinates['lat'] - $latitude);
+        $lngDelta = deg2rad($coordinates['lng'] - $longitude);
+
+        $a = sin($latDelta / 2) ** 2
+            + cos(deg2rad($latitude)) * cos(deg2rad($coordinates['lat'])) * sin($lngDelta / 2) ** 2;
+
+        return $earthRadiusKm * 2 * asin(min(1.0, sqrt($a)));
+    }
 }

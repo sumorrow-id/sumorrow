@@ -76,6 +76,7 @@ class PostController extends Controller
         $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
             $query->whereNull('community_id')->whereHas('tags');
         }])
+            ->having('posts_count', '>', 0)
             ->orderByDesc('posts_count')
             ->limit(5)
             ->get();

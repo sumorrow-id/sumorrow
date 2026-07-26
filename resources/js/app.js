@@ -1,5 +1,6 @@
 import './bootstrap';
 import { ExploreSearch } from './features/ExploreSearch';
+import { NearbyMountains } from './features/NearbyMountains';
 import { FilterDrawer } from './features/FilterDrawer';
 import { FlashBanner } from './features/FlashBanner';
 import { PasswordVisibilityToggle } from './features/PasswordVisibilityToggle';
@@ -24,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (exploreForm && searchInput) {
         new ExploreSearch(exploreForm, searchInput);
+        // Nearby-mountains geolocation (explore page only).
+        new NearbyMountains(document.getElementById('enable-location-btn'));
     }
 
     // Explore page: mobile filter drawer

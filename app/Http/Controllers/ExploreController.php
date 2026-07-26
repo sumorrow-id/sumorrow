@@ -7,12 +7,21 @@ use App\Models\Mountain;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class ExploreController extends Controller
 {
+    /**
+     * How close a mountain must be to the visitor to count as "nearby".
+     * 100 km covers the mountains reachable from most Indonesian cities
+     * (e.g. Jakarta → Gede/Salak, Yogyakarta → Merapi) without spilling
+     * across a whole island.
+     */
+    private const NEARBY_RADIUS_KM = 100;
+
     public function index(Request $request): View
     {
         $query = Mountain::with(['images', 'province']);
@@ -69,10 +78,47 @@ class ExploreController extends Controller
             });
         }
 
-        $seed = $request->input('seed', rand(1, 999999));
-        $mountains = $query->inRandomOrder($seed)->paginate(10)->appends(['seed' => $seed])->withQueryString();
+        // Only 100-ish rows, and "nearby" needs every mountain's coordinates to
+        // sort by distance, so partition in PHP rather than paginate in SQL.
+        // ponytail: fetch-all is fine at this catalog size; add SQL-side geo
+        // filtering only if the catalog grows into the thousands.
+        $mountains = $query->get();
 
-        return view('explore', compact('mountains'));
+        $latitude = $request->filled('lat') ? (float) $request->input('lat') : null;
+        $longitude = $request->filled('lng') ? (float) $request->input('lng') : null;
+        $hasLocation = $latitude !== null && $longitude !== null;
+
+        $radiusKm = self::NEARBY_RADIUS_KM;
+        $nearbyMountains = collect();
+        $otherMountains = $mountains->sortBy('name')->values();
+
+        if ($hasLocation) {
+            $mountains->each(fn (Mountain $mountain) => $mountain->distance_km = $mountain->distanceKmFrom($latitude, $longitude));
+
+            $nearbyMountains = $mountains
+                ->filter(fn (Mountain $mountain) => $mountain->distance_km !== null && $mountain->distance_km <= $radiusKm)
+                ->sortBy('distance_km')
+                ->values();
+
+            $nearbyIds = $nearbyMountains->pluck('id')->all();
+            $otherMountains = $mountains
+                ->reject(fn (Mountain $mountain) => in_array($mountain->id, $nearbyIds, true))
+                ->sortBy('name')
+                ->values();
+        }
+
+        // Paginate the "Others" collection (nearby is a page-1 highlight only).
+        $perPage = 10;
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $otherMountains = (new LengthAwarePaginator(
+            $otherMountains->forPage($page, $perPage)->values(),
+            $otherMountains->count(),
+            $perPage,
+            $page,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        ))->withQueryString();
+
+        return view('explore', compact('nearbyMountains', 'otherMountains', 'hasLocation', 'radiusKm'));
     }
 
     public function show(int $id): View

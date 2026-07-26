@@ -11,6 +11,68 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-26 — branch: `main` — Forum Leaders: exclude 0-contribution users
+
+By: Claude Code
+
+**What changed**
+
+- `PostController::index`: Forum Leaders query now has
+  `->having('posts_count', '>', 0)`, so users with no global forum posts no
+  longer fill the board (previously `limit(5)` returned 5 users regardless of
+  count — leftover demo accounts with 0 posts were showing up).
+- Test: `test_forum_leaders_excludes_users_with_zero_contributions`.
+
+**Operational note (VM)**
+
+- Leftover dummy accounts from the old `ForumPostSeeder`
+  (`raka.dewa@ / sinta.puspita@ / bima.senja@example.com`) still exist on the
+  VM. They have 0 posts now, so the code fix hides them from the board. To
+  delete the accounts themselves, reassign any communities they created to an
+  admin first (`communities.created_by` is `cascadeOnDelete`), then delete the
+  users (their posts cascade away). See the deletion snippet handed to the
+  owner; back up the DB first.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/PostControllerTest.php` (passing).
+
+## 2026-07-26 — branch: `main` — Explore: Nearby Mountains + Others sections (geolocation)
+
+By: Claude Code
+
+**What changed**
+
+- New explore layout: after the search bar, a **Nearby Mountains** section
+  (mountains within **100 km** of the visitor, closest first, with a distance
+  badge) and an **Others** section for everything else.
+- `Mountain` model: added `coordinatesToDecimal()` (parses the stored DMS
+  string, same grammar as WeatherController/CoordinatesPicker) and
+  `distanceKmFrom($lat, $lng)` (haversine). Returns null for unparseable
+  coordinates, which drop to "Others".
+- `ExploreController::index`: radius constant `NEARBY_RADIUS_KM = 100`. Reads
+  `lat`/`lng` from the query, fetches all filtered mountains (≈112 rows), and
+  partitions in PHP into `nearbyMountains` / `otherMountains`. The Others list
+  is paginated (10/page) via a `LengthAwarePaginator` over the collection, with
+  `withQueryString()` so filters + lat/lng survive page links. Nearby is a
+  page-1 highlight only (hidden on page 2+ via `onFirstPage()`). Card images are
+  `loading="lazy"`.
+- Card markup extracted to `resources/views/explore/partials/mountain-card.blade.php`
+  (used by both sections; distance badge only when `showDistance`).
+- Geolocation: `resources/js/features/NearbyMountains.js` (wired in `app.js`)
+  asks for location once per session, remembers coords in sessionStorage, and
+  reloads with `?lat=&lng=`. Hidden lat/lng inputs keep location across filter
+  submits. A "Show mountains near me" button re-prompts after a denial.
+- Lang keys added (en + id): `others`, `nearby_within_radius`,
+  `no_nearby_within_radius`, `enable_location`, `km_away`, `no_mountains_found`.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/ExploreControllerTest.php` (14 passing).
+- Load `/explore`, allow location → Nearby section lists close mountains with a
+  "N km away" badge; the rest fall under Others. Deny → only Others, with a
+  "Show mountains near me" button. Needs HTTPS or localhost for geolocation.
+
 ## 2026-07-26 — branch: `main` — Fix VM deploy rsync exit 23 (can't set times on bootstrap/cache)
 
 By: Claude Code
