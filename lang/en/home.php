@@ -7,7 +7,6 @@ return [
     'all_elevations' => 'All Elevations',
     'explore_now' => 'Explore Expeditions',
     'mountain_fallback' => 'Mountain',
-    'sample_post' => 'Every summit starts with one step. Share your journey with the Sumorrow community.',
 
     'feature_realtime_title' => 'Real Time Conditions',
     'feature_realtime_desc' => 'Get up-to-the-minute updates on weather, trail accessibility, and safety alerts.',

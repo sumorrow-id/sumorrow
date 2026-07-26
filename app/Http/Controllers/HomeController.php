@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mountain;
-use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -90,42 +88,28 @@ class HomeController extends Controller
         // pointed at a hardcoded external stock photo).
         $communityImages = $allMountains->take(8)->map(fn ($m) => $this->resolveImageUrl($m))->values();
 
-        // Community showcase: latest global forum posts (same scope as the
-        // forum feed — tagged, not inside a community). Posts without an
-        // uploaded image borrow a catalog image so every card has a photo.
+        // Community showcase is intentionally dummy so real user posts never
+        // surface on the public home page. Photos borrow catalog images.
+        // ponytail: static sample cards; wire back to Post if real posts are ever wanted here.
         $fallbackImage = fn (int $i) => $communityImages->get($i % max($communityImages->count(), 1), asset('images/placeholder.svg'));
 
-        $communityCards = Post::with(['author', 'images'])
-            ->withCount(['likes', 'comments'])
-            ->whereNull('community_id')
-            ->whereHas('tags')
-            ->latest()
-            ->take(8)
-            ->get()
-            ->values()
-            ->map(fn (Post $post, int $i) => [
-                'url' => route('community.posts.show', $post),
-                'username' => $post->author->username,
-                'avatar' => $post->author->avatarUrl(asset('images/community/profile-blank.jpg')),
-                'body' => Str::limit($post->body, 90),
-                'image' => $post->images->first() ? asset($post->images->first()->image_url) : $fallbackImage($i),
-                'likes' => number_format($post->likes_count),
-                'comments' => number_format($post->comments_count),
-            ]);
-
-        // Empty forum (fresh install) — keep the section alive with the
-        // sample cards it used to hardcode in the view.
-        if ($communityCards->isEmpty()) {
-            $communityCards = collect(range(0, 7))->map(fn (int $i) => [
-                'url' => url('/community'),
-                'username' => 'John Doe',
-                'avatar' => asset('images/community/profile-blank.jpg'),
-                'body' => __('home.sample_post'),
-                'image' => $fallbackImage($i),
-                'likes' => '1.7k',
-                'comments' => '439',
-            ]);
-        }
+        $communityCards = collect([
+            ['name' => 'Budi Santoso', 'body' => 'Sunrise dari puncak Rinjani kemarin benar-benar bikin merinding. Worth banget 7 jam trekking-nya!', 'likes' => '1.7k', 'comments' => '439'],
+            ['name' => 'Siti Rahayu', 'body' => 'Tips buat pemula: mulai naik jam 3 pagi biar kebagian golden sunrise. Jangan lupa headlamp cadangan ya.', 'likes' => '982', 'comments' => '210'],
+            ['name' => 'Agus Pratama', 'body' => 'Baru turun dari Prau via Patak Banteng. Lautan awan sama bukit Teletubbies-nya juara sih!', 'likes' => '2.3k', 'comments' => '512'],
+            ['name' => 'Dewi Lestari', 'body' => 'Ada rekomendasi sleeping bag buat suhu di bawah 5 derajat? Lagi nyari yang ringan tapi tetap hangat.', 'likes' => '640', 'comments' => '128'],
+            ['name' => 'Rizky Ramadhan', 'body' => 'Semeru minggu ini cuacanya lagi labil, kabut sering turun. Selalu pantau info dari basecamp Ranu Pani.', 'likes' => '1.1k', 'comments' => '305'],
+            ['name' => 'Putri Anggraini', 'body' => 'Pendakian pertama ke Merbabu via Selo, kaki pegel tapi pemandangannya nggak ada obat. Kapan lagi coba?', 'likes' => '774', 'comments' => '196'],
+        ])->map(fn (array $card, int $i) => [
+            'url' => url('/community'),
+            'username' => $card['name'],
+            // Initials avatar from the name, same generator the app uses for users.
+            'avatar' => 'https://ui-avatars.com/api/?name='.urlencode($card['name']).'&background=094174&color=fff&bold=true',
+            'body' => $card['body'],
+            'image' => $fallbackImage($i),
+            'likes' => $card['likes'],
+            'comments' => $card['comments'],
+        ]);
 
         return view('home', compact('weatherData', 'popularMountains', 'randomPeaks', 'heroImages', 'communityImages', 'communityCards'));
     }

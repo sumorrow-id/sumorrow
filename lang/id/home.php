@@ -7,7 +7,6 @@ return [
     'all_elevations' => 'Semua Ketinggian',
     'explore_now' => 'Jelajahi Ekspedisi',
     'mountain_fallback' => 'Gunung',
-    'sample_post' => 'Setiap puncak dimulai dari satu langkah. Bagikan perjalanan Anda bersama komunitas Sumorrow.',
 
     'feature_realtime_title' => 'Kondisi Waktu Nyata',
     'feature_realtime_desc' => 'Dapatkan pembaruan terkini tentang cuaca, aksesibilitas jalur, dan peringatan keselamatan.',

@@ -11,6 +11,53 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-07-26 — branch: `main` — Natural Indonesian home dummy; drop forum seeder
+
+By: Claude Code
+
+**What changed**
+
+- `HomeController::index`: the dummy home community cards are now natural —
+  Indonesian names + Indonesian post bodies, and each avatar is an initials
+  avatar generated from the name via `ui-avatars.com` (same generator
+  `User::avatarUrl` already uses). Removed the now-unused `home.sample_post`
+  lang key (en + id).
+- Removed the forum seeder so the community forum starts empty like a real
+  forum: deleted `database/seeders/ForumPostSeeder.php` and
+  `tests/Feature/ForumPostSeederTest.php`, and dropped `ForumPostSeeder::class`
+  from `DatabaseSeeder`. `CommunitySeeder` (groups only, no posts) is kept.
+- Updated `HomeControllerTest` dummy-name assertions (`John Doe` → `Budi Santoso`).
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` (9 passing).
+- `php artisan migrate:fresh --seed` → community forum feed is empty; only
+  communities (groups) are seeded.
+- Load `/home` → community cards show Indonesian names/text with initials pfps.
+
+## 2026-07-26 — branch: `main` — Home community preview → dummy; remove Forum Leaders arrow
+
+By: Claude Code
+
+**What changed**
+
+- `HomeController::index`: the home "Community" showcase no longer queries real
+  `Post` rows. It now renders a fixed set of 6 dummy cards, so real user posts
+  never surface on the public home page. `communityImages` (catalog photos) is
+  still used for the card backgrounds. Dropped now-unused `Post`/`Str` imports.
+- `community/components/sidebar.blade.php`: removed the chevron arrow next to the
+  "Forum Leaders" heading (it implied a link/action that didn't exist).
+- Forum Leaders is still capped at 5 users (`PostController::index` → `->limit(5)`),
+  which already satisfied the "only 5 people" request — no change needed there.
+- Updated `HomeControllerTest`: the section that used to assert real forum posts
+  appear now asserts they do **not** (dummy only).
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/HomeControllerTest.php` (9 passing).
+- Load `/home` → Community cards show dummy names (John Doe, Sarah Lin, …), not
+  real posts. Load `/community` → Forum Leaders card has no arrow, ≤5 people.
+
 ## 2026-07-23 — branch: `main` — VM deploy: stop `rsync --delete` wiping `.env` & runtime files
 ## 2026-07-23 — branch: `main` — Auth emails: send synchronously (fix "verification email never arrives")
 
