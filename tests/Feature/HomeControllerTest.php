@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Community;
 use App\Models\Mountain;
 use App\Models\Province;
 use App\Models\User;
@@ -102,42 +101,29 @@ class HomeControllerTest extends TestCase
         $response->assertDontSee('http://first.test/storage/', false);
     }
 
-    public function test_home_community_section_shows_global_forum_posts_only(): void
+    public function test_home_community_section_uses_dummy_cards_not_real_posts(): void
     {
         $user = User::factory()->create(['username' => 'rakadewa']);
 
         $forumPost = $user->posts()->create(['title' => '', 'body' => 'HOME_FORUM_POST']);
         $forumPost->tags()->create(['keyword' => 'hiking-stories']);
 
-        $community = Community::create([
-            'name' => 'Pendaki Nusantara',
-            'slug' => 'pendaki-nusantara',
-            'description' => 'A community for Indonesian hikers.',
-            'privacy' => 'public',
-            'created_by' => $user->id,
-        ]);
-        $communityPost = $user->posts()->create([
-            'title' => '',
-            'body' => 'HOME_COMMUNITY_POST',
-            'community_id' => $community->id,
-        ]);
-        $communityPost->tags()->create(['keyword' => 'gear-talk']);
-
         $response = $this->get('/home');
 
         $response->assertOk();
-        $response->assertSee('HOME_FORUM_POST');
-        $response->assertSee('rakadewa');
-        $response->assertDontSee('HOME_COMMUNITY_POST');
-        $response->assertSee(route('community.posts.show', $forumPost));
+        // Real user posts must never surface in the home showcase — it is dummy.
+        $response->assertSee('Budi Santoso');
+        $response->assertDontSee('HOME_FORUM_POST');
+        $response->assertDontSee('rakadewa');
+        $response->assertDontSee(route('community.posts.show', $forumPost));
     }
 
-    public function test_home_community_section_falls_back_to_sample_cards_when_forum_is_empty(): void
+    public function test_home_community_section_shows_dummy_cards_when_forum_is_empty(): void
     {
         $response = $this->get('/home');
 
         $response->assertOk();
-        $response->assertSee('John Doe');
+        $response->assertSee('Budi Santoso');
     }
 
     private function makeMountain(Province $province, string $name): Mountain

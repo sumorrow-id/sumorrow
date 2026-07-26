@@ -20,10 +20,7 @@
 
     {{-- 1. Forum Leaders --}}
     <div class="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 p-5 md:p-6">
-        <h2 class="font-bold text-lg text-[#1a2b4c] mb-2 flex items-center justify-between cursor-pointer group">
-            <span>{{ __('community.forum_leaders_heading') }}</span>
-            <svg class="w-4 h-4 text-[#1a2b4c] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </h2>
+        <h2 class="font-bold text-lg text-[#1a2b4c] mb-2">{{ __('community.forum_leaders_heading') }}</h2>
         <p class="text-xs md:text-sm text-gray-500 mb-5 leading-relaxed">{{ __('community.forum_leaders_description') }}</p>
 
         <div class="flex flex-col gap-5">
