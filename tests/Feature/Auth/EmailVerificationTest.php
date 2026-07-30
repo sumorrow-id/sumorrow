@@ -58,6 +58,21 @@ class EmailVerificationTest extends TestCase
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 
+    public function test_verification_link_clicked_while_logged_out_still_verifies_after_login(): void
+    {
+        // Opening the email on another device/browser means the click arrives as a guest.
+        $user = User::factory()->unverified()->create();
+        $url = $this->verificationUrlFor($user);
+
+        $this->get($url)->assertRedirect('/login');
+
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])
+            ->assertRedirect($url);
+
+        $this->get($url)->assertRedirect(route('home'));
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    }
+
     public function test_email_cannot_be_verified_with_invalid_hash(): void
     {
         $user = User::factory()->create(['email_verified_at' => null]);

@@ -41,7 +41,10 @@ class LoginController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->route('home');
+            // intended(), not route('home'): an emailed link (e.g. email verification)
+            // opened while logged out lands on /login, and dropping the intended URL
+            // here means the click silently never completes.
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors(['email' => __('auth.invalid_credentials')])->onlyInput('email');
@@ -59,7 +62,7 @@ class LoginController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->route('home');
+            return redirect()->intended(route('home'));
         } catch (Exception $e) {
             report($e);
 
