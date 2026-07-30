@@ -73,6 +73,21 @@ class EmailVerificationTest extends TestCase
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 
+    public function test_resending_from_edit_profile_shows_a_success_popup(): void
+    {
+        Notification::fake();
+        $user = User::factory()->unverified()->create();
+
+        $this->actingAs($user)
+            ->from(route('profile.edit'))
+            ->followingRedirects()
+            ->post(route('verification.send'))
+            ->assertOk()
+            ->assertSee(__('auth.verify_email_resent_message'));
+
+        Notification::assertSentTo($user, VerifyEmailNotification::class);
+    }
+
     public function test_email_cannot_be_verified_with_invalid_hash(): void
     {
         $user = User::factory()->create(['email_verified_at' => null]);

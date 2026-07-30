@@ -9,12 +9,6 @@
             {!! __('auth.verify_email_body', ['app_name' => '<strong>Sumorrow</strong>']) !!}
         </p>
 
-        @if (session('message'))
-            <div class="mb-6 p-4 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
-                {{ __('auth.verify_email_resent_message') }}
-            </div>
-        @endif
-
         <div class="space-y-4">
             <!-- Tombol Kirim Ulang -->
             <form method="POST" action="{{ route('verification.send') }}">
