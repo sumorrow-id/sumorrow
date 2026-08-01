@@ -167,6 +167,10 @@ Routes shared by users and admins
 */
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
+// Legal pages — one view, content comes from lang/{locale}/legal.php
+Route::view('/privacy-policy', 'legal', ['page' => 'privacy'])->name('privacy');
+Route::view('/terms-of-service', 'legal', ['page' => 'terms'])->name('terms');
+
 /*
 --------------------------------------------------------------------------
 Admin Routes

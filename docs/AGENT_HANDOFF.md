@@ -11,6 +11,28 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-08-01 — branch: `main` — Privacy Policy + Terms of Service pages (EN/ID)
+
+By: Claude Code
+
+**What changed**
+
+- New routes `/privacy-policy` (`privacy`) and `/terms-of-service` (`terms`),
+  registered outside the `redirect.admin` group so admins can read them too.
+  Both use `Route::view` — no controller.
+- One shared view `resources/views/legal.blade.php` driven by a `$page` key
+  (`privacy` / `terms`). It loops over a sections array from the lang files,
+  so adding/reordering clauses is a lang-file edit only.
+- Content lives in `lang/en/legal.php` and `lang/id/legal.php` (title, intro,
+  `sections[]` with `heading`, `body`, optional `list`). Update both when
+  editing — a test asserts the section counts match.
+- Footer's Privacy/Terms links now point at the real routes instead of `#`.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/LegalPageTest.php` (5 passing).
+- Visit `/privacy-policy` and `/terms-of-service`, then `?lang=id` on each.
+
 ## 2026-07-26 — branch: `main` — Forum Leaders: exclude 0-contribution users
 
 By: Claude Code

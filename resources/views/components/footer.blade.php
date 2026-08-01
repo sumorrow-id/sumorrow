@@ -20,8 +20,8 @@
             <h3 class="font-bold text-[#1a2b4c] mb-6">{{ __('common.footer_legal') }}</h3>
 
             <div class="flex flex-col gap-4 items-center md:items-start text-center md:text-left">
-                <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_privacy_policy') }}</a>
-                <a href="#" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_terms_of_service') }}</a>
+                <a href="{{ route('privacy') }}" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_privacy_policy') }}</a>
+                <a href="{{ route('terms') }}" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_terms_of_service') }}</a>
                 <a href="/api/docs" class="text-gray-500 hover:text-[#094174] transition w-fit">{{ __('common.footer_api_documentation') }}</a>
             </div>
         </div>
