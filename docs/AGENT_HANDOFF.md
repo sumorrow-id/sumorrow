@@ -11,6 +11,39 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-08-03 — branch: `docs/legal` — Kawi Butak review seeder + admin basecamp editing
+
+By: Claude Code
+
+**What changed**
+
+- New `MountainRatingSeeder` seeds 50 Indonesian reviews (score + text) for
+  `Kawi Butak`, one per user. It reuses existing users and only tops up with
+  `User::factory()` when there are fewer than 50. Idempotent via
+  `updateOrCreate` on `(user_id, mountain_id)`; `created_at` is staggered one
+  per day so the review list isn't all one timestamp. Registered in
+  `DatabaseSeeder` right after `MountainSeeder`.
+- Admin mountain create/edit form gained an **Official Basecamps** section:
+  repeatable `basecamps[]` text inputs (Alpine) between Trail Metrics and
+  Availability. `basecamps` are stripped before `Mountain::create/update` and
+  handled by `MountainController::syncBasecamps()`.
+- `syncBasecamps` treats the name as the basecamp's identity (same assumption
+  `MountainSeeder` makes, since the table is just `id/mountain_id/name`):
+  untouched names keep their id — and their `/api/v1/basecamps/{id}` URL —
+  while removed/renamed ones are dropped. Blank and duplicate rows are ignored;
+  an empty submission clears the list.
+- Lang keys `section_basecamps*`, `field_basecamp_name_placeholder`,
+  `add_basecamp`, `remove_basecamp` added to `lang/{en,id}/admin.php`.
+
+**How to verify**
+
+- `php artisan test --compact tests/Feature/MountainRatingSeederTest.php` (3) and
+  `tests/Feature/AdminControllerTest.php` (51).
+- `php artisan db:seed --class=MountainRatingSeeder`, then open Kawi Butak in
+  Explore — 50 reviews, `avg_rating` ≈ 4.06.
+- Admin → Mountain Data → Edit any mountain, add/remove basecamp rows, save,
+  and confirm they appear in the Explore sidebar.
+
 ## 2026-08-01 — branch: `main` — Privacy Policy + Terms of Service pages (EN/ID)
 
 By: Claude Code

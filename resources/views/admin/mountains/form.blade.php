@@ -111,6 +111,40 @@
 
     <hr class="border-morning-mist/60">
 
+    <!-- Basecamps -->
+    @php($basecampNames = old('basecamps', $mountain?->basecamps->pluck('name')->all() ?? []))
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" x-data="{ basecamps: @js(array_values(array_filter($basecampNames, fn ($name) => trim((string) $name) !== '')) ?: ['']) }">
+        <div>
+            <h4 class="text-sm font-bold text-deep-midnight">{{ __('admin.section_basecamps') }}</h4>
+            <p class="text-xs text-lithic-blue mt-1">{{ __('admin.section_basecamps_hint') }}</p>
+        </div>
+        <div class="lg:col-span-2 space-y-3">
+            <template x-for="(basecamp, index) in basecamps" :key="index">
+                <div class="flex items-center gap-2">
+                    <input type="text" name="basecamps[]" x-model="basecamps[index]" maxlength="255"
+                           placeholder="{{ __('admin.field_basecamp_name_placeholder') }}"
+                           class="w-full border border-morning-mist rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-summit-blue">
+                    <button type="button" @click="basecamps.splice(index, 1)" x-show="basecamps.length > 1"
+                            aria-label="{{ __('admin.remove_basecamp') }}" title="{{ __('admin.remove_basecamp') }}"
+                            class="shrink-0 p-3 rounded-xl text-lithic-blue hover:text-red-600 hover:bg-red-50 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </template>
+
+            <button type="button" @click="basecamps.push('')"
+                    class="text-xs font-bold text-summit-blue uppercase tracking-widest hover:text-deep-midnight transition-colors">
+                + {{ __('admin.add_basecamp') }}
+            </button>
+
+            @error('basecamps.*')<p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>@enderror
+        </div>
+    </div>
+
+    <hr class="border-morning-mist/60">
+
     <!-- Availability -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div>

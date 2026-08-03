@@ -606,6 +606,79 @@ class AdminControllerTest extends TestCase
         $this->assertSame('2026-06-01', $mountain->closed_since->format('Y-m-d'));
     }
 
+    public function test_admin_can_create_mountain_with_basecamps(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+
+        $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+            'basecamps' => ['Basecamp Kalisat', '  Basecamp Ranu Pani  ', '', 'Basecamp Kalisat'],
+        ]));
+
+        $mountain = Mountain::where('name', 'Gunung Baru')->firstOrFail();
+        $this->assertSame(
+            ['Basecamp Kalisat', 'Basecamp Ranu Pani'],
+            $mountain->basecamps()->orderBy('name')->pluck('name')->all()
+        );
+    }
+
+    public function test_updating_basecamps_adds_removes_and_keeps_ids(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+        $mountain = $this->mountain($province);
+        $kept = $mountain->basecamps()->create(['name' => 'Basecamp Kalisat']);
+        $mountain->basecamps()->create(['name' => 'Basecamp Lama']);
+
+        $this->actingAs($admin)->put(route('admin.mountains.update', $mountain), $this->validMountainPayload($province, [
+            'basecamps' => ['Basecamp Kalisat', 'Basecamp Baru'],
+        ]));
+
+        $this->assertSame(
+            ['Basecamp Baru', 'Basecamp Kalisat'],
+            $mountain->basecamps()->orderBy('name')->pluck('name')->all()
+        );
+        $this->assertSame($kept->id, $mountain->basecamps()->where('name', 'Basecamp Kalisat')->value('id'));
+    }
+
+    public function test_submitting_no_basecamps_clears_them(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+        $mountain = $this->mountain($province);
+        $mountain->basecamps()->create(['name' => 'Basecamp Lama']);
+
+        $this->actingAs($admin)->put(route('admin.mountains.update', $mountain), $this->validMountainPayload($province, [
+            'basecamps' => [''],
+        ]));
+
+        $this->assertSame(0, $mountain->basecamps()->count());
+    }
+
+    public function test_basecamp_name_is_length_limited(): void
+    {
+        $admin = $this->admin();
+        $province = $this->province();
+
+        $response = $this->actingAs($admin)->post(route('admin.mountains.store'), $this->validMountainPayload($province, [
+            'basecamps' => [str_repeat('a', 256)],
+        ]));
+
+        $response->assertSessionHasErrors(['basecamps.0']);
+        $this->assertDatabaseCount('mountains', 0);
+    }
+
+    public function test_edit_form_prefills_existing_basecamps(): void
+    {
+        $province = $this->province();
+        $mountain = $this->mountain($province);
+        $mountain->basecamps()->create(['name' => 'Basecamp Kalisat']);
+
+        $response = $this->actingAs($this->admin())->get(route('admin.mountains.edit', $mountain));
+
+        $response->assertSee('Basecamp Kalisat', false);
+    }
+
     public function test_admin_can_delete_mountain(): void
     {
         $admin = $this->admin();

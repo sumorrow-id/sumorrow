@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             MountainSeeder::class,
+            MountainRatingSeeder::class,
             AchievementSeeder::class,
             GearSeeder::class,
             CommunitySeeder::class,
