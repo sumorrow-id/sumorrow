@@ -41,6 +41,8 @@ class StoreMountainRequest extends FormRequest
             'difficulty' => ['required', 'in:easy,moderate,hard,strenuous'],
             'is_active' => ['nullable', 'boolean'],
             'closed_since' => ['nullable', 'date'],
+            'basecamps' => ['nullable', 'array'],
+            'basecamps.*' => ['nullable', 'string', 'max:255'],
         ];
     }
 

@@ -43,7 +43,9 @@ class MountainController extends Controller
 
     public function store(StoreMountainRequest $request): RedirectResponse
     {
-        $mountain = Mountain::create($request->safe()->except('image'));
+        $mountain = Mountain::create($request->safe()->except(['image', 'basecamps']));
+
+        $this->syncBasecamps($mountain, $request->input('basecamps', []));
 
         if ($request->hasFile('image')) {
             $this->saveCoverImage($mountain, $request->file('image'));
@@ -61,7 +63,9 @@ class MountainController extends Controller
 
     public function update(UpdateMountainRequest $request, Mountain $mountain): RedirectResponse
     {
-        $mountain->update($request->safe()->except('image'));
+        $mountain->update($request->safe()->except(['image', 'basecamps']));
+
+        $this->syncBasecamps($mountain, $request->input('basecamps', []));
 
         if ($request->hasFile('image')) {
             $this->saveCoverImage($mountain, $request->file('image'));
@@ -75,6 +79,31 @@ class MountainController extends Controller
         $mountain->delete();
 
         return back()->with('success', __('admin.mountain_deleted', ['name' => $mountain->name]));
+    }
+
+    /**
+     * Replace the mountain's basecamp list with the submitted names.
+     *
+     * A basecamp row is nothing but a name, so the name is its identity here —
+     * the same assumption MountainSeeder makes. Untouched names keep their id
+     * (and therefore their `/api/v1/basecamps/{id}` URL); renamed or removed
+     * ones are dropped.
+     *
+     * @param  array<int, string|null>  $names
+     */
+    private function syncBasecamps(Mountain $mountain, array $names): void
+    {
+        $names = collect($names)
+            ->map(fn (?string $name): string => trim((string) $name))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $mountain->basecamps()->whereNotIn('name', $names)->delete();
+
+        foreach ($names as $name) {
+            $mountain->basecamps()->firstOrCreate(['name' => $name]);
+        }
     }
 
     /**
