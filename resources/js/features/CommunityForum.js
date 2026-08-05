@@ -62,6 +62,18 @@ export class CommunityForum {
                 content.classList.remove('grid');
             }
         });
+
+        // The tab lives in the URL (?tab=community) and every paginator/search
+        // link is built from the current query string. Switching tabs is
+        // client-side only, so without this the stale ?tab= would follow the
+        // Forum pagination links and land the user back on My Community.
+        const url = new URL(window.location);
+        if (tab === 'community') {
+            url.searchParams.set('tab', 'community');
+        } else {
+            url.searchParams.delete('tab');
+        }
+        window.history.replaceState({}, '', url);
     }
 
     openModal() {
