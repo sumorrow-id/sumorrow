@@ -86,11 +86,12 @@ class PostController extends Controller
         // paginator use their own query keys and carry ?tab=community so the
         // tab is still selected after a reload.
         $communitySearch = $request->query('community_search');
+        $searchByName = fn ($query) => $query->where('name', 'like', '%'.$communitySearch.'%');
 
         $myCommunities = collect();
         if (Auth::check()) {
             $myCommunities = Auth::user()->communities()
-                ->when($communitySearch, fn ($query) => $query->where('name', 'like', '%'.$communitySearch.'%'))
+                ->when($communitySearch, $searchByName)
                 ->withCount('members')
                 ->orderBy('communities.name')
                 ->paginate(perPage: 6, pageName: 'community_page')
@@ -103,9 +104,12 @@ class PostController extends Controller
             // Not pluck()-ed from $myCommunities — that only holds the current page.
             fn ($query) => $query->whereDoesntHave('members', fn ($member) => $member->whereKey(Auth::id()))
         )
+            ->when($communitySearch, $searchByName)
             ->withCount('members')
-            ->take(6)
-            ->get();
+            ->orderBy('name')
+            ->paginate(perPage: 6, pageName: 'suggested_page')
+            ->withQueryString()
+            ->appends('tab', 'community');
 
         return view('community.index', compact(
             'posts',

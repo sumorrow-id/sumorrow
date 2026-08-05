@@ -23,6 +23,9 @@ By: Claude Code
   the Explore feed's `page`. `?community_search=` filters by community name.
   Both paginator links and the search form carry `tab=community`, which the
   existing `CommunityForum` JS already reads to re-select the tab after reload.
+- **Suggested For You is searchable and paged too.** Same `community_search`
+  term filters it, own page name `suggested_page`, 6/page, ordered by name. The
+  search box therefore renders for guests as well.
 - **Suggested communities fix.** The exclusion list used to come from
   `$myCommunities->pluck('id')`, which now only holds one page; switched to a
   `whereDoesntHave('members', …)` check so joined communities on page 2+ stay

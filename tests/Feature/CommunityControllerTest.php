@@ -103,6 +103,31 @@ class CommunityControllerTest extends TestCase
         $response->assertDontSee('Rinjani Squad 1');
     }
 
+    public function test_suggested_communities_can_be_searched_and_are_paginated(): void
+    {
+        // 7 communities the visitor has not joined → 6 on page one, 1 on page two.
+        foreach (range(1, 6) as $i) {
+            $this->makeCommunity(['name' => "Rinjani Open {$i}", 'slug' => "rinjani-open-{$i}"]);
+        }
+        $this->makeCommunity(['name' => 'Semeru Open', 'slug' => 'semeru-open']);
+
+        $response = $this->get(route('community', ['tab' => 'community']));
+        $response->assertOk();
+        $response->assertSee('Rinjani Open 1');
+        $response->assertDontSee('Semeru Open');
+
+        $response = $this->get(route('community', ['tab' => 'community', 'suggested_page' => 2]));
+        $response->assertOk();
+        $response->assertSee('Semeru Open');
+        $response->assertDontSee('Rinjani Open 1');
+
+        // The single search box filters the suggestions too.
+        $response = $this->get(route('community', ['tab' => 'community', 'community_search' => 'Semeru']));
+        $response->assertOk();
+        $response->assertSee('Semeru Open');
+        $response->assertDontSee('Rinjani Open 1');
+    }
+
     public function test_suggested_communities_exclude_joined_ones_beyond_the_first_page(): void
     {
         $user = User::factory()->create();

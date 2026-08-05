@@ -87,25 +87,23 @@
                     @endguest
                 </div>
 
-                {{-- Search: filters the joined communities below --}}
-                @auth
-                    <form method="GET" action="{{ route('community.explore') }}" role="search">
-                        <input type="hidden" name="tab" value="community">
-                        <div class="relative w-full">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                name="community_search"
-                                value="{{ $communitySearch }}"
-                                placeholder="{{ __('community.search_communities_placeholder') }}"
-                                class="block w-full pl-11 pr-4 py-3 bg-[#F8F9FA] rounded-xl text-sm md:text-base border-none focus:ring-0 focus:outline-none placeholder-gray-400">
+                {{-- Search: filters both the joined list and the suggestions below --}}
+                <form method="GET" action="{{ route('community.explore') }}" role="search">
+                    <input type="hidden" name="tab" value="community">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
                         </div>
-                    </form>
-                @endauth
+                        <input
+                            type="text"
+                            name="community_search"
+                            value="{{ $communitySearch }}"
+                            placeholder="{{ __('community.search_communities_placeholder') }}"
+                            class="block w-full pl-11 pr-4 py-3 bg-[#F8F9FA] rounded-xl text-sm md:text-base border-none focus:ring-0 focus:outline-none placeholder-gray-400">
+                    </div>
+                </form>
 
                 {{-- Main: Joined Communities Grid --}}
                 @if ($myCommunities->isEmpty())
@@ -138,13 +136,17 @@
                     <h3 class="text-xl font-bold text-[#001E3A] mb-4">{{ __('community.suggested_for_you') }}</h3>
 
                     @if ($suggestedCommunities->isEmpty())
-                        <p class="text-sm text-gray-400">{{ __('community.no_recommendations') }}</p>
+                        <p class="text-sm text-gray-400">
+                            {{ $communitySearch ? __('community.no_communities_found', ['search' => $communitySearch]) : __('community.no_recommendations') }}
+                        </p>
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($suggestedCommunities as $suggested)
                                 <x-community-card :community="$suggested" :joined="false" />
                             @endforeach
                         </div>
+
+                        {{ $suggestedCommunities->links() }}
                     @endif
                 </div>
             </div>
