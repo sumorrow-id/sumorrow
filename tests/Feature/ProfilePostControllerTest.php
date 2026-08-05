@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Post;
 use App\Models\User;
+use Database\Seeders\AchievementSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -85,6 +86,19 @@ class ProfilePostControllerTest extends TestCase
             'title' => 'Summit of Semeru',
             'author_id' => $user->id,
         ]);
+    }
+
+    public function test_storing_a_summit_log_unlocks_the_first_summit_achievement(): void
+    {
+        $this->seed(AchievementSeeder::class);
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post(route('profile.posts.store'), [
+            'title' => 'Summit Semeru',
+            'body' => 'Made it to Mahameru at sunrise.',
+        ]);
+
+        $this->assertTrue($user->achievements()->where('title', 'First Summit')->exists());
     }
 
     public function test_storing_a_post_requires_title_and_body(): void

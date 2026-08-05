@@ -38,9 +38,7 @@ class PostController extends Controller
         // profile) carry no category tags, so exclude tag-less posts — same
         // convention ProfileController uses to split the two.
         // Community posts stay on their community page, not the global feed.
-        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])
-            ->whereNull('community_id')
-            ->whereHas('tags');
+        $postsQuery = Post::with(['author', 'tags', 'images', 'likes'])->forumPost();
 
         $postsQuery->latest();
 
@@ -74,7 +72,7 @@ class PostController extends Controller
         // Rank by global forum posts only — summit logs (tag-less posts)
         // and posts made inside a community don't count.
         $forumLeaders = User::withCount(['posts as posts_count' => function ($query) {
-            $query->whereNull('community_id')->whereHas('tags');
+            $query->forumPost();
         }])
             ->having('posts_count', '>', 0)
             ->orderByDesc('posts_count')
@@ -224,6 +222,25 @@ class PostController extends Controller
         return redirect()
             ->route('community.posts.show', $post->id)
             ->with('success', __('community.reply_posted'));
+    }
+
+    // ====================================================================
+    // DESTROY COMMENT — Delete an own reply
+    // ====================================================================
+
+    /**
+     * Delete a reply owned by the authenticated user.
+     *
+     * Route: DELETE /community/posts/comments/{comment}
+     * Name:  community.posts.comments.destroy
+     */
+    public function destroyComment(Request $request, PostComment $comment): RedirectResponse
+    {
+        abort_unless($comment->user_id === $request->user()->id, 403);
+
+        $comment->delete();
+
+        return back()->with('success', __('community.reply_deleted'));
     }
 
     // ====================================================================

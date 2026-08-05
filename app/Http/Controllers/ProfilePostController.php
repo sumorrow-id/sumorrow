@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProfilePostRequest;
 use App\Models\Mountain;
 use App\Models\User;
+use App\Services\AchievementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -16,9 +17,10 @@ class ProfilePostController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Hanya catatan puncak (summit log) — post forum ditandai dengan tags
+        // Hanya catatan puncak (summit log) — post forum ditandai dengan tags,
+        // dan post di dalam community tidak pernah masuk ke sini.
         $posts = $user->posts()
-            ->whereDoesntHave('tags')
+            ->summitLog()
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
@@ -48,7 +50,7 @@ class ProfilePostController extends Controller
         return view('profile.posts.show', compact('post'));
     }
 
-    public function store(StoreProfilePostRequest $request): RedirectResponse
+    public function store(StoreProfilePostRequest $request, AchievementService $achievementService): RedirectResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -66,6 +68,10 @@ class ProfilePostController extends Controller
                 ]);
             }
         }
+
+        // Unlock straight away so "First Summit" lands with the post rather than
+        // waiting for the next visit to the profile page.
+        $achievementService->checkAndUnlockAchievements($user);
 
         return redirect()->route('profile.posts.index')->with('success', __('profile.activity_posted'));
     }

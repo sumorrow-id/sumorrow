@@ -30,7 +30,7 @@
                             <span class="text-green-600 font-semibold">{{ __('profile.earned_on', ['date' => \Carbon\Carbon::parse($unlockedData->pivot->unlocked_at)->translatedFormat('d M Y')]) }}</span> <br class="block sm:hidden">
                             <span class="hidden sm:inline">-</span>
                         @endif
-                        {{ $achievement->description }}
+                        {{ $achievement->localizedDescription() }}
                     </p>
 
                     @if(!$isUnlocked)

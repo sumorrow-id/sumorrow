@@ -48,9 +48,12 @@ export class GearModal {
             this.filterGear('all');
         }
 
-        // Auto-show the modal when the form was re-rendered with validation errors
+        // Auto-show the modal when the form was re-rendered with validation
+        // errors. Validation redirects lose the #gear fragment, so re-select
+        // the Gear tab too — otherwise the errors show over the Posts tab.
         if (this.modal.dataset.hasErrors === 'true') {
             this.modal.classList.remove('hidden');
+            document.getElementById('btn-gear')?.click();
         }
     }
 

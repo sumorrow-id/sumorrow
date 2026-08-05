@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMountainRatingRequest;
 use App\Models\Mountain;
+use App\Models\MountainRating;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -121,9 +122,25 @@ class ExploreController extends Controller
         return view('explore', compact('nearbyMountains', 'otherMountains', 'hasLocation', 'radiusKm'));
     }
 
+    /**
+     * How many reviews one "page" of the reviews section shows.
+     */
+    private const REVIEWS_PER_PAGE = 5;
+
     public function show(int $id): View
     {
-        $mountain = Mountain::with(['images', 'province', 'basecamps', 'ratings.user'])->findOrFail($id);
+        $mountain = Mountain::with(['images', 'province', 'basecamps'])
+            ->withCount('ratings')
+            ->findOrFail($id);
+
+        // Reviews are paged rather than capped at 5 so the "see more reviews"
+        // button can walk the whole list without loading every row up front.
+        $reviews = $mountain->ratings()
+            ->with('user')
+            ->latest('created_at')
+            ->paginate(self::REVIEWS_PER_PAGE, ['*'], 'reviews')
+            ->withQueryString()
+            ->fragment('reviews');
 
         $nearbyMountains = Mountain::with(['images', 'province'])
             ->where('province_id', $mountain->province_id)
@@ -135,7 +152,7 @@ class ExploreController extends Controller
         $weatherUrl = URL::temporarySignedRoute('weather.show', now()->addHours(2), ['mountain' => $mountain->id]);
         $forecastUrl = URL::temporarySignedRoute('weather.forecast', now()->addHours(2), ['mountain' => $mountain->id]);
 
-        return view('explore.show', compact('mountain', 'nearbyMountains', 'weatherUrl', 'forecastUrl'));
+        return view('explore.show', compact('mountain', 'reviews', 'nearbyMountains', 'weatherUrl', 'forecastUrl'));
     }
 
     public function storeRating(StoreMountainRatingRequest $request, int $id): RedirectResponse
@@ -159,5 +176,23 @@ class ExploreController extends Controller
         });
 
         return back()->with('success', __('explore.review_submitted'));
+    }
+
+    /**
+     * Delete the authenticated user's own review of a mountain.
+     */
+    public function destroyRating(Request $request, MountainRating $rating): RedirectResponse
+    {
+        abort_unless($rating->user_id === $request->user()->id, 403);
+
+        $mountain = $rating->mountain;
+
+        DB::transaction(function () use ($rating, $mountain) {
+            $rating->delete();
+
+            $mountain->update(['avg_rating' => $mountain->ratings()->avg('score') ?? 0]);
+        });
+
+        return back()->with('success', __('explore.review_deleted'));
     }
 }

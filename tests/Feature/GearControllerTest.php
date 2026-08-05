@@ -42,7 +42,7 @@ class GearControllerTest extends TestCase
                 'category' => 'Sleep System',
             ]);
 
-        $response->assertRedirect(route('profile'));
+        $response->assertRedirect(route('profile').'#gear');
         $this->assertDatabaseHas('gears', [
             'name' => 'Sleeping Bag',
             'user_id' => $user->id,
@@ -91,7 +91,7 @@ class GearControllerTest extends TestCase
                 'category' => 'Shelter',
             ]);
 
-        $response->assertRedirect(route('profile'));
+        $response->assertRedirect(route('profile').'#gear');
         $this->assertDatabaseHas('gears', [
             'id' => $gear->id,
             'name' => 'Ultralight Tent',
@@ -131,7 +131,7 @@ class GearControllerTest extends TestCase
             ->from(route('profile'))
             ->delete(route('gears.destroy', $gear));
 
-        $response->assertRedirect(route('profile'));
+        $response->assertRedirect(route('profile').'#gear');
         $this->assertDatabaseMissing('gears', ['id' => $gear->id]);
     }
 

@@ -11,6 +11,69 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-08-05 — branch: `main` — review/reply deletion, public profiles, achievement i18n
+
+By: Claude Code
+
+**What changed**
+
+- **Delete own mountain review.** `DELETE /explore/ratings/{rating}`
+  (`explore.ratings.destroy`) → `ExploreController::destroyRating`. Owner-only
+  (`abort_unless`); the delete and the `avg_rating` recompute share one
+  transaction, mirroring `storeRating`. The review card shows a Delete button
+  only on your own review, wired through the existing `confirm-submit-form`
+  modal.
+- **Paged reviews.** `ExploreController::show` no longer eager-loads every
+  rating; it uses `withCount('ratings')` plus a 5-per-page paginator
+  (`?reviews=N`, fragment `#reviews`) passed to the view as `$reviews`. The
+  section renders "See more reviews" / "Previous reviews" buttons instead of a
+  hard `take(5)`. The blade now reads `$mountain->ratings_count`.
+- **Delete own forum reply.** `DELETE /community/posts/comments/{comment}`
+  (`community.posts.comments.destroy`) → `PostController::destroyComment`,
+  author-only. Four path segments, so it can't collide with
+  `DELETE /community/{community}` or `/community/posts/{post}`.
+- **Public profiles.** `GET /users/{user}` (`users.show`) →
+  `ProfileController::show`, rendering the new `profile/public.blade.php`
+  (header, achievements earned, recent forum posts, summit logs, reviews).
+  Guests may view it; visiting your own link redirects to `/profile`. Reviewer
+  names/avatars on a mountain page now link here.
+- **Achievement descriptions are localized.** New `lang/{en,id}/achievements.php`
+  keyed by the snake_cased English title (`first_summit`, …). Titles stay
+  English in the DB because `AchievementService` matches unlock rules on them;
+  `Achievement::localizedDescription()` does the lookup with a fallback to the
+  stored description.
+- **"First Summit" fixed.** It counted *any* post, so a forum post unlocked it
+  and a summit log wasn't specifically required. Now
+  `posts()->whereDoesntHave('tags')` (the same summit-log convention the profile
+  and forum feed use). `ProfilePostController::store` also runs the achievement
+  check, so the badge lands with the post rather than on the next profile visit.
+- **Community posts no longer leak onto profiles.** "Forum post" and "summit
+  log" were defined ad hoc in seven places and had drifted: `PostController`
+  excluded `community_id`, the profile queries did not, so posts written inside
+  a community (public *or* private) showed up in the profile Posts tab and on
+  the new public profile. Both definitions now live in one place as
+  `Post::scopeForumPost()` / `Post::scopeSummitLog()` (PHP `#[Scope]`
+  attribute), and `PostController`, `ProfileController`, `ProfilePostController`
+  and `AchievementService` all route through them. Add future post-visibility
+  rules to the scopes, not the call sites.
+- **Gear tab survives add/delete.** `GearController` returns to
+  `route('profile').'#gear'` instead of `back()` (browsers strip the fragment
+  from `Referer`). `ProfileTabs` now restores the tab from the URL fragment and
+  keeps it in sync via `history.replaceState`; `GearModal` re-selects the Gear
+  tab when it reopens on validation errors.
+
+**How to verify**
+
+- `php artisan test` — 358 passing. New coverage: review pagination + delete
+  (`ExploreControllerTest`), reply delete (`PostControllerTest`), public profile
+  (`ProfileControllerTest`), `tests/Unit/Services/AchievementServiceTest.php`.
+  Gear redirect assertions in `GearControllerTest` were updated to `#gear`.
+- Manually: open a mountain with >5 reviews → "See more reviews" pages through
+  them; your own review shows Delete; click a reviewer's name → their public
+  profile. Post a summit log → First Summit unlocks. Add/delete gear → you stay
+  on the Gear tab. Switch to Indonesian → achievement descriptions translate.
+- `npm run build` after pulling (ProfileTabs/GearModal changed).
+
 ## 2026-08-03 — branch: `docs/legal` — Kawi Butak review seeder + admin basecamp editing
 
 By: Claude Code

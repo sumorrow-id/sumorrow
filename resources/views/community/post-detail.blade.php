@@ -90,13 +90,31 @@
             <div class="flex flex-col gap-4 mb-6">
                 @foreach ($comments as $comment)
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                        <div class="flex items-center gap-3 mb-3">
-                            <img src="{{ $comment->user->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
-                                class="w-9 h-9 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
-                            <div>
-                                <div class="font-bold text-[#1a2b4c] text-sm">{{ $comment->user->username }}</div>
-                                <div class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</div>
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="{{ $comment->user->avatarUrl(asset('images/community/profile-blank.jpg')) }}"
+                                    class="w-9 h-9 rounded-full object-cover" alt="{{ __('community.avatar_alt') }}">
+                                <div class="min-w-0">
+                                    <div class="font-bold text-[#1a2b4c] text-sm truncate">{{ $comment->user->username }}</div>
+                                    <div class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</div>
+                                </div>
                             </div>
+
+                            @if (Auth::id() === $comment->user_id)
+                                <form method="POST" action="{{ route('community.posts.comments.destroy', $comment) }}"
+                                    class="confirm-submit-form shrink-0"
+                                    data-confirm-title="{{ __('community.delete_reply') }}"
+                                    data-confirm-message="{{ __('community.confirm_delete_reply') }}"
+                                    data-confirm-label="{{ __('common.delete') }}"
+                                    data-confirm-variant="danger">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-xs font-bold text-red-500 hover:text-red-600 hover:underline transition">
+                                        {{ __('community.delete_reply') }}
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                         <p class="text-[#1a2b4c] text-sm leading-relaxed">{{ $comment->body }}</p>
                     </div>
