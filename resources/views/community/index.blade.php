@@ -146,7 +146,9 @@
                             @endforeach
                         </div>
 
-                        {{ $suggestedCommunities->links() }}
+                        <div class="mt-6">
+                            {{ $suggestedCommunities->links() }}
+                        </div>
                     @endif
                 </div>
             </div>
