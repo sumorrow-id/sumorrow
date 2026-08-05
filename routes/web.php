@@ -39,6 +39,8 @@ Route::middleware('redirect.admin')->group(function () {
     Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
     Route::get('/explore/{id}', [ExploreController::class, 'show'])->name('explore.show');
     Route::get('/community', [PostController::class, 'index'])->name('community');
+    // Public profile of another hiker (reachable from their mountain reviews)
+    Route::get('/users/{user}', [ProfileController::class, 'show'])->name('users.show');
     Route::middleware('throttle:weather')->group(function () {
         Route::get('/weather/{mountain}', [WeatherController::class, 'show'])->name('weather.show');
         Route::get('/weather/{mountain}/forecast', [WeatherController::class, 'forecast'])->name('weather.forecast');
@@ -118,6 +120,7 @@ Route::middleware('redirect.admin')->group(function () {
 
         // Explore / Mountain — submitting a review requires a verified email.
         Route::post('/explore/{id}/ratings', [ExploreController::class, 'storeRating'])->middleware('verified')->name('explore.ratings.store');
+        Route::delete('/explore/ratings/{rating}', [ExploreController::class, 'destroyRating'])->name('explore.ratings.destroy');
 
         // Posts (Profile)
         Route::get('/profile/posts', [ProfilePostController::class, 'index'])->name('profile.posts.index');
@@ -131,6 +134,10 @@ Route::middleware('redirect.admin')->group(function () {
 
         // Community Forum — Store a comment on a specific post
         Route::post('/community/posts/{post}/comments', [PostController::class, 'storeComment'])->middleware('verified')->name('community.posts.comments.store');
+
+        // Community Forum — Delete an own reply. Four segments, so it never
+        // collides with DELETE /community/{community} or /community/posts/{post}.
+        Route::delete('/community/posts/comments/{comment}', [PostController::class, 'destroyComment'])->name('community.posts.comments.destroy');
 
         // Community Forum — Toggle like on a post
         Route::post('/community/posts/{post}/like', [PostController::class, 'toggleLike'])->middleware('verified')->name('community.posts.like');

@@ -34,7 +34,7 @@
                                     d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
                                 </path>
                             </svg>
-                            {{ number_format($mountain->avg_rating, 1) }} ({{ __('explore.reviews_count', ['count' => $mountain->ratings->count()]) }})
+                            {{ number_format($mountain->avg_rating, 1) }} ({{ __('explore.reviews_count', ['count' => $mountain->ratings_count]) }})
                         </span>
                         <span class="bg-[#001E3A] text-white px-3 py-1 rounded-full font-semibold">
                             {{ $difficultyLabel }}
@@ -192,8 +192,8 @@
                     </section>
 
                     <!-- Reviews Section -->
-                    <section>
-                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.reviews_heading', ['count' => $mountain->ratings->count()]) }}</h2>
+                    <section id="reviews" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-[#001E3A] mb-4">{{ __('explore.reviews_heading', ['count' => $mountain->ratings_count]) }}</h2>
 
                         <!-- Add Review Form -->
                         @auth
@@ -237,27 +237,57 @@
                         @endauth
 
                         <div class="space-y-4">
-                            @forelse($mountain->ratings->sortByDesc('created_at')->take(5) as $rating)
+                            @forelse($reviews as $rating)
                                 <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                                    <div class="flex items-center gap-3 mb-2">
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-[#001E3A] font-bold text-sm uppercase">
-                                            {{ substr($rating->user->username ?? 'U', 0, 1) }}
-                                        </div>
-                                        <div>
-                                            <h4 class="font-semibold text-gray-900">
-                                                {{ $rating->user->username ?? __('explore.unknown_hiker') }}</h4>
-                                            <div class="flex text-yellow-400 text-xs mt-1">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <svg class="w-4 h-4 {{ $i <= $rating->score ? 'text-yellow-400' : 'text-gray-200' }}"
-                                                        fill="currentColor" viewBox="0 0 20 20">
-                                                        <path
-                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
-                                                        </path>
-                                                    </svg>
-                                                @endfor
+                                    <div class="flex items-start justify-between gap-3 mb-2">
+                                        @php
+                                            $reviewer = $rating->user;
+                                            $reviewerName = $reviewer->username ?? __('explore.unknown_hiker');
+                                        @endphp
+                                        {{-- Reviewer identity links to their public profile. --}}
+                                        <a href="{{ $reviewer ? route('users.show', $reviewer) : '#reviews' }}"
+                                            @if ($reviewer) title="{{ __('explore.view_reviewer_profile', ['name' => $reviewerName]) }}" @endif
+                                            class="flex items-center gap-3 min-w-0 group {{ $reviewer ? '' : 'pointer-events-none' }}">
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-[#001E3A] font-bold text-sm uppercase shrink-0 overflow-hidden">
+                                                @if ($reviewer)
+                                                    <img src="{{ $reviewer->avatarUrl() }}" alt="{{ $reviewerName }}"
+                                                        class="w-full h-full object-cover">
+                                                @else
+                                                    U
+                                                @endif
                                             </div>
-                                        </div>
+                                            <div class="min-w-0">
+                                                <h4 class="font-semibold text-gray-900 truncate {{ $reviewer ? 'group-hover:text-[#2A9D8F] transition-colors' : '' }}">
+                                                    {{ $reviewerName }}</h4>
+                                                <div class="flex text-yellow-400 text-xs mt-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-4 h-4 {{ $i <= $rating->score ? 'text-yellow-400' : 'text-gray-200' }}"
+                                                            fill="currentColor" viewBox="0 0 20 20">
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                                            </path>
+                                                        </svg>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        @if (Auth::id() === $rating->user_id)
+                                            <form method="POST" action="{{ route('explore.ratings.destroy', $rating) }}"
+                                                class="confirm-submit-form shrink-0"
+                                                data-confirm-title="{{ __('explore.delete_review') }}"
+                                                data-confirm-message="{{ __('explore.confirm_delete_review') }}"
+                                                data-confirm-label="{{ __('common.delete') }}"
+                                                data-confirm-variant="danger">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="text-xs font-semibold text-red-500 hover:text-red-600 hover:underline transition">
+                                                    {{ __('explore.delete_review') }}
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                     @if ($rating->review)
                                         <p class="text-gray-600 mt-2 text-sm">{{ $rating->review }}</p>
@@ -270,6 +300,24 @@
                                 </div>
                             @endforelse
                         </div>
+
+                        {{-- "See more reviews" — walks the paginated review list 5 at a time. --}}
+                        @if ($reviews->hasPages())
+                            <div class="flex flex-wrap justify-center gap-3 mt-6">
+                                @if ($reviews->previousPageUrl())
+                                    <a href="{{ $reviews->previousPageUrl() }}"
+                                        class="inline-block border border-[#001E3A] text-[#001E3A] px-6 py-2 rounded-lg font-semibold hover:bg-[#001E3A] hover:text-white transition-colors">
+                                        {{ __('explore.see_previous_reviews') }}
+                                    </a>
+                                @endif
+                                @if ($reviews->nextPageUrl())
+                                    <a href="{{ $reviews->nextPageUrl() }}"
+                                        class="inline-block bg-[#001E3A] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 transition-colors">
+                                        {{ __('explore.see_more_reviews') }}
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
                     </section>
 
                 </div>

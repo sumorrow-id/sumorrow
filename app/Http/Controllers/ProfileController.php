@@ -22,10 +22,10 @@ class ProfileController extends Controller
         $achievementService->checkAndUnlockAchievements($user);
 
         // 1. Ambil data kontribusi user.
-        // Post forum dibedakan dari catatan puncak lewat category tags:
-        // hanya post forum yang memiliki baris di post_tags.
+        // Post forum dibedakan dari catatan puncak lewat category tags, dan
+        // keduanya mengecualikan post di dalam community (lihat scope di Post).
         $forumPosts = $user->posts()
-            ->whereHas('tags')
+            ->forumPost()
             ->with(['tags', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
@@ -34,7 +34,7 @@ class ProfileController extends Controller
             ->get();
 
         $hikingPosts = $user->posts()
-            ->whereDoesntHave('tags')
+            ->summitLog()
             ->with(['mountain.province', 'images' => function ($query) {
                 $query->orderBy('position', 'asc');
             }])
@@ -56,6 +56,41 @@ class ProfileController extends Controller
 
         // 3. Kirim semua variabel ke view profile
         return view('profile.profile', compact('forumPosts', 'hikingPosts', 'gears', 'allAchievements', 'userAchievements', 'user', 'lastReviews'));
+    }
+
+    /**
+     * Public profile of another hiker, reachable from their mountain reviews.
+     * Viewing your own link just sends you to your editable profile.
+     */
+    public function show(User $user): View|RedirectResponse
+    {
+        if (Auth::id() === $user->id) {
+            return redirect()->route('profile');
+        }
+
+        $forumPosts = $user->posts()
+            ->forumPost()
+            ->with(['tags', 'images' => fn ($query) => $query->orderBy('position', 'asc')])
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+
+        $summitLogs = $user->posts()
+            ->summitLog()
+            ->with('mountain')
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+
+        $reviews = $user->ratings()
+            ->with(['mountain.images'])
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+
+        $achievements = $user->achievements()->get();
+
+        return view('profile.public', compact('user', 'forumPosts', 'summitLogs', 'reviews', 'achievements'));
     }
 
     public function edit(): View

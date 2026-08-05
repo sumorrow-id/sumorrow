@@ -93,6 +93,18 @@ return [
     'post_activity' => 'Post Summit Log',
     'activity_posted' => 'Summit log posted!',
 
+    // profile/public.blade.php
+    'public_achievements' => 'Achievements Earned',
+    'public_no_achievements' => 'No achievements earned yet.',
+    'public_forum_posts' => 'Recent Forum Posts',
+    'public_no_forum_posts' => 'No forum posts yet.',
+    'public_summit_logs' => 'Recent Summit Logs',
+    'public_no_summit_logs' => 'No summit logs yet.',
+    'public_reviews' => 'Recent Mountain Reviews',
+    'public_no_reviews' => 'No mountain reviews yet.',
+    'public_no_bio' => 'This hiker has not written a bio yet.',
+    'public_untitled_log' => 'Untitled summit log',
+
     // profile/posts/show.blade.php
     'back' => 'Back',
     'author' => 'Author',

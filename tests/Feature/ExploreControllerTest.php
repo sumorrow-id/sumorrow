@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Mountain;
+use App\Models\MountainRating;
 use App\Models\Province;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -238,5 +240,126 @@ class ExploreControllerTest extends TestCase
 
         $this->assertEqualsWithDelta(-8.41, $decimal['lat'], 0.01);
         $this->assertEqualsWithDelta(116.46, $decimal['lng'], 0.01);
+    }
+
+    // -------------------------------------------------------------------------
+    // Reviews — pagination
+    // -------------------------------------------------------------------------
+
+    public function test_reviews_are_paginated_five_per_page(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+
+        foreach (User::factory()->count(7)->create() as $user) {
+            MountainRating::create([
+                'user_id' => $user->id,
+                'mountain_id' => $mountain->id,
+                'score' => 4,
+                'review' => 'Great hike.',
+            ]);
+        }
+
+        $page1 = $this->get(route('explore.show', $mountain->id));
+        $page1->assertStatus(200);
+        $this->assertCount(5, $page1->viewData('reviews'));
+        $this->assertTrue($page1->viewData('reviews')->hasMorePages());
+        // The "see more reviews" button must be rendered when more pages exist.
+        $page1->assertSee(__('explore.see_more_reviews'));
+
+        $page2 = $this->get(route('explore.show', $mountain->id).'?reviews=2');
+        $page2->assertStatus(200);
+        $this->assertCount(2, $page2->viewData('reviews'));
+        $this->assertSame(7, $page2->viewData('mountain')->ratings_count);
+    }
+
+    // -------------------------------------------------------------------------
+    // Reviews — delete
+    // -------------------------------------------------------------------------
+
+    public function test_owner_can_delete_their_own_review(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+        $user = User::factory()->create();
+        $rating = MountainRating::create([
+            'user_id' => $user->id,
+            'mountain_id' => $mountain->id,
+            'score' => 5,
+            'review' => 'Loved it.',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->from(route('explore.show', $mountain->id))
+            ->delete(route('explore.ratings.destroy', $rating));
+
+        $response->assertRedirect(route('explore.show', $mountain->id));
+        $this->assertDatabaseMissing('mountain_ratings', ['id' => $rating->id]);
+        // Removing the only review resets the mountain's average.
+        $this->assertEquals(0.0, (float) $mountain->fresh()->avg_rating);
+    }
+
+    public function test_user_cannot_delete_another_users_review(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+        $owner = User::factory()->create();
+        $intruder = User::factory()->create();
+        $rating = MountainRating::create([
+            'user_id' => $owner->id,
+            'mountain_id' => $mountain->id,
+            'score' => 5,
+            'review' => 'Loved it.',
+        ]);
+
+        $response = $this->actingAs($intruder)->delete(route('explore.ratings.destroy', $rating));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('mountain_ratings', ['id' => $rating->id]);
+    }
+
+    public function test_guest_cannot_delete_a_review(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+        $owner = User::factory()->create();
+        $rating = MountainRating::create([
+            'user_id' => $owner->id,
+            'mountain_id' => $mountain->id,
+            'score' => 5,
+        ]);
+
+        $this->delete(route('explore.ratings.destroy', $rating))->assertRedirect('/login');
+        $this->assertDatabaseHas('mountain_ratings', ['id' => $rating->id]);
+    }
+
+    public function test_delete_review_button_only_shows_on_own_review(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        MountainRating::create([
+            'user_id' => $owner->id,
+            'mountain_id' => $mountain->id,
+            'score' => 5,
+            'review' => 'Loved it.',
+        ]);
+
+        $this->actingAs($owner)->get(route('explore.show', $mountain->id))
+            ->assertSee(__('explore.delete_review'));
+
+        $this->actingAs($other)->get(route('explore.show', $mountain->id))
+            ->assertDontSee(__('explore.delete_review'));
+    }
+
+    public function test_review_links_to_the_reviewers_public_profile(): void
+    {
+        $mountain = $this->makeMountain($this->makeProvince());
+        $reviewer = User::factory()->create();
+        MountainRating::create([
+            'user_id' => $reviewer->id,
+            'mountain_id' => $mountain->id,
+            'score' => 4,
+            'review' => 'Nice trail.',
+        ]);
+
+        $this->get(route('explore.show', $mountain->id))
+            ->assertSee(route('users.show', $reviewer), false);
     }
 }

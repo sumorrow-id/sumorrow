@@ -93,6 +93,18 @@ return [
     'post_activity' => 'Posting Catatan Puncak',
     'activity_posted' => 'Catatan puncak berhasil diposting!',
 
+    // profile/public.blade.php
+    'public_achievements' => 'Pencapaian yang Diraih',
+    'public_no_achievements' => 'Belum ada pencapaian yang diraih.',
+    'public_forum_posts' => 'Postingan Forum Terbaru',
+    'public_no_forum_posts' => 'Belum ada postingan forum.',
+    'public_summit_logs' => 'Catatan Puncak Terbaru',
+    'public_no_summit_logs' => 'Belum ada catatan puncak.',
+    'public_reviews' => 'Ulasan Gunung Terbaru',
+    'public_no_reviews' => 'Belum ada ulasan gunung.',
+    'public_no_bio' => 'Pendaki ini belum menulis bio.',
+    'public_untitled_log' => 'Catatan puncak tanpa judul',
+
     // profile/posts/show.blade.php
     'back' => 'Kembali',
     'author' => 'Penulis',

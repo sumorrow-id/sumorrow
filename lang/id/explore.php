@@ -53,6 +53,12 @@ return [
     'login' => 'Masuk',
     'unknown_hiker' => 'Pendaki Tidak Dikenal',
     'no_reviews_yet' => 'Belum ada ulasan. Jadilah yang pertama menaklukkan dan mengulas gunung ini!',
+    'delete_review' => 'Hapus Ulasan',
+    'confirm_delete_review' => 'Hapus ulasan Anda untuk gunung ini? Tindakan ini tidak dapat dibatalkan.',
+    'review_deleted' => 'Ulasan Anda telah dihapus.',
+    'see_more_reviews' => 'Lihat ulasan lainnya',
+    'see_previous_reviews' => 'Ulasan sebelumnya',
+    'view_reviewer_profile' => 'Lihat profil :name',
 
     'faq_heading' => 'FAQ',
     'faq_permit_question' => 'Apakah saya memerlukan izin untuk mendaki :name?',

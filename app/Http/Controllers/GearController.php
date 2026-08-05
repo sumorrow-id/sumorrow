@@ -18,14 +18,14 @@ class GearController extends Controller
 
         Gear::create($validated);
 
-        return back()->with('success', __('gear.added_successfully'));
+        return $this->backToGearTab(__('gear.added_successfully'));
     }
 
     public function update(UpdateGearRequest $request, Gear $gear): RedirectResponse
     {
         $gear->update($request->validated());
 
-        return back()->with('success', __('gear.updated_successfully'));
+        return $this->backToGearTab(__('gear.updated_successfully'));
     }
 
     public function destroy(Gear $gear): RedirectResponse
@@ -34,6 +34,16 @@ class GearController extends Controller
 
         $gear->delete();
 
-        return back()->with('success', __('gear.deleted_successfully'));
+        return $this->backToGearTab(__('gear.deleted_successfully'));
+    }
+
+    /**
+     * Return to the profile with the Gear tab still selected. `back()` would
+     * drop the fragment (browsers strip it from Referer), landing the user on
+     * the Posts tab after every add/edit/delete.
+     */
+    private function backToGearTab(string $message): RedirectResponse
+    {
+        return redirect()->to(route('profile').'#gear')->with('success', $message);
     }
 }

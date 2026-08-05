@@ -53,6 +53,12 @@ return [
     'login' => 'Login',
     'unknown_hiker' => 'Unknown Hiker',
     'no_reviews_yet' => 'No reviews yet. Be the first to conquer and review this mountain!',
+    'delete_review' => 'Delete Review',
+    'confirm_delete_review' => 'Delete your review of this mountain? This action cannot be undone.',
+    'review_deleted' => 'Your review has been deleted.',
+    'see_more_reviews' => 'See more reviews',
+    'see_previous_reviews' => 'Previous reviews',
+    'view_reviewer_profile' => "View :name's profile",
 
     'faq_heading' => 'FAQ',
     'faq_permit_question' => 'Do I need a permit to climb :name?',

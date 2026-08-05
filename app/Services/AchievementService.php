@@ -26,8 +26,9 @@ class AchievementService
             $unlocked = false;
             switch ($achievement->title) {
                 case 'First Summit':
-                    // Successfully logged your first mountain climbing activity
-                    $unlocked = $user->posts()->exists();
+                    // Successfully logged your first mountain climbing activity.
+                    // Summit logs carry no category tags — a forum post is not a summit.
+                    $unlocked = $user->posts()->summitLog()->exists();
                     break;
 
                 case 'The Explorer':

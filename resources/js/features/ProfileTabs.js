@@ -15,9 +15,19 @@ export class ProfileTabs {
         this.tabButtons.forEach((btn) => {
             btn.addEventListener('click', () => this.switchTab(btn.dataset.tab));
         });
+
+        // Restore the tab named in the URL fragment (e.g. /profile#gear) so a
+        // refresh — or a redirect back from adding/deleting gear — keeps the
+        // user on the tab they were working in.
+        this.switchTab(window.location.hash.replace('#', ''));
     }
 
     switchTab(tabName) {
+        const content = tabName ? document.getElementById('content-' + tabName) : null;
+
+        // Unknown fragment (or none): leave the default tab alone.
+        if (!content) return;
+
         // 1. Sembunyikan semua konten
         document.querySelectorAll('.tab-content').forEach((el) => {
             el.classList.remove('block');
@@ -25,8 +35,8 @@ export class ProfileTabs {
         });
 
         // 2. Tampilkan konten yang dipilih
-        document.getElementById('content-' + tabName).classList.remove('hidden');
-        document.getElementById('content-' + tabName).classList.add('block');
+        content.classList.remove('hidden');
+        content.classList.add('block');
 
         // 3. Reset style semua tombol tab (jadikan abu-abu)
         document.querySelectorAll('.tab-btn').forEach((btn) => {
@@ -36,7 +46,14 @@ export class ProfileTabs {
 
         // 4. Bikin tombol yang diklik jadi aktif (biru tebal)
         const activeBtn = document.getElementById('btn-' + tabName);
-        activeBtn.classList.remove('border-transparent', 'text-gray-400', 'font-semibold');
-        activeBtn.classList.add('border-[#094174]', 'text-[#094174]', 'font-bold');
+        if (activeBtn) {
+            activeBtn.classList.remove('border-transparent', 'text-gray-400', 'font-semibold');
+            activeBtn.classList.add('border-[#094174]', 'text-[#094174]', 'font-bold');
+        }
+
+        // 5. Keep the fragment in sync so a refresh lands on the same tab.
+        if (window.location.hash !== '#' + tabName) {
+            window.history.replaceState(null, '', '#' + tabName);
+        }
     }
 }

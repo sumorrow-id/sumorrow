@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Community;
 use App\Models\Post;
+use App\Models\PostComment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -298,5 +299,76 @@ class PostControllerTest extends TestCase
         $response->assertOk();
         // The typed text must survive a failed-validation reload.
         $response->assertSee('value="My draft text"', false);
+    }
+
+    // -------------------------------------------------------------------------
+    // Replies — delete
+    // -------------------------------------------------------------------------
+
+    public function test_author_can_delete_their_own_reply()
+    {
+        $user = User::factory()->create();
+        $post = Post::create(['author_id' => $user->id, 'title' => '', 'body' => 'A post']);
+        $comment = PostComment::create([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+            'body' => 'My reply',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->from(route('community.posts.show', $post->id))
+            ->delete(route('community.posts.comments.destroy', $comment));
+
+        $response->assertRedirect(route('community.posts.show', $post->id));
+        $this->assertDatabaseMissing('post_comments', ['id' => $comment->id]);
+    }
+
+    public function test_user_cannot_delete_another_users_reply()
+    {
+        $author = User::factory()->create();
+        $intruder = User::factory()->create();
+        $post = Post::create(['author_id' => $author->id, 'title' => '', 'body' => 'A post']);
+        $comment = PostComment::create([
+            'user_id' => $author->id,
+            'post_id' => $post->id,
+            'body' => 'My reply',
+        ]);
+
+        $response = $this->actingAs($intruder)->delete(route('community.posts.comments.destroy', $comment));
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('post_comments', ['id' => $comment->id]);
+    }
+
+    public function test_guest_cannot_delete_a_reply()
+    {
+        $author = User::factory()->create();
+        $post = Post::create(['author_id' => $author->id, 'title' => '', 'body' => 'A post']);
+        $comment = PostComment::create([
+            'user_id' => $author->id,
+            'post_id' => $post->id,
+            'body' => 'My reply',
+        ]);
+
+        $this->delete(route('community.posts.comments.destroy', $comment))->assertRedirect('/login');
+        $this->assertDatabaseHas('post_comments', ['id' => $comment->id]);
+    }
+
+    public function test_delete_reply_button_only_shows_on_own_reply()
+    {
+        $author = User::factory()->create();
+        $other = User::factory()->create();
+        $post = Post::create(['author_id' => $author->id, 'title' => '', 'body' => 'A post']);
+        PostComment::create([
+            'user_id' => $author->id,
+            'post_id' => $post->id,
+            'body' => 'My reply',
+        ]);
+
+        $this->actingAs($author)->get(route('community.posts.show', $post->id))
+            ->assertSee(__('community.delete_reply'));
+
+        $this->actingAs($other)->get(route('community.posts.show', $post->id))
+            ->assertDontSee(__('community.delete_reply'));
     }
 }
