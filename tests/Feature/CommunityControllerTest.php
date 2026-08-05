@@ -72,6 +72,54 @@ class CommunityControllerTest extends TestCase
         $response->assertSee(route('community.show', $withoutImage));
     }
 
+    public function test_my_communities_can_be_searched_and_are_paginated(): void
+    {
+        $user = User::factory()->create();
+
+        // 7 joined communities → 6 on page one, 1 on page two.
+        foreach (range(1, 6) as $i) {
+            $this->makeCommunity(['name' => "Rinjani Squad {$i}", 'slug' => "rinjani-squad-{$i}"])
+                ->members()->attach($user->id, ['role' => 'member']);
+        }
+        $this->makeCommunity(['name' => 'Semeru Squad', 'slug' => 'semeru-squad'])
+            ->members()->attach($user->id, ['role' => 'member']);
+
+        // Page one holds the first six, not the seventh.
+        $response = $this->actingAs($user)->get(route('community', ['tab' => 'community']));
+        $response->assertOk();
+        $response->assertSee('Rinjani Squad 1');
+        $response->assertDontSee('Semeru Squad');
+
+        // Page two holds the seventh, and pagination links keep the tab selected.
+        $response = $this->actingAs($user)->get(route('community', ['tab' => 'community', 'community_page' => 2]));
+        $response->assertOk();
+        $response->assertSee('Semeru Squad');
+        $response->assertDontSee('Rinjani Squad 1');
+
+        // Search filters the joined list.
+        $response = $this->actingAs($user)->get(route('community', ['tab' => 'community', 'community_search' => 'Semeru']));
+        $response->assertOk();
+        $response->assertSee('Semeru Squad');
+        $response->assertDontSee('Rinjani Squad 1');
+    }
+
+    public function test_suggested_communities_exclude_joined_ones_beyond_the_first_page(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (range(1, 7) as $i) {
+            $this->makeCommunity(['name' => "Joined {$i}", 'slug' => "joined-{$i}"])
+                ->members()->attach($user->id, ['role' => 'member']);
+        }
+
+        // The 7th joined community sits on page two of My Communities, so it must
+        // still be excluded from the suggestions on page one.
+        $response = $this->actingAs($user)->get(route('community', ['tab' => 'community']));
+
+        $response->assertOk();
+        $response->assertDontSee('Joined 7');
+    }
+
     public function test_community_feed_excludes_summit_logs(): void
     {
         $user = User::factory()->create();

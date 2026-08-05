@@ -11,6 +11,33 @@ Running log of work done by developers and AI agents, newest first.
 
 ---
 
+## 2026-08-05 — branch: `feat/web-enhancement` — My Community search + pagination
+
+By: Claude Code
+
+**What changed**
+
+- **My Community tab is searchable and paged.** `PostController::index` now
+  paginates the joined-communities list (6/page, `orderBy(name)`) instead of
+  `->get()`, using its own page name `community_page` so it can't collide with
+  the Explore feed's `page`. `?community_search=` filters by community name.
+  Both paginator links and the search form carry `tab=community`, which the
+  existing `CommunityForum` JS already reads to re-select the tab after reload.
+- **Suggested communities fix.** The exclusion list used to come from
+  `$myCommunities->pluck('id')`, which now only holds one page; switched to a
+  `whereDoesntHave('members', …)` check so joined communities on page 2+ stay
+  out of the suggestions.
+- New keys `community.no_communities_found` / `community.search_communities_placeholder`
+  in `lang/en` and `lang/id`.
+
+**How to verify**
+
+`php artisan test --compact --filter=CommunityControllerTest` (two new tests
+cover paging + search and the suggestion exclusion). In the UI: join 7+
+communities, open `/community?tab=community`, page through and search.
+
+---
+
 ## 2026-08-05 — branch: `main` — review/reply deletion, public profiles, achievement i18n
 
 By: Claude Code
