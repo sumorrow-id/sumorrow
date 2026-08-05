@@ -82,13 +82,27 @@ class PostController extends Controller
         // ----------------------------------------------------------------
         // 4. My Communities & Suggested Communities
         // ----------------------------------------------------------------
+        // The "My Community" tab lives on this same page, so its search and
+        // paginator use their own query keys and carry ?tab=community so the
+        // tab is still selected after a reload.
+        $communitySearch = $request->query('community_search');
+
         $myCommunities = collect();
         if (Auth::check()) {
-            $myCommunities = Auth::user()->communities()->withCount('members')->get();
+            $myCommunities = Auth::user()->communities()
+                ->when($communitySearch, fn ($query) => $query->where('name', 'like', '%'.$communitySearch.'%'))
+                ->withCount('members')
+                ->orderBy('communities.name')
+                ->paginate(perPage: 6, pageName: 'community_page')
+                ->withQueryString()
+                ->appends('tab', 'community');
         }
 
-        $myCommunityIds = $myCommunities->pluck('id')->toArray();
-        $suggestedCommunities = Community::whereNotIn('id', $myCommunityIds)
+        $suggestedCommunities = Community::when(
+            Auth::check(),
+            // Not pluck()-ed from $myCommunities — that only holds the current page.
+            fn ($query) => $query->whereDoesntHave('members', fn ($member) => $member->whereKey(Auth::id()))
+        )
             ->withCount('members')
             ->take(6)
             ->get();
@@ -99,6 +113,7 @@ class PostController extends Controller
             'forumLeaders',
             'activeTag',
             'search',
+            'communitySearch',
             'myCommunities',
             'suggestedCommunities'
         ));

@@ -13,6 +13,8 @@ return [
     'my_communities_subheading' => 'Communities you have joined or managed.',
     'create_community' => 'Create Community',
     'no_communities_joined' => "You haven't joined any community yet.",
+    'no_communities_found' => 'No community matches ":search".',
+    'search_communities_placeholder' => 'Search your communities…',
     'discover_recommendations_text' => 'Discover exciting climbing spaces through recommendations below!',
     'suggested_for_you' => 'Suggested For You',
     'no_recommendations' => 'No new recommendations available right now.',

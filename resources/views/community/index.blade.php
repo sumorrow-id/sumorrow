@@ -87,6 +87,26 @@
                     @endguest
                 </div>
 
+                {{-- Search: filters the joined communities below --}}
+                @auth
+                    <form method="GET" action="{{ route('community.explore') }}" role="search">
+                        <input type="hidden" name="tab" value="community">
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                            <input
+                                type="text"
+                                name="community_search"
+                                value="{{ $communitySearch }}"
+                                placeholder="{{ __('community.search_communities_placeholder') }}"
+                                class="block w-full pl-11 pr-4 py-3 bg-[#F8F9FA] rounded-xl text-sm md:text-base border-none focus:ring-0 focus:outline-none placeholder-gray-400">
+                        </div>
+                    </form>
+                @endauth
+
                 {{-- Main: Joined Communities Grid --}}
                 @if ($myCommunities->isEmpty())
                     <div class="text-center py-12 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
@@ -95,8 +115,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM15 20H9m6 0h6" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-[#001E3A] mb-1">{{ __('community.no_communities_joined') }}</h3>
-                        <p class="text-gray-400 text-sm mb-4">{{ __('community.discover_recommendations_text') }}</p>
+                        @if ($communitySearch)
+                            <h3 class="text-lg font-bold text-[#001E3A] mb-1">{{ __('community.no_communities_found', ['search' => $communitySearch]) }}</h3>
+                            <a href="{{ route('community.explore', ['tab' => 'community']) }}" class="text-sm font-bold text-[#094174] hover:underline">{{ __('community.clear_filter_aria') }}</a>
+                        @else
+                            <h3 class="text-lg font-bold text-[#001E3A] mb-1">{{ __('community.no_communities_joined') }}</h3>
+                            <p class="text-gray-400 text-sm mb-4">{{ __('community.discover_recommendations_text') }}</p>
+                        @endif
                     </div>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -104,6 +129,8 @@
                             <x-community-card :community="$community" :joined="true" />
                         @endforeach
                     </div>
+
+                    {{ $myCommunities->links() }}
                 @endif
 
                 {{-- Section: Suggested For You --}}

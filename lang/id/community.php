@@ -13,6 +13,8 @@ return [
     'my_communities_subheading' => 'Komunitas yang telah Anda ikuti atau kelola.',
     'create_community' => 'Buat Komunitas',
     'no_communities_joined' => 'Anda belum bergabung dengan komunitas apa pun.',
+    'no_communities_found' => 'Tidak ada komunitas yang cocok dengan ":search".',
+    'search_communities_placeholder' => 'Cari komunitas Anda…',
     'discover_recommendations_text' => 'Temukan ruang pendakian menarik melalui rekomendasi di bawah ini!',
     'suggested_for_you' => 'Disarankan Untuk Anda',
     'no_recommendations' => 'Belum ada rekomendasi baru saat ini.',
